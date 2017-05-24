@@ -11,7 +11,7 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
+#dist/
 downloads/
 eggs/
 .eggs/
@@ -102,5 +102,5 @@ ENV/
 
 #Angular
 
-angular/dist/
+#angular/dist/
 angular/node_modules/**

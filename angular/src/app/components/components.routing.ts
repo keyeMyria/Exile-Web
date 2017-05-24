@@ -11,43 +11,44 @@ import { TypographyComponent } from './typography/typography.component';
 
 export const ComponentsRoutes: Routes = [
     {
-      path: '',
-      children: [ {
-        path: 'buttons',
-        component: ButtonsComponent
-    }]},{
-    path: '',
-    children: [ {
-      path: 'grid',
-      component: GridSystemComponent
-    }]
-    },{
-      path: '',
-      children: [ {
-        path: 'icons',
-        component: IconsComponent
-        }]
-    },{
         path: '',
-        children: [ {
+        children: [{
+            path: 'buttons',
+            component: ButtonsComponent
+        }]
+    }, {
+        path: '',
+        children: [{
+            path: 'grid',
+            component: GridSystemComponent
+        }]
+    }, {
+        path: '',
+        children: [{
+            path: 'icons',
+            component: IconsComponent
+        }]
+    }, {
+        path: '',
+        children: [{
             path: 'notifications',
             component: NotificationsComponent
         }]
-    },{
+    }, {
         path: '',
-        children: [ {
+        children: [{
             path: 'panels',
             component: PanelsComponent
         }]
-    },{
+    }, {
         path: '',
-        children: [ {
+        children: [{
             path: 'sweet-alert',
             component: SweetAlertComponent
         }]
-    },{
+    }, {
         path: '',
-        children: [ {
+        children: [{
             path: 'typography',
             component: TypographyComponent
         }]
