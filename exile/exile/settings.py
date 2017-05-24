@@ -25,7 +25,10 @@ SECRET_KEY = '7&8^v06ea2i&#3%^l1$%bi**(usyk7yup+jzt+_@l#_#im%e60'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '104.236.33.228',
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -41,7 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'supra',
-    'frontend'
+    'frontend',
+    'usuarios',
+    'operacion',
+    'subcripcion',
+    'novedades',
+    'informes'
 ]
 
 MIDDLEWARE = [
@@ -80,11 +88,18 @@ WSGI_APPLICATION = 'exile.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'exile',
+        'USER': 'postgres',
+        'PASSWORD': 'Exile*74522547',
+        'HOST': '104.236.33.228',
+        'POST': '5432'
+    },
+    'default2': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

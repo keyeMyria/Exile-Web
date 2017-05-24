@@ -33,31 +33,22 @@ class Usuario(User):
 # end class
 
 
-class Operario(Usuario):
+class Cargo(models.Model):
+    nombre = models.CharField(max_length=100)
+# end class
+
+
+class Empleado(Usuario):
+    cargo = models.ForeignKey(Cargo)
     fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
     fecha_retiro = models.DateField(verbose_name="Fecha de Retiro", blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Dibujante"
-        verbose_name_plural = "Dibujantes"
     # end class
 # end class
 
 
 class Grupo(models.Model):
     nombre = models.CharField(max_length=100)
-    operarios = models.ManyToManyField(Operario)
-# end class
-
-
-class Supervisor(Usuario):
-    fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
-    fecha_retiro = models.DateField(verbose_name="Fecha de Retiro", blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Supervisor"
-        verbose_name_plural = "Supervisores"
-    # end class
+    empleados = models.ManyToManyField(Empleado)
 # end class
 
 
