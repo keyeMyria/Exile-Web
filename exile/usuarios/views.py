@@ -17,3 +17,9 @@ class Login(supra.SupraSession):
         return super(Login, self).dispatch(request, *args, **kwargs)
     # end def
 # end class
+
+
+def logoutUsers(request):
+    logout(request)
+    return response([], 200)
+# end def

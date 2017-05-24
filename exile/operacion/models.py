@@ -49,8 +49,10 @@ class Tarea(models.Model):
     descripcion = models.TextField("Descripción", max_length=400)
     fecha_de_ejecucion = models.DateField()
     repetir_cada = models.TextField(default=0)
+    lugar = models.ForeignKey(Lugar, blank=True, null=True)
+    cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado)
-    grupos = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
+    grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
     sub_complete = models.BooleanField()  # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
     unidad_de_repeticion = models.IntegerField(choices=(
         (3, "Mes(es)", ), (4, "Año(s)", ), ), null=True, blank=True, default=3)
