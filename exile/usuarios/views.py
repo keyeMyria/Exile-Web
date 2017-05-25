@@ -14,7 +14,8 @@ class Login(supra.SupraSession):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(Login, self).dispatch(request, *args, **kwargs)
+        a = super(Login, self).dispatch(request, *args, **kwargs)
+        return a
     # end def
 # end class
 
