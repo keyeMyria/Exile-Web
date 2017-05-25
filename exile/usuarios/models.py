@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
 from django.db import models
+from cuser.fields import CurrentUserField
 
 
 class Usuario(User):
@@ -15,6 +16,8 @@ class Usuario(User):
     fijo = models.CharField(
         max_length=15, verbose_name="Fijo", blank=True, null=True)
     imagen = models.ImageField(upload_to="avatar", null=True, blank=True)
+    creator = CurrentUserField(add_only=True, related_name="created_user")
+    last_editor = CurrentUserField(related_name="last_edited_user")
 
     def avatar(self):
         if self.imagen:
