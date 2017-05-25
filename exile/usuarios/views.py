@@ -11,7 +11,8 @@ supra.SupraConf.ACCECC_CONTROL["allow"] = True
 
 
 class Login(supra.SupraSession):
-
+    body = True
+        
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         a = super(Login, self).dispatch(request, *args, **kwargs)

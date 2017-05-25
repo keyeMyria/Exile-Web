@@ -31,6 +31,7 @@ class TipoReporteListView(supra.SupraListView):
 
 class TipoSupraForm(supra.SupraFormView):
     model = models.TipoReporte
+    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -82,6 +83,7 @@ class ReporteForm(supra.SupraFormView):
     model = models.Reporte
     form_class = forms.ReporteSupraForm
     inlines = [FotoReporteInlineForm]
+    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -93,6 +95,7 @@ class ReporteForm(supra.SupraFormView):
 
 class FotoReporteForm(supra.SupraFormView):
     model = models.FotoReporte
+    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
