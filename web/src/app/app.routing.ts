@@ -4,10 +4,10 @@ import { DashboardComponent } from './containers/pages/dashboard/dashboard.compo
 import { AuthComponent } from './containers/pages/auth/auth.component';
 
 export const AppRoutes: Routes = [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
     {
         path: '', component: AuthComponent, children: [
-            { path: 'auth', loadChildren: './containers/pages/auth/auth.module#AuthModule' }
+            { path: '', loadChildren: './containers/pages/auth/auth.module#AuthModule' }
         ]
     },
     {
@@ -19,5 +19,5 @@ export const AppRoutes: Routes = [
             { path: 'perfil', loadChildren: './containers/sectios/usuarios/usuarios.module#UsuariosModule' },
         ]
     },
-    { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+    { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];

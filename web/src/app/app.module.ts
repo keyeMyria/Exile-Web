@@ -11,6 +11,8 @@ import { LoaderComponent } from './conponent-lib/loader/loader.component';
 
 import { DashboardComponent } from './containers/pages/dashboard/dashboard.component';
 import { AuthComponent } from './containers/pages/auth/auth.component';
+import { CardComponent } from './card/card.component';
+
 
 // import { SidebarModule } from './sidebar/sidebar.module';
 // import { FooterModule } from './shared/footer/footer.module';
@@ -20,14 +22,15 @@ import { AuthComponent } from './containers/pages/auth/auth.component';
     imports: [
         BrowserModule,
         FormsModule,
-        RouterModule.forRoot(AppRoutes),
-        HttpModule
+        HttpModule,
+        RouterModule.forRoot(AppRoutes)
     ],
     declarations: [
         AppComponent,
         LoaderComponent,
         DashboardComponent,
-        AuthComponent
+        AuthComponent,
+        CardComponent
     ],
     bootstrap: [AppComponent]
 })
