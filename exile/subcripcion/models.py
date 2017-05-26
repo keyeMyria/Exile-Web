@@ -3,26 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from operacion import models as operacion
 
 # Create your models here.
-
-
-class Cliente(User):
-    identificacion = models.CharField(max_length=25, unique=True)
-
-    def __unicode__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
-    # end def
-
-    def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
-    # end def
-
-    class Meta:
-        verbose_name = "Cliente"
-        verbose_name_plural = "Clientes"
-    # end class
-# end class
 
 
 class Modulo(models.Model):
@@ -31,11 +14,11 @@ class Modulo(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'%s' % (self.nombre)
     # end def
 
     def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'%s' % (self.nombre)
     # end def
 
     class Meta:
@@ -68,6 +51,8 @@ class Funcionalidad(models.Model):
 
 
 class InstModulo(models.Model):
+    nombre = models.CharField(max_length=200)
+    nombre = models.CharField(max_length=800, null=True)
     modulo = models.ForeignKey(Modulo)
     funcionalidades = models.ManyToManyField(Funcionalidad)
     estado = models.BooleanField(default=True)
@@ -89,8 +74,13 @@ class InstModulo(models.Model):
 
 class Plan(models.Model):
     nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=800)
+    descripcion = models.CharField(max_length=800, null=True, blank=True)
+    operadores = models.IntegerField(verbose_name='Número de operadores',default=0)
+    asistentes = models.IntegerField(verbose_name='Número de asistentes',default=0)
+    duracion = models.IntegerField(verbose_name='Dias de duración en meses',default=0)
+    valor = models.FloatField(default=0)
     modulos = models.ManyToManyField(InstModulo)
+    estado = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % (self.modulo.nombre)
@@ -105,3 +95,65 @@ class Plan(models.Model):
         verbose_name_plural = "Funcionalidades planes"
     # end class
 # end class
+
+
+class Suscripcion(models.Model):
+    plan = models.ForeignKey(Plan)
+    inscripcion = models.DateTimeField(auto_now_add=True, verbose_name='Inscripción')
+    inicio = models.DateTimeField(blank=True, null=True)
+    fin = models.DateTimeField(blank=True, null=True)
+    activa = models.BooleanField(default=False)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    def __str__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    class Meta:
+        verbose_name = "Suscripción"
+        verbose_name_plural = "Subscripciones"
+    # end class
+#end class
+
+
+class Factura(models.Model):
+    suscripcion = models.ForeignKey(Suscripcion)
+    paga = models.BooleanField(default=False)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    def __str__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    class Meta:
+        verbose_name = "Suscripción"
+        verbose_name_plural = "Subscripciones"
+    # end class
+#end class
+
+class Cuenta(models.Model):
+    cliente = models.ForeignKey(operacion.Cliente)
+    suscripciones = models.ManyToManyField(Suscripcion)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    def __str__(self):
+        return u'%s' % (self.plan.nombre)
+    # end def
+
+    class Meta:
+        verbose_name = "Cuenta"
+        verbose_name_plural = "Cuentas"
+    # end class
+#end class
