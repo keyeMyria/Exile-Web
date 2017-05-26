@@ -32,7 +32,7 @@ class Reporte(models.Model):
     numero = models.CharField(max_length=100, null=True, blank=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=400)
-    tipo_de_reporte = models.ForeignKey(TipoReporte)
+    tipo_de_reporte = models.ForeignKey(TipoReporte, blank=True, null=True)
     cliente = models.ForeignKey(operacion.Cliente, blank=True, null=True)
     lugar = models.ForeignKey(operacion.Lugar, blank=True, null=True)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -41,7 +41,7 @@ class Reporte(models.Model):
     estado = models.BooleanField(default=False, choices=cerrado)
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
-    resend = models.BooleanField(default=False, verbose_name="Re enviar al cliente")
+    # resend = models.BooleanField(default=False, verbose_name="Re enviar al cliente")
 
     def __unicode__(self):
         return u'%s %s, cliente: %s' % (self.nombre, self.fecha.strftime('%Y-%m-%d %H:%M:%S'), self.piscina.cliente())
