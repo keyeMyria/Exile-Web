@@ -31,10 +31,39 @@ class FuncionalidadAdmin(admin.ModelAdmin):
     # end def
 #end class
 
+
+class InstModuloAdmin(admin.ModelAdmin):
+    list_display = ['nombre','descripcion','modulo', 'estado']
+    search_fields = ['nombre','descripcion']
+    filter_horizontal = ['funcionalidades']
+    form = forms.InstModuloForm
+
+    def get_queryset(self, request):
+        queryset = super(InstModuloAdmin, self).get_queryset(request)
+        return queryset.order_by('modulo','nombre','estado')
+    # end def
+#end class
+
+
+class PlanAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'operadores', 'asistentes', 'descripcion', 'valor', 'duracion', 'estado']
+    search_fields = ['nombre','descripcion', 'operadores', 'asistentes', 'valor', 'duracion']
+    filter_horizontal = ['modulos']
+    form = forms.PlanForm
+
+    def get_queryset(self, request):
+        queryset = super(PlanAdmin, self).get_queryset(request)
+        return queryset.order_by('nombre', 'duracion','estado')
+    # end def
+#end class
+
+
+
+
 admin.site.register(models.Funcionalidad)
 admin.site.register(models.Modulo, ModuloAdmin)
-admin.site.register(models.InstModulo)
-admin.site.register(models.Plan)
+admin.site.register(models.InstModulo, InstModuloAdmin)
+admin.site.register(models.Plan, PlanAdmin)
 admin.site.register(models.Suscripcion)
 admin.site.register(models.Factura)
 admin.site.register(models.Cuenta)

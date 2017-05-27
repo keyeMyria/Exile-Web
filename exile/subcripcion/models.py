@@ -58,16 +58,16 @@ class InstModulo(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s' % (self.modulo.nombre)
+        return u'%s --> %s' % (self.modulo.nombre, self.nombre)
     # end def
 
     def __str__(self):
-        return u'%s' % (self.modulo.nombre)
+        return u'%s --> %s' % (self.modulo.nombre, self.nombre)
     # end def
 
     class Meta:
-        verbose_name = "Funcionalidad plan"
-        verbose_name_plural = "Funcionalidades planes"
+        verbose_name = "Modulo plan"
+        verbose_name_plural = "Modulos de planes"
     # end class
 # end class
 
@@ -99,7 +99,7 @@ class Plan(models.Model):
 
 class Suscripcion(models.Model):
     plan = models.ForeignKey(Plan)
-    inscripcion = models.DateTimeField(auto_now_add=True, verbose_name='Inscripción')
+    inscripcion = models.DateTimeField(auto_now_add=True, verbose_name='Inscripción',blank=True, null=True)
     inicio = models.DateTimeField(blank=True, null=True)
     fin = models.DateTimeField(blank=True, null=True)
     activa = models.BooleanField(default=False)
@@ -122,6 +122,7 @@ class Suscripcion(models.Model):
 
 class Factura(models.Model):
     suscripcion = models.ForeignKey(Suscripcion)
+    realizacion = models.DateTimeField(auto_now_add=True)
     paga = models.BooleanField(default=False)
     estado = models.BooleanField(default=True)
 

@@ -50,3 +50,35 @@ class FuncionalidadForm(forms.ModelForm):
         return modulo
     # end def
 #end class
+
+
+class InstModuloForm(forms.ModelForm):
+    class Meta:
+        model = models.InstModulo
+        fields = ['nombre', 'descripcion', 'modulo', 'funcionalidades', 'estado']
+        exclude = []
+    #end class
+
+    def save(self, commit=True):
+        modulo = super(InstModuloForm, self).save(commit)
+        modulo.nombre = modulo.nombre.title()
+        modulo.save()
+        return modulo
+    # end def
+#end class
+
+
+class PlanForm(forms.ModelForm):
+    class Meta:
+        model = models.Plan
+        fields = ['nombre', 'operadores', 'asistentes', 'descripcion', 'valor', 'duracion', 'modulos' ,'estado']
+        exclude = []
+    #end class
+
+    def save(self, commit=True):
+        modulo = super(PlanForm, self).save(commit)
+        modulo.nombre = modulo.nombre.title()
+        modulo.save()
+        return modulo
+    # end def
+#end class
