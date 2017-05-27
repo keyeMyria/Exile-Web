@@ -52,7 +52,7 @@ class Funcionalidad(models.Model):
 
 class InstModulo(models.Model):
     nombre = models.CharField(max_length=200)
-    nombre = models.CharField(max_length=800, null=True)
+    descripcion = models.CharField(max_length=800, null=True)
     modulo = models.ForeignKey(Modulo)
     funcionalidades = models.ManyToManyField(Funcionalidad)
     estado = models.BooleanField(default=True)
