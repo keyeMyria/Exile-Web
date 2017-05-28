@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { InformesRoutes } from './informes.route';
+import { HomeRoutes } from './home.route';
 
 @NgModule({
     imports: [
-        RouterModule.forChild(InformesRoutes),
+        RouterModule.forChild(HomeRoutes),
         CommonModule
     ],
     declarations: [],
     providers: []
 })
-export class InformesModule { } 
+export class InformesModule { }

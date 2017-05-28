@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from  '@angular/forms';
-import { Router } from '@angular/router';
-
-import { LoginService } from './login.service'
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 declare var $: any;
 
@@ -10,28 +9,53 @@ declare var $: any;
     selector: 'ex-login',
     templateUrl: './login.component.html'
 })
+
 export class LoginComponent implements OnInit {
 
-    errorMessage: string;
+    form: FormGroup;
+    returnUrl: string;
 
-    constructor(private _ls: LoginService, private _router: Router) { }
+    constructor(
+        private _ls: AuthService,
+        private _fb: FormBuilder,
+        private _ar: ActivatedRoute,
+        private _rt: Router) {
 
-    login(loginForm: NgForm) {
-        if (loginForm && loginForm.valid) {
-            let userName = loginForm.form.value.userName;
-            let password = loginForm.form.value.password;
-            this._ls.login(userName, password);
-
-            if (this._ls.redirectUrl) {
-                this._router.navigateByUrl(this._ls.redirectUrl);
-            } else {
-                this._router.navigate(['/registro']);
-            }
-        } else {
-            this.errorMessage = 'Please enter a user name and password.';
-        };
+        this.form = this._fb.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
+        this.form.patchValue({
+            username: 'admin',
+            password: 'admin123456'
+        });
     }
 
-    ngOnInit() { }
+    isValid(): boolean {
+        return this.form.valid;
+    }
+
+    login() {
+        this._ls.login(this.form.value).subscribe(data => {
+            this._ls.addUser(data.json());
+            this._rt.navigate([this.returnUrl]);
+        }, err => {
+            console.log(err);
+        });
+    }
+
+    logout() {
+        if (this._ls.logout()) {
+            console.log('Out ok');
+        }
+    }
+
+    ngOnInit() {
+        this.returnUrl = this._ar.snapshot.queryParams['returnUrl'] || '/dashboard/';
+        if (this._ls.getUser()) {
+            console.log(this.returnUrl);
+            this._rt.navigate([this.returnUrl]);
+        }
+    }
 
 }

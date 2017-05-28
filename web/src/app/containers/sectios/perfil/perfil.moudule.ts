@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { PerfilRoutes } from './perfil.route';
+
 @NgModule({
     imports: [
-        NgModule,
-        RouterModule.forChild([]),
+        RouterModule.forChild(PerfilRoutes),
         CommonModule
     ],
     declarations: [],

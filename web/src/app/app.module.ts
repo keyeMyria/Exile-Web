@@ -1,18 +1,14 @@
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { APP_BASE_HREF } from '@angular/common';
-
+import { HttpModule } from '@angular/http';
+// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { APP_BASE_HREF } from '@angular/common';
+import { CallService } from './call.service';
+import { AppRouteModule } from './app.route.module';
 import { AppComponent } from './app.component';
-import { AppRoutes } from './app.routing';
 import { LoaderComponent } from './conponent-lib/loader/loader.component';
-
 import { DashboardComponent } from './containers/pages/dashboard/dashboard.component';
 import { AuthComponent } from './containers/pages/auth/auth.component';
-import { CardComponent } from './card/card.component';
-
 
 // import { SidebarModule } from './sidebar/sidebar.module';
 // import { FooterModule } from './shared/footer/footer.module';
@@ -21,16 +17,19 @@ import { CardComponent } from './card/card.component';
 @NgModule({
     imports: [
         BrowserModule,
-        FormsModule,
+        // FormsModule,
+        // ReactiveFormsModule,
         HttpModule,
-        RouterModule.forRoot(AppRoutes)
+        AppRouteModule
     ],
     declarations: [
         AppComponent,
         LoaderComponent,
         DashboardComponent,
-        AuthComponent,
-        CardComponent
+        AuthComponent
+    ],
+    providers: [
+        CallService
     ],
     bootstrap: [AppComponent]
 })
