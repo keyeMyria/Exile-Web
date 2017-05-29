@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-card',
+    selector: 'ex-card',
     templateUrl: './card.component.html'
 })
 export class CardComponent implements OnInit {
+    isIcon:  boolean;
+    @Input('icon')
+    set (value: boolean) {
+        this.isIcon = value != false;
+    };
 
     constructor() { }
 

@@ -3,13 +3,17 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutes } from './home.route';
-
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CardComponent } from '../../../conponent-lib/card/card.component'
 @NgModule({
     imports: [
-        RouterModule.forChild(HomeRoutes),
-        CommonModule
+        CommonModule,
+        RouterModule.forChild(HomeRoutes)
     ],
-    declarations: [],
+    declarations: [
+        CardComponent,
+        DashboardComponent
+    ],
     providers: []
 })
-export class InformesModule { }
+export class HomeModule { }
