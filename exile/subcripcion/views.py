@@ -21,3 +21,27 @@ from django.views.generic.edit import BaseFormView
 from django.contrib.auth.views import logout
 from django.db.models import Q
 # Create your views here.
+
+
+class ListPlan(supra.SupraListView):
+    model = models.Plan
+    search_key = 'q'
+    list_display = ['id','nombre','descripcion','operadores','asistentes','valor','modulos']
+    search_fields = ['id']
+    paginate_by = 100
+
+    def modulos(self, obj, row):
+        return 'Lunes martes'
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListConfiguracion, self).get_queryset()
+        user = CuserMiddleware.get_user()
+        confi = queryset.filter(estado=True)
+        return confi
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ListPlan, self).dispatch(*args, **kwargs)
+    # end def
+# end class
