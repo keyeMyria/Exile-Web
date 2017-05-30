@@ -5,7 +5,7 @@ from django.db import models
 from usuarios import models as usuarios
 from django.contrib.auth.models import User
 from cuser.fields import CurrentUserField
-
+from subcripcion.models import Cuenta
 # Create your models here.
 
 
@@ -13,6 +13,7 @@ class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
     creator = CurrentUserField(add_only=True, related_name="created_tipo")
     last_editor = CurrentUserField(related_name="last_edited_tipo")
+    cuenta = models.ForeignKey(Cuenta)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
@@ -30,6 +31,7 @@ class Cliente(models.Model):
         "Teléfono", max_length=15, blank=True, null=True)
     creator = CurrentUserField(add_only=True, related_name="created_cliente")
     last_editor = CurrentUserField(related_name="last_edited_cliente")
+    cuenta = models.ForeignKey(Cuenta, related_name="mi_cliente")
 
     class Meta:
         verbose_name = "Mi cliente"
@@ -50,6 +52,7 @@ class Lugar(models.Model):
     longitud = models.FloatField(null=True, blank=True)
     creator = CurrentUserField(add_only=True, related_name="created_lugar")
     last_editor = CurrentUserField(related_name="last_edited_lugar")
+    cuenta = models.ForeignKey(Cuenta)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
@@ -58,6 +61,7 @@ class Lugar(models.Model):
 
 
 class Tarea(models.Model):
+    cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
     fecha_de_ejecucion = models.DateField()

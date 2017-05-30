@@ -4,11 +4,12 @@ from __future__ import unicode_literals
 from django.db import models
 from cuser.fields import CurrentUserField
 from operacion import models as operacion
-
+from subcripcion.models import Cuenta
 # Create your models here.
 
 
 class TipoReporte(models.Model):
+    cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     creator = CurrentUserField(add_only=True, related_name="created_tipo_re")
     last_editor = CurrentUserField(related_name="last_edited_tipo_re")
@@ -25,6 +26,7 @@ class TipoReporte(models.Model):
 
 
 class Reporte(models.Model):
+    cuenta = models.ForeignKey(Cuenta)
     cerrado = (
         (False, "Abierto"),
         (True, "Cerrado")
