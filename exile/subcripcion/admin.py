@@ -58,8 +58,6 @@ class PlanAdmin(admin.ModelAdmin):
 #end class
 
 
-
-
 admin.site.register(models.Funcionalidad)
 admin.site.register(models.Modulo, ModuloAdmin)
 admin.site.register(models.InstModulo, InstModuloAdmin)
