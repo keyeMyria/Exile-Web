@@ -83,7 +83,7 @@ class ClienteForm(UserCreationForm):
         data = super(ClienteForm, self).clean()
         if data.get('identificacion'):
             if models.Cliente.objects.filter(identificacion=data.get('identificacion')).first():
-                self.add_error('first_name','El cliente se encuentra registrado')
+                self.add_error('identificacion','El cliente se encuentra registrado')
             #end def
     #end def
 
