@@ -12,14 +12,14 @@ class RepeatWidget(forms.Widget):
     def render(self, name, value, attrs=None, choices=()):
         dias = range(0, 7)
         mes = range(1, 31)
-        return render_to_string("notificaciones/repeat.html", {'name': name, 'value': value, 'choices': self.choices, 'dias': dias, 'mes':mes})
+        return render_to_string("operacion/repeat.html", {'name': name, 'value': value, 'choices': self.choices, 'dias': dias, 'mes':mes})
     # end def
 
     class Media:
         css = {
-            'all': ('notificaciones/css/repeat.css', )
+            'all': ('operacion/css/repeat.css', )
         }
-        js = ('notificaciones/js/repeat.js', )
+        js = ('operacion/js/repeat.js', )
     # end class
 
 # end class
@@ -30,14 +30,14 @@ class IntervalWidget(forms.Widget):
     def render(self, name, value, attrs=None):
         dias = range(0, 7)
         mes = range(1, 31)
-        return render_to_string("notificaciones/interval.html", {'name': name, 'value': value, 'dias': dias, 'mes':mes})
+        return render_to_string("operacion/interval.html", {'name': name, 'value': value, 'dias': dias, 'mes':mes})
     # end def
 
     class Media:
         css = {
-            'all': ('notificaciones/css/interval.css',)
+            'all': ('operacion/css/interval.css',)
         }
-        js = ('notificaciones/js/interval.js',)
+        js = ('operacion/js/interval.js',)
     # end class
 
 # end class
