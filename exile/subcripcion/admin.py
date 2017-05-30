@@ -33,7 +33,7 @@ class FuncionalidadAdmin(admin.ModelAdmin):
 
 
 class InstModuloAdmin(admin.ModelAdmin):
-    list_display = ['nombre','descripcion','modulo', 'estado']
+    list_display = ['nombre','descripcion', 'estado']
     search_fields = ['nombre','descripcion']
     filter_horizontal = ['funcionalidades']
     form = forms.InstModuloForm
@@ -58,6 +58,18 @@ class PlanAdmin(admin.ModelAdmin):
 #end class
 
 
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ['identificacion','first_name','direccion']
+    form = forms.ClienteForm
+
+    def get_form(self, request, obj=None, *args, **kwargs):
+        if obj:
+            kwargs['form'] = forms.ClienteEditForm
+        # end if
+        return super(ClienteAdmin, self).get_form(request, obj, *args, **kwargs)
+    # end def
+#end class
+
 admin.site.register(models.Funcionalidad)
 admin.site.register(models.Modulo, ModuloAdmin)
 admin.site.register(models.InstModulo, InstModuloAdmin)
@@ -65,3 +77,4 @@ admin.site.register(models.Plan, PlanAdmin)
 admin.site.register(models.Suscripcion)
 admin.site.register(models.Factura)
 admin.site.register(models.Cuenta)
+admin.site.register(models.Cliente, ClienteAdmin)
