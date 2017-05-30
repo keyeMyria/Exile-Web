@@ -89,7 +89,7 @@ class ListInstModulo(supra.SupraListView):
     paginate_by = 100
 
     def funcionalidades(self, obj, row):
-        return 'Lunes martes'
+        return [{'nombre':x.nombre for x in obj.funcionalidades.all()}]
     # end def
 
     def get_queryset(self):
