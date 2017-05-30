@@ -157,10 +157,10 @@ class Factura(models.Model):
     # end def
 
     class Meta:
-        verbose_name = "Suscripción"
-        verbose_name_plural = "Subscripciones"
+        verbose_name = "Factura"
+        verbose_name_plural = "Facturas"
     # end class
-#end class
+# end class
 
 class Cuenta(models.Model):
     cliente = models.ForeignKey(Cliente)
@@ -179,4 +179,4 @@ class Cuenta(models.Model):
         verbose_name = "Cuenta"
         verbose_name_plural = "Cuentas"
     # end class
-#end class
+# end class

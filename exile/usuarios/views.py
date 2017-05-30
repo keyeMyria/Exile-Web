@@ -7,6 +7,8 @@ from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
 from exile.http import response
+import forms
+import models
 import json as simplejson
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -35,3 +37,15 @@ def logoutUsers(request):
     logout(request)
     return response([], 200)
 # end def
+
+
+class AsistenteSupraForm(supra.SupraFormView):
+    model = models.Asistente
+    form_class = forms.AsistenteForm
+    body = True
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
