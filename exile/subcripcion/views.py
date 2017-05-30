@@ -45,3 +45,37 @@ class ListPlan(supra.SupraListView):
         return super(ListPlan, self).dispatch(*args, **kwargs)
     # end def
 # end class
+
+
+class AddPlan(supra.SupraFormView):
+    model = models.Plan
+    form_class = forms.PlanForm
+    template_name = 'usuario/addplan.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AddEmpleado, self).dispatch(*args, **kwargs)
+    # end def
+# end class
+
+
+class DeletePlan(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(DeletePlan, self).dispatch(*args, **kwargs)
+    # end def
+
+    def get(self, request, *args, **kwargs):
+        empr=kwargs['pk']
+        if empr:
+            print 1
+            empre = models.Plan.objects.filter(id=empr).first()
+            if empre:
+                empre.estado=False
+                empre.save()
+                return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=202)
+    # end def
+# end class
