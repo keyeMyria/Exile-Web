@@ -31,7 +31,7 @@ class Cliente(models.Model):
         "Teléfono", max_length=15, blank=True, null=True)
     creator = CurrentUserField(add_only=True, related_name="created_cliente")
     last_editor = CurrentUserField(related_name="last_edited_cliente")
-    cuenta = models.ForeignKey(Cuenta)
+    cuenta = models.ForeignKey(Cuenta, related_name="mi_cliente")
 
     class Meta:
         verbose_name = "Mi cliente"
