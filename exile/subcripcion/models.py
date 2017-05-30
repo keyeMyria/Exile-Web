@@ -10,10 +10,10 @@ from django.core import validators
 
 
 class Cliente(User):
-    identificacion = models.CharField(max_length=100)
+    identificacion = models.CharField(max_length=100, unique=True, validators=[validators.RegexValidator(re.compile('^([1-9]+[0-9]*){7,20}$'), ('Identificacion invalida'), 'invalid')])
     direccion = models.CharField(
         "Dirección", max_length=200, blank=True, null=True)
-    telfono = models.CharField(
+    telefono = models.CharField(
         "Teléfono", max_length=15, blank=True, null=True)
 
     class Meta:
@@ -169,11 +169,11 @@ class Cuenta(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s' % (self.plan.nombre)
+        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
     # end def
 
     def __str__(self):
-        return u'%s' % (self.plan.nombre)
+        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
     # end def
 
     class Meta:
