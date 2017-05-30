@@ -102,3 +102,81 @@ class ListInstModulo(supra.SupraListView):
         return super(ListItModulo, self).dispatch(*args, **kwargs)
     # end def
 # end class
+
+
+class ListCliente(supra.SupraListView):
+    model = models.Cliente
+    search_key = 'q'
+    list_display = ['id','first_name','last_name','username','telefono','email']
+    search_fields = ['id','identificacion']
+    paginate_by = 1
+
+    def get_queryset(self):
+        queryset = super(ListCliente, self).get_queryset()
+        confi = queryset.filter(estado=True)
+        return confi
+    #end def
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ListCliente, self).dispatch(*args, **kwargs)
+    # end def
+# end class
+
+
+class AddCliente(supra.SupraFormView):
+    model = models.Cliente
+    form_class = forms.ClienteForm
+    template_name = 'usuario/addcliente.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AddCliente, self).dispatch(*args, **kwargs)
+    # end def
+# end class
+
+class SetPassWordEmpleado(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(SetPassWordEmpleado, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get(self, request, *args, **kwargs):
+        return render(request,'subcripcion/setpassword.html')
+    #
+    def post(self, request, *args, **kwargs):# 359291054481645
+        passw = request.GET.get('password',False)
+        passw2 = request.GET.get('password2',False)
+        if passwo and iden :
+            cli = models.Cliente.objects.filter(id=request.user.id).first()
+            if cli :
+                    cli.set_password(raw_password=password)
+                    cli.save()
+                    return HttpResponse('{"r":"Ok"}', content_type="application/json", status=200)
+            # end if
+            return HttpResponse('{"r":"Campos invalidos"}', content_type="application/json", status=400)
+        # end if
+        return HttpResponse('{"r":"Campos requeridos"}', content_type="application/json", status=400)
+    # end def
+#end class
+
+class DeleteCliente(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteCliente, self).dispatch(*args, **kwargs)
+    # end def
+
+    def get(self, request, *args, **kwargs):
+        empr=kwargs['pk']
+        if empr:
+            print 1
+            empre = models.Cliente.objects.filter(id=empr).first()
+            if empre:
+                empre.estado=False
+                empre.save()
+                return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=202)
+    # end def
+# end class
