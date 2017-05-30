@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'operacion',
     'subcripcion',
     'novedades',
-    'informes'
+    'informes',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,16 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'exile.urls'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'exile.routing.channel_routing',
+    }
+}
 
 TEMPLATES = [
     {
