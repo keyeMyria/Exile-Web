@@ -48,4 +48,11 @@ class AsistenteSupraForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
+
+    def get_form_class(self):
+        if self.initial_pk:
+            self.form_class = forms.AsistenteFormEdit
+        # end if
+        return self.form_class
+    # end class
 # end class
