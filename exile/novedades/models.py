@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from cuser.fields import CurrentUserField
 from operacion import models as operacion
-from subcripcion import Cuenta
+from subcripcion.models import Cuenta
 # Create your models here.
 
 
