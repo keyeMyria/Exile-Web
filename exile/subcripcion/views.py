@@ -35,7 +35,7 @@ class ListPlan(supra.SupraListView):
     # end def
 
     def get_queryset(self):
-        queryset = super(ListConfiguracion, self).get_queryset()
+        queryset = super(ListPlan, self).get_queryset()
         user = CuserMiddleware.get_user()
         confi = queryset.filter(estado=True)
         return confi
@@ -77,5 +77,28 @@ class DeletePlan(View):
             # end if
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=202)
+    # end def
+# end class
+
+
+class ListInstModulo(supra.SupraListView):
+    model = models.InstModulo
+    search_key = 'q'
+    list_display = ['id','nombre','descripcion','funcionalidades','estado']
+    search_fields = ['plan__id']
+    paginate_by = 100
+
+    def funcionalidades(self, obj, row):
+        return 'Lunes martes'
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListItModulo, self).get_queryset()
+        instmodulo = queryset.filter(estado=True)
+        return instmodulo
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ListItModulo, self).dispatch(*args, **kwargs)
     # end def
 # end class
