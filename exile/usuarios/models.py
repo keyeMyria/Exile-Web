@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from cuser.fields import CurrentUserField
+from subcripcion.models import Cuenta
 
 
 class Usuario(User):
+    cuenta = models.ForeignKey(Cuenta)
     identificacion = models.CharField(
         max_length=120, verbose_name="Identificación", unique=True)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
@@ -37,6 +39,7 @@ class Usuario(User):
 
 
 class Cargo(models.Model):
+    cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
 # end class
 
@@ -50,6 +53,7 @@ class Empleado(Usuario):
 
 
 class Grupo(models.Model):
+    cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     empleados = models.ManyToManyField(Empleado)
 # end class
