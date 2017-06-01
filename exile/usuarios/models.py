@@ -21,7 +21,8 @@ class Usuario(User):
     creator = CurrentUserField(add_only=True, related_name="created_user")
     last_editor = CurrentUserField(related_name="last_edited_user")
     eliminado = models.BooleanField(default=False)
-    
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_usuario", blank=True, null=True)
+
     def avatar(self):
         if self.imagen:
             imagen = self.imagen
@@ -42,6 +43,10 @@ class Usuario(User):
 class Cargo(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
+    creator = CurrentUserField(add_only=True, related_name="created_cargo")
+    last_editor = CurrentUserField(related_name="last_edited_cargo")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_cargo", blank=True, null=True)
 # end class
 
 

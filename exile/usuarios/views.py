@@ -10,6 +10,7 @@ from exile.http import response
 from exile.decorator import check_login
 from django.http import HttpResponse
 from django.db.models import Q
+from cuser.middleware import CuserMiddleware
 import forms
 import models
 import json as simplejson
@@ -79,6 +80,8 @@ class AsistenteSupraFormDelete(supra.SupraDeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
         self.object.save()
         return HttpResponse(status=200)
     # end def
