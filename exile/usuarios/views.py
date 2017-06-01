@@ -7,13 +7,14 @@ from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
 from exile.http import response
+from django.db.models import Q
 import forms
 import models
 import json as simplejson
 from django.contrib.auth.models import User, Group
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.50:4200"
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.24:4200"
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 
@@ -23,15 +24,14 @@ class LoginU(supra.SupraSession):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        a = super(Login, self).dispatch(request, *args, **kwargs)
+        a = super(LoginU, self).dispatch(request, *args, **kwargs)
         return a
     # end def
 # end class
 
 
 def islogin(request):
-    print request.session.session_key, "dddddd"
-    if User.objects.filter(username="admin").first().is_authenticated():
+    if request.user.is_authenticated():
         return response(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
     return response([], 400)
@@ -55,9 +55,51 @@ class AsistenteSupraForm(supra.SupraFormView):
     # end def
 
     def get_form_class(self):
-        if self.initial_pk:
+        if 'pk' in self.http_kwargs:
             self.form_class = forms.AsistenteFormEdit
         # end if
         return self.form_class
     # end class
 # end class
+
+
+class AsistenteList(supra.SupraListView):
+    model = models.Asistente
+    search_key = 'q'
+    list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion', 'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
+    search_fields = ['first_name', 'last_name', 'identificacion', 'email', 'username']
+    paginate_by = 10
+
+    def nombre(self, obj, row):
+        return {'first_name': obj.first_name, 'last_name':obj.last_name }
+    # end def
+
+    def date(self, obj, row):
+        return obj.fecha_nacimiento.strftime("%Y-%m-%d")
+    # end def
+
+    def servicios(self, obj, row):
+        edit = "/usuarios/asistente/form/%d/" % (obj.id)
+        delete = "/usuarios/asistente/delete/%d/" % (obj.id)
+        return {'add': '/usuarios/asistente/form/', 'edit': edit, 'delete': delete}
+    # end def
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AsistenteList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(AsistenteList, self).get_queryset()
+        self.paginate_by = self.request.GET.get('num_page', False)
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(cuenta__usuario=self.request.user.pk, eliminado=False))
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-"+propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset

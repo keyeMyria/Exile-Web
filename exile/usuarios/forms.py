@@ -60,6 +60,7 @@ class AsistenteFormEdit(forms.ModelForm):
         super(AsistenteFormEdit, self).__init__(*args, **kwargs)
         self.fields['fecha_nacimiento'].input_formats = (
             '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+        self.fields['fecha_nacimiento'].format = "m/d/y"
     # end def
 
     class Meta:
