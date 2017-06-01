@@ -14,7 +14,7 @@ import json as simplejson
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 
 
-class Login(supra.SupraSession):
+class LoginU(supra.SupraSession):
     body = True
 
     @method_decorator(csrf_exempt)
