@@ -8,6 +8,12 @@ from cuser.middleware import CuserMiddleware
 from subcripcion.models import Cuenta
 
 
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput(render_value=False))
+# end class
+
+
 class AsistenteForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):

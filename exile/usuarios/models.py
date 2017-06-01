@@ -20,7 +20,8 @@ class Usuario(User):
     imagen = models.ImageField(upload_to="avatar", null=True, blank=True)
     creator = CurrentUserField(add_only=True, related_name="created_user")
     last_editor = CurrentUserField(related_name="last_edited_user")
-
+    eliminado = models.BooleanField(default=False)
+    
     def avatar(self):
         if self.imagen:
             imagen = self.imagen

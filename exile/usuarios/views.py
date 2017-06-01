@@ -18,7 +18,7 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 
 
-class Login(supra.SupraSession):
+class LoginU(supra.SupraSession):
     body = True
 
     @method_decorator(csrf_exempt)
