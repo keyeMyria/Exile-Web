@@ -10,8 +10,12 @@ from exile.http import response
 import forms
 import models
 import json as simplejson
+from django.contrib.auth.models import User, Group
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.50:4200"
+supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
+supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 
 
 class Login(supra.SupraSession):
@@ -26,7 +30,8 @@ class Login(supra.SupraSession):
 
 
 def islogin(request):
-    if request.user.is_authenticated():
+    print request.session.session_key, "dddddd"
+    if User.objects.filter(username="admin").first().is_authenticated():
         return response(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
     return response([], 400)

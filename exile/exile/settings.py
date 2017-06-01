@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'supra',
+    'supra.auths.oauth',
     'cuser',
     'frontend',
     'usuarios',
