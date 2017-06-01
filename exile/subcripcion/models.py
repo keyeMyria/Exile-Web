@@ -53,7 +53,7 @@ class Modulo(models.Model):
 class Funcionalidad(models.Model):
     modulo = models.ForeignKey(Modulo)
     nombre = models.CharField(max_length=30, unique=True)
-    url = models.URLField(max_length=300, blank=True, null=True)
+    url = models.CharField(max_length=300, blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True, null=True)
     estado = models.BooleanField(default=True)
 
@@ -113,8 +113,8 @@ class Plan(models.Model):
     # end def
 
     class Meta:
-        verbose_name = "Funcionalidad plan"
-        verbose_name_plural = "Funcionalidades planes"
+        verbose_name = "Plan"
+        verbose_name_plural = "Planes"
     # end class
 # end class
 

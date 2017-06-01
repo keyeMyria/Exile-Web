@@ -119,3 +119,39 @@ class ClienteEditForm(forms.ModelForm):
         exclude = ['estado', 'password1', 'password2']
     # end class
 #end class
+
+
+class SuscripcionForm(forms.ModelForm):
+    class Meta:
+        model = models.Suscripcion
+        fields = ['plan']
+        exclude = ['estado', 'inscripcion', 'inicio','fin','activa']
+    # end class
+
+    def __init__(self, request, *args, **kwargs):
+        super(SuscripcionForm, self).__init__(*args, **kwargs)
+        self.request = request
+    #end def
+
+    def clean(self):
+        data = super(SuscripcionForm, self).clean()
+        if data.get('identificacion'):
+            if not models.Cliente.objects.filter(id=data.get('identificacion')).first():
+                self.add_error('identificacion','El cliente se encuentra registrado')
+            #end def
+    #end def
+#end class
+
+
+class SuscripcionFormAdmin(forms.ModelForm):
+    class Meta:
+        model = models.Suscripcion
+        fields = '__all__'
+        exclude = []
+    # end class
+
+    def __init__(self, request, *args, **kwargs):
+        super(SuscripcionForm, self).__init__(*args, **kwargs)
+        self.request = request
+    #end def
+#end class

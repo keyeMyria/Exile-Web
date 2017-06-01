@@ -50,7 +50,7 @@ class ListPlan(supra.SupraListView):
 class AddPlan(supra.SupraFormView):
     model = models.Plan
     form_class = forms.PlanForm
-    template_name = 'usuario/addplan.html'
+    template_name = 'subcripcion/addplan.html'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -127,11 +127,23 @@ class ListCliente(supra.SupraListView):
 class AddCliente(supra.SupraFormView):
     model = models.Cliente
     form_class = forms.ClienteForm
-    template_name = 'usuario/addcliente.html'
+    template_name = 'subcripcion/addcliente.html'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(AddCliente, self).dispatch(*args, **kwargs)
+    # end def
+# end class
+
+
+class EditCliente(supra.SupraFormView):
+    model = models.Cliente
+    form_class = forms.ClienteEditForm
+    template_name = 'subcripcion/addcliente.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(EditCliente, self).dispatch(*args, **kwargs)
     # end def
 # end class
 
@@ -179,4 +191,22 @@ class DeleteCliente(View):
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=202)
     # end def
+# end class
+
+
+class AddSuscripcion(supra.SupraFormView):
+    model = models.Suscripcion
+    form_class = forms.SuscripcionForm
+    template_name = 'subcripcion/addsuscripcion.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AddSuscripcion, self).dispatch(*args, **kwargs)
+    # end def
+
+    def get_form_kwargs(self):
+        kwargs = super(AddSuscripcion, self ).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    #end def
 # end class
