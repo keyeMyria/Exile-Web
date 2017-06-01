@@ -7,6 +7,8 @@ from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
 from exile.http import response
+from exile.decorator import check_login
+from django.http import HttpResponse
 from django.db.models import Q
 import forms
 import models
@@ -49,7 +51,8 @@ class AsistenteSupraForm(supra.SupraFormView):
     form_class = forms.AsistenteForm
     body = True
 
-    @method_decorator(csrf_exempt)
+    @method_decorator(check_login)
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
@@ -60,6 +63,25 @@ class AsistenteSupraForm(supra.SupraFormView):
         # end if
         return self.form_class
     # end class
+# end class
+
+
+class AsistenteSupraFormDelete(supra.SupraDeleteView):
+    model = models.Asistente
+    body = True
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(AsistenteSupraFormDelete, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
 # end class
 
 
@@ -84,7 +106,8 @@ class AsistenteList(supra.SupraListView):
         return {'add': '/usuarios/asistente/form/', 'edit': edit, 'delete': delete}
     # end def
 
-    @method_decorator(csrf_exempt)
+    @method_decorator(check_login)
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteList, self).dispatch(request, *args, **kwargs)
     # end def
