@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^', include('frontend.urls')),
     url(r'^usuarios/', include('usuarios.urls')),
     url(r'^novedades/', include('novedades.urls')),
+    url(r'^subscripcion/', include('subcripcion.urls', namespace='suscripcion')),
 ]
 
 if settings.DEBUG:
