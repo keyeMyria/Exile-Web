@@ -103,3 +103,5 @@ class AsistenteList(supra.SupraListView):
                 queryset = queryset.order_by(propiedad)
         # end if
         return queryset
+    # end def
+# end class
