@@ -4,7 +4,7 @@ from django import forms
 from django.db.models import Q
 from usuarios import models as usuarios
 from django.contrib.auth.forms import UserCreationForm
-from cuser.middleware import CuserMiddleware
+from exile.servicios import get_cuenta
 from subcripcion.models import Cuenta
 
 
@@ -28,10 +28,7 @@ class AsistenteForm(UserCreationForm):
                   'identificacion', 'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
 
     def clean(self):
-        user = CuserMiddleware.get_user()
-        cuenta = Cuenta.objects.filter(
-            Q(cliente=user.pk) | Q(usuario=user.pk)).first()
-        if cuenta:
+        if get_cuenta():
             return super(AsistenteForm, self).clean()
         # end if
         raise forms.ValidationError(
@@ -40,14 +37,9 @@ class AsistenteForm(UserCreationForm):
 
     def save(self, commit=False):
         usuario = super(AsistenteForm, self).save(commit)
-        user = CuserMiddleware.get_user()
-        if user:
-            cuenta = Cuenta.objects.filter(
-                Q(cliente=user.pk) | Q(usuario=user.pk)).first()
-            if cuenta:
-                usuario.cuenta = cuenta
-                usuario.save()
-            # end if
+        if get_cuenta():
+            usuario.cuenta = get_cuenta()
+            usuario.save()
         # end if
         return usuario
     # end def
@@ -68,4 +60,30 @@ class AsistenteFormEdit(forms.ModelForm):
         fields = ['username', 'email', 'first_name', 'last_name', 'identificacion',
                   'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
     # end class
+# end class
+
+
+class CargoForm(forms.ModelForm):
+
+    class Meta:
+        model = usuarios.Cargo
+        fields = ['nombre', ]
+    # end class
+
+    def clean(self):
+        if get_cuenta():
+            return super(CargoForm, self).clean()
+        # end if
+        raise forms.ValidationError(
+            "Este usuario no esta asociado a una cuenta")
+    # end def
+
+    def save(self, commit=False):
+        cargo = super(CargoForm, self).save(commit)
+        if get_cuenta():
+            cargo.cuenta = get_cuenta()
+            cargo.save()
+        # end if
+        return cargo
+    # end def
 # end class

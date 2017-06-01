@@ -20,10 +20,10 @@ supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.24:4200"
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
+supra.SupraConf.body = True
 
 
 class LoginU(supra.SupraSession):
-    body = True
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -47,10 +47,14 @@ def logoutUsers(request):
 # end def
 
 
+"""
+    Servicios de Asistente
+"""
+
+
 class AsistenteSupraForm(supra.SupraFormView):
     model = models.Asistente
     form_class = forms.AsistenteForm
-    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -69,7 +73,6 @@ class AsistenteSupraForm(supra.SupraFormView):
 
 class AsistenteSupraFormDelete(supra.SupraDeleteView):
     model = models.Asistente
-    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -91,17 +94,19 @@ class AsistenteSupraFormDelete(supra.SupraDeleteView):
 class AsistenteList(supra.SupraListView):
     model = models.Asistente
     search_key = 'q'
-    list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion', 'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
-    search_fields = ['first_name', 'last_name', 'identificacion', 'email', 'username']
+    list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
+                    'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
+    search_fields = ['first_name', 'last_name',
+                     'identificacion', 'email', 'username']
     paginate_by = 10
 
     def nombre(self, obj, row):
-        return {'first_name': obj.first_name, 'last_name':obj.last_name }
+        return {'first_name': obj.first_name, 'last_name': obj.last_name}
     # end def
 
     def date(self, obj, row):
         return obj.fecha_nacimiento.strftime("%Y-%m-%d")
-    # end def
+    # end defNone
 
     def servicios(self, obj, row):
         edit = "/usuarios/asistente/form/%d/" % (obj.id)
@@ -120,14 +125,32 @@ class AsistenteList(supra.SupraListView):
         self.paginate_by = self.request.GET.get('num_page', False)
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
-        queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(cuenta__usuario=self.request.user.pk, eliminado=False))
+        queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+            cuenta__usuario=self.request.user.pk, eliminado=False))
         if propiedad and orden:
             if orden == "asc":
                 queryset = queryset.order_by(propiedad)
             elif orden == "desc":
-                propiedad = "-"+propiedad
+                propiedad = "-" + propiedad
                 queryset = queryset.order_by(propiedad)
         # end if
         return queryset
+    # end def
+# end class
+
+
+"""
+    Servicios de Cargo
+"""
+
+
+class CargoSupraForm(supra.SupraFormView):
+    model = models.Cargo
+    form_class = forms.CargoForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CargoSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
 # end class
