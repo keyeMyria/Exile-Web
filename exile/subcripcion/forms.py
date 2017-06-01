@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.admin import widgets
 import models
+from cuser.middleware import CuserMiddleware
 
 
 class ModuloForm(forms.ModelForm):
@@ -139,6 +140,23 @@ class SuscripcionForm(forms.ModelForm):
             if not models.Cliente.objects.filter(id=data.get('identificacion')).first():
                 self.add_error('identificacion','El cliente se encuentra registrado')
             #end def
+    #end def
+
+    def save(self, commit = True):
+        sucrip = super(SuscripcionForm, self).save(commit=False)
+        if commit:
+            user = CuserMiddleware.get_user()
+            if user:
+                cuenta = models.Cuenta.objects.filter(cliente__id=user.id).first()
+                if cuenta:
+                    sucrip.save()
+                    cuenta.suscripciones.add(sucrip)
+                    cuenta.save()
+                #end if
+            #end if
+        #conf.empresa= empresa.Empresa.objects.filter(tienda__empleado__user_ptr_id=user.id).first()
+        sucrip.save()
+        return sucrip
     #end def
 #end class
 

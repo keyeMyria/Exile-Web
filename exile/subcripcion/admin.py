@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-
-# Register your models here.
 import models
 import forms
 # Register your models here.
@@ -69,6 +67,14 @@ class ClienteAdmin(admin.ModelAdmin):
         return super(ClienteAdmin, self).get_form(request, obj, *args, **kwargs)
     # end def
 #end class
+
+
+# Register your models here.
+class SuscripcionInline(admin.StackedInline):
+    model = models.Suscripcion
+    extra = 1
+# end class
+
 
 admin.site.register(models.Funcionalidad)
 admin.site.register(models.Modulo, ModuloAdmin)

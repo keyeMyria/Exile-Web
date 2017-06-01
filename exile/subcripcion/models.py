@@ -74,7 +74,7 @@ class Funcionalidad(models.Model):
 
 class InstModulo(models.Model):
     nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=800, null=True)
+    descripcion = models.CharField(max_length=800, null=True, blank=True)
     modulo = models.ForeignKey(Modulo)
     funcionalidades = models.ManyToManyField(Funcionalidad)
     estado = models.BooleanField(default=True)
@@ -105,11 +105,11 @@ class Plan(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s' % (self.modulo.nombre)
+        return u'%s' % (self.nombre)
     # end def
 
     def __str__(self):
-        return u'%s' % (self.modulo.nombre)
+        return u'%s' % (self.nombre)
     # end def
 
     class Meta:
@@ -119,8 +119,28 @@ class Plan(models.Model):
 # end class
 
 
+class Cuenta(models.Model):
+    cliente = models.ForeignKey(Cliente)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
+    # end def
+
+    def __str__(self):
+        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
+    # end def
+
+    class Meta:
+        verbose_name = "Cuenta"
+        verbose_name_plural = "Cuentas"
+    # end class
+# end class
+
+
 class Suscripcion(models.Model):
     plan = models.ForeignKey(Plan)
+    cuenta = models.ForeignKey(Cuenta)
     inscripcion = models.DateTimeField(auto_now_add=True, verbose_name='Inscripción',blank=True, null=True)
     inicio = models.DateTimeField(blank=True, null=True)
     fin = models.DateTimeField(blank=True, null=True)
@@ -159,24 +179,5 @@ class Factura(models.Model):
     class Meta:
         verbose_name = "Factura"
         verbose_name_plural = "Facturas"
-    # end class
-# end class
-
-class Cuenta(models.Model):
-    cliente = models.ForeignKey(Cliente)
-    suscripciones = models.ManyToManyField(Suscripcion)
-    estado = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
-    # end def
-
-    def __str__(self):
-        return u'%s %s' % (self.cliente.first_name,self.cliente.last_name)
-    # end def
-
-    class Meta:
-        verbose_name = "Cuenta"
-        verbose_name_plural = "Cuentas"
     # end class
 # end class
