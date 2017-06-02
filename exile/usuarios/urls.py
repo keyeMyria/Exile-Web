@@ -28,4 +28,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^cargo/form/$', views.CargoSupraForm.as_view(), name="cargo"),
     url(r'^cargo/form/(?P<pk>\d+)/$', views.CargoSupraForm.as_view(), name="cargo_edit"),
+    url(r'^cargo/list/$', views.CargoList.as_view(), name="cargo_list"),
+    url(r'^cargo/delete/(?P<pk>\d+)/$',
+        views.CargoDeleteSupra.as_view(), name="cargo_delete"),
 ]

@@ -58,7 +58,7 @@ class AsistenteFormEdit(forms.ModelForm):
     class Meta:
         model = usuarios.Asistente
         fields = ['username', 'email', 'first_name', 'last_name', 'identificacion',
-                  'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
+                  'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen', 'eliminado']
     # end class
 # end class
 
@@ -86,4 +86,13 @@ class CargoForm(forms.ModelForm):
         # end if
         return cargo
     # end def
+# end class
+
+
+class CargoFormEdit(forms.ModelForm):
+
+    class Meta:
+        model = usuarios.Cargo
+        fields = ['nombre', 'eliminado']
+    # end class
 # end class
