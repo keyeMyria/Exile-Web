@@ -96,3 +96,52 @@ class CargoFormEdit(forms.ModelForm):
         fields = ['nombre', 'eliminado']
     # end class
 # end class
+
+
+class EmpleadoForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EmpleadoForm, self).__init__(*args, **kwargs)
+        self.fields['fecha_nacimiento'].input_formats = (
+            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+    # end def
+
+    class Meta:
+        model = usuarios.Empleado
+        fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name',
+                  'identificacion', 'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen']
+
+    def clean(self):
+        if get_cuenta():
+            return super(EmpleadoForm, self).clean()
+        # end if
+        raise forms.ValidationError(
+            "Este usuario no esta asociado a una cuenta")
+    # end def
+
+    def save(self, commit=False):
+        usuario = super(EmpleadoForm, self).save(commit)
+        if get_cuenta():
+            usuario.cuenta = get_cuenta()
+            usuario.save()
+        # end if
+        return usuario
+    # end def
+# end class
+
+
+class EmpleadoFormEdit(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EmpleadoFormEdit, self).__init__(*args, **kwargs)
+        self.fields['fecha_nacimiento'].input_formats = (
+            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+        self.fields['fecha_nacimiento'].format = "m/d/y"
+    # end def
+
+    class Meta:
+        model = usuarios.Empleado
+        fields = ['username', 'email', 'first_name', 'last_name', 'identificacion',
+                  'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen', 'eliminado']
+    # end class
+# end class

@@ -3,6 +3,7 @@ import views
 
 urlpatterns = [
     url(r'^login/$', views.LoginU.as_view(), name="loginU"),
+    url(r'^login/empleado/$', views.LoginE.as_view(), name="LoginE"),
     url(r'^logout/$', views.logoutUsers, name="loginOut"),
     url(r'^is/login/$', views.islogin, name="isLogin"),
 ]
@@ -31,4 +32,17 @@ urlpatterns += [
     url(r'^cargo/list/$', views.CargoList.as_view(), name="cargo_list"),
     url(r'^cargo/delete/(?P<pk>\d+)/$',
         views.CargoDeleteSupra.as_view(), name="cargo_delete"),
+]
+
+
+"""
+    Urls empleado
+"""
+
+urlpatterns += [
+    url(r'^empleado/form/$', views.EmpleadoSupraForm.as_view(), name="cargo"),
+    url(r'^empleado/form/(?P<pk>\d+)/$', views.EmpleadoSupraForm.as_view(), name="cargo_edit"),
+    url(r'^empleado/list/$', views.EmpleadoList.as_view(), name="cargo_list"),
+    url(r'^empleado/delete/(?P<pk>\d+)/$',
+        views.EmpleadoSupraFormDelete.as_view(), name="cargo_delete"),
 ]

@@ -48,6 +48,10 @@ class Cargo(models.Model):
     last_editor = CurrentUserField(related_name="last_edited_cargo")
     eliminado = models.BooleanField(default=False)
     eliminado_por = models.ForeignKey(User, related_name="eliminado_cargo", blank=True, null=True)
+
+    def __unicode__(self):
+        return u"%s" % (self.nombre)
+    # end def
 # end class
 
 
@@ -63,6 +67,10 @@ class Grupo(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     empleados = models.ManyToManyField(Empleado)
+
+    def __unicode__(self):
+        return u"%s" % (self.nombre)
+    # end def
 # end class
 
 
