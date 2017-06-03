@@ -3,12 +3,24 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from cuser.middleware import CuserMiddleware
+from django.http import HttpResponse
+from exile.decorator import check_login
 from usuarios import models as usuarios
+from supra import views as supra
+from django.db.models import Q
+import forms
 import croniter
 import models
 import urllib2
 import json
-
+supra.SupraConf.ACCECC_CONTROL["allow"] = True
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
+supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
+supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
+supra.SupraConf.body = True
 # Create your views here.
 
 
@@ -107,7 +119,7 @@ def activities(request, start, end, now, empleado):
         acts = acts.filter(cliente=int(cliente))
     # end if
     if empleado:
-        acts = acts.filter(empleados=empleado | | grupo__empleados=empleado)
+        acts = acts.filter(Q(empleados=empleado) | Q(grupo__empleados=empleado))
     # end if
     dates = []
     for act in acts:
@@ -184,3 +196,85 @@ def error(request):
 def connections(request):
     return HttpResponse("%s:%s" % (HOST, IO_PORT))
 # end def
+
+
+class TipoSupraForm(supra.SupraFormView):
+    model = models.Tipo
+    form_class = forms.TipoForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TipoSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.TipoFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class
+
+
+class TipoDeleteSupra(supra.SupraDeleteView):
+    model = models.Tipo
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TipoDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+
+class TipoList(supra.SupraListView):
+    model = models.Tipo
+    search_key = 'q'
+    list_display = ['nombre', 'servicios']
+    search_fields = ['nombre', ]
+    paginate_by = 10
+
+    def servicios(self, obj, row):
+        edit = "/operacion/tipo/form/%d/" % (obj.id)
+        delete = "/operacion/tipo/delete/%d/" % (obj.id)
+        return {'add': '/operacion/tipo/form/', 'edit': edit, 'delete': delete}
+    # end def
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TipoList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(TipoList, self).get_queryset()
+        self.paginate_by = self.request.GET.get('num_page', False)
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset
+    # end def
+# end class

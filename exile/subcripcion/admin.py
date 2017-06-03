@@ -73,7 +73,19 @@ class ClienteAdmin(admin.ModelAdmin):
 class SuscripcionInline(admin.StackedInline):
     model = models.Suscripcion
     extra = 1
+
+    def get_queryset(self, request):
+        data = super(SuscripcionInline, self).get_queryset(request)
+        return data.order_by('inscripcion')
+    #end def
 # end class
+
+
+class CuentaAdmin(admin.ModelAdmin):
+    list_display = ['cliente','estado']
+    search_fields=['cliente__first_name','cliente__last_name']
+    inlines = [SuscripcionInline,]
+#end class
 
 
 admin.site.register(models.Funcionalidad)
@@ -82,5 +94,5 @@ admin.site.register(models.InstModulo, InstModuloAdmin)
 admin.site.register(models.Plan, PlanAdmin)
 admin.site.register(models.Suscripcion)
 admin.site.register(models.Factura)
-admin.site.register(models.Cuenta)
+admin.site.register(models.Cuenta, CuentaAdmin)
 admin.site.register(models.Cliente, ClienteAdmin)
