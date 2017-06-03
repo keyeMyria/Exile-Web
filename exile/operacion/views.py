@@ -3,8 +3,13 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from exile.decorator import check_login
 from usuarios import models as usuarios
 from supra import views as supra
+from django.db.models import Q
+import forms
 import croniter
 import models
 import urllib2
@@ -112,7 +117,7 @@ def activities(request, start, end, now, empleado):
         acts = acts.filter(cliente=int(cliente))
     # end if
     if empleado:
-        acts = acts.filter(empleados=empleado | | grupo__empleados=empleado)
+        acts = acts.filter(Q(empleados=empleado) | Q(grupo__empleados=empleado))
     # end if
     dates = []
     for act in acts:
@@ -191,4 +196,13 @@ def connections(request):
 # end def
 
 
-def
+class TipoSupraForm(supra.SupraFormView):
+    model = models.Tipo
+    form_class = forms.TipoForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TipoSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
