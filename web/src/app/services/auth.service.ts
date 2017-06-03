@@ -1,8 +1,8 @@
 
-import { CallService } from '../call.service';
+import { CallService } from './call.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from './user';
+import { User } from '../auth/user';
 
 declare var document: any;
 
@@ -17,13 +17,13 @@ export class AuthService {
     constructor(private _cl: CallService, private _rt: Router) { }
 
     isLoggedIn(): boolean {
-        return true;
-        // return !!this.getUser();
+        // return true;
+        return !!this.getUser();
     }
 
     addUser(user: User) {
         this.user = user;
-        localStorage.setItem('user', JSON.stringify(this.user));
+        // localStorage.setItem('user', JSON.stringify(this.user));
     }
 
     getUser(): User {
@@ -44,22 +44,22 @@ export class AuthService {
             return;
         }
         this._rt.navigate([this.redirectUrl || '/dashboard']);
-        // this._cl.post('usuarios/login/', body)
-        //     .then(data => {
-        //         this.sokect = this._cl.ws('users');
-        //         this.sokect.onmessage = (evn) => {
-        //             console.log(JSON.parse(evn.data));
-        //         };
-        //         this.addUser(data.json());
-        //         this._rt.navigate([this.redirectUrl || '/dashboard']);
-        //     })
-        //     .catch(err => console.log('error', err));
+        this._cl.post('usuarios/login/', body)
+            .then(data => {
+                this.sokect = this._cl.ws('users');
+                this.sokect.onmessage = (evn) => {
+                    console.log(JSON.parse(evn.data));
+                };
+                this.addUser(data.json());
+                this._rt.navigate([this.redirectUrl || '/dashboard']);
+            })
+            .catch(err => console.log('error', err));
     }
 
 
 
     logout() {
-        this._cl.get('usuarios/logout/')
+        this._cl.delete('usuarios/login/')
             .then(res => {
                 this.user = null;
                 this.redirectUrl = null;
@@ -72,7 +72,7 @@ export class AuthService {
 
     isLogin() {
         this._cl.get('usuarios/is/login/')
-            .then(res => console.log(res.ok))
-            .catch(err => console.log(err.ok));
+            .then(res => console.log('then:', res))
+            .catch(err => console.log('catch', err));
     }
 }

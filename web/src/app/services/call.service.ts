@@ -7,10 +7,12 @@ import 'rxjs/add/operator/toPromise';
 
 declare var WebSocket: any;
 
-const json = new RequestOptions({
-    headers: new Headers({
-        'Content-Type': 'application/json'
-    })
+const headers = new Headers();
+headers.append('Content-Type', 'application/json');
+
+const options = new RequestOptions({
+    headers: headers,
+    withCredentials: true
 });
 
 
@@ -39,24 +41,25 @@ export class CallService {
     }
 
     get(url: string, params?: any): Promise<Response> {
+        console.log('get:', url);
         const op: URLSearchParams = new URLSearchParams();
         for (const key in params) {
             if (!!params[key]) {
                 op.set(key.toString(), params[key]);
             }
         }
-
-        return this._http.get(this.getUrl(url), { search: op }).toPromise();
-        //     .map((res: Response) => res)
-        //     .catch((err: any) => Observable.throw(err));
+        return this._http.get(this.getUrl(url), options).toPromise();
 
     }
 
     post(url: string, body?: any): Promise<Response> {
-        console.log(url);
-        return this._http.post(this.getUrl(url), body, json).toPromise();
-        // .map((res: Response) => res)
-        // .catch((err: any) => Observable.throw(err));
+        console.log('post:', url);
+        return this._http.post(this.getUrl(url), body, options).toPromise();
+    }
+
+    delete(url: string) {
+        console.log('delete:', url);
+        return this._http.delete(this.getUrl(url), options).toPromise();
     }
 
     ws(url: string): WebSocket {

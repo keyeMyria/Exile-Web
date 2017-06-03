@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CallService } from './call.service';
+import { CallService } from './services/call.service';
 
 declare var $: any;
 // declare var fetch: any;
@@ -11,8 +11,8 @@ declare var $: any;
 
 export class AppComponent implements OnInit {
     constructor(private elRef: ElementRef, private _cl: CallService) {
-        this._cl.conf('104.236.33.228', '8000');
-        // this._cl.conf('192.168.1.52', '8001');
+        // this._cl.conf('104.236.33.228', '8000');
+        this._cl.conf('192.168.1.10', '8001');
     }
 
     ngOnInit() {

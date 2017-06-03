@@ -5,7 +5,7 @@ import { LibModule } from '../lib/lib.module';
 
 import { HomeRoutes } from './home.route';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @NgModule({
     imports: [

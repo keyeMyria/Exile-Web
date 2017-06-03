@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { BaseComponent } from './lib/base/base.component';
 import { P404Component } from './lib/404/404.component';
 import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard } from './services/auth.guard';
 
 export interface MenuMeta {
     title: string;

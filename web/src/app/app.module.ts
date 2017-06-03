@@ -6,8 +6,8 @@ import { AppRouteModule } from './app.route.module';
 
 
 import { AppComponent } from './app.component';
-import { AuthService } from './auth/auth.service';
-import { CallService } from './call.service';
+import { AuthService } from './services/auth.service';
+import { CallService } from './services/call.service';
 
 
 @NgModule({
