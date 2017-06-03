@@ -4370,13 +4370,16 @@ h2.title {
   width: 260px;
   background: #FFFFFF;
   box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); }
+  .sidebar .logo-normal,
+  .off-canvas-sidebar .logo-normal {
+    min-height: 40px; }
   .sidebar .logo-img,
   .off-canvas-sidebar .logo-img {
-    width: 42px;
+    width: 90px;
     max-height: 42px; }
     .sidebar .logo-img img,
     .off-canvas-sidebar .logo-img img {
-      width: 42px;
+      width: 90px;
       top: 16px;
       left: 18px;
       position: absolute; }

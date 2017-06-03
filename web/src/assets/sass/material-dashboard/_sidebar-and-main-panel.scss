@@ -66,13 +66,16 @@
     background: $white-color;
     @include shadow-big();
 
+    .logo-normal{
+        min-height: 40px;
+    }
 
     .logo-img{
-        width: 42px;
+        width: 90px;
         max-height: 42px;
 
         img{
-            width: 42px;
+            width: 90px;
             top: 16px;
             left: 18px;
             position: absolute;

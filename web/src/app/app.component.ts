@@ -12,11 +12,12 @@ declare var $: any;
 export class AppComponent implements OnInit {
     constructor(private elRef: ElementRef, private _cl: CallService) {
         this._cl.conf('104.236.33.228', '8000');
+        // this._cl.conf('192.168.1.52', '8001');
     }
 
     ngOnInit() {
-        let body = document.getElementsByTagName('body')[0];
-        let isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+        const body = document.getElementsByTagName('body')[0];
+        const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
         if (isWindows) {
             body.classList.add('perfect-scrollbar-on');
         } else {
