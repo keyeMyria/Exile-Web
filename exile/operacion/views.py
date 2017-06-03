@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from cuser.middleware import CuserMiddleware
+from django.http import HttpResponse
 from exile.decorator import check_login
 from usuarios import models as usuarios
 from supra import views as supra
@@ -204,5 +206,32 @@ class TipoSupraForm(supra.SupraFormView):
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(TipoSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.TipoFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class
+
+
+class TipoDeleteSupra(supra.SupraDeleteView):
+    model = models.Tipo
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TipoDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
     # end def
 # end class

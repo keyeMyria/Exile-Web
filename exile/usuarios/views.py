@@ -17,7 +17,7 @@ import json as simplejson
 from django.contrib.auth.models import User, Group
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.24:4200"
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True
@@ -50,12 +50,6 @@ def islogin(request):
     # end if
     return response([], 400)
 # end if
-
-
-def logoutUsers(request):
-    logout(request)
-    return response([], 200)
-# end def
 
 
 """
@@ -202,7 +196,7 @@ class CargoDeleteSupra(supra.SupraDeleteView):
 class CargoList(supra.SupraListView):
     model = models.Cargo
     search_key = 'q'
-    list_display = ['nombre', 'date', 'id']
+    list_display = ['nombre', 'date', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
 

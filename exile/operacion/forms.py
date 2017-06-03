@@ -6,6 +6,7 @@ import models
 import widgets
 from exile.servicios import get_cuenta
 from django.db.models import Q
+from cuser.middleware import CuserMiddleware
 
 
 class TareaForm(forms.ModelForm):
@@ -52,4 +53,24 @@ class TipoForm(forms.ModelForm):
         # end if
         return tipo
     # end def
+# end class
+
+
+class TipoFormEdit(forms.ModelForm):
+
+    class Meta:
+        model = models.Tipo
+        fields = ['nombre', 'eliminado']
+    # end class
+
+    def save(self, commit=False):
+        tipo = super(TipoFormEdit, self).save(commit)
+        if tipo.eliminado:
+            user = CuserMiddleware.get_user()
+            if user:
+                tipo.eliminado_por = user
+            # end if
+        # end if
+        tipo.save()
+        return tipo
 # end class
