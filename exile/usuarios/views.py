@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
-from exile.http import response
 from exile.decorator import check_login
 from django.http import HttpResponse
 from django.db.models import Q
@@ -44,11 +43,13 @@ class LoginE(supra.SupraSession):
 # end class
 
 
+@supra.access_control
 def islogin(request):
+    print request.user
     if request.user.is_authenticated():
-        return response(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
+        return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
-    return response([], 400)
+    return HttpResponse([], 400)
 # end if
 
 
