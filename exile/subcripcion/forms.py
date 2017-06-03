@@ -149,9 +149,7 @@ class SuscripcionForm(forms.ModelForm):
             if user:
                 cuenta = models.Cuenta.objects.filter(cliente__id=user.id).first()
                 if cuenta:
-                    sucrip.save()
-                    cuenta.suscripciones.add(sucrip)
-                    cuenta.save()
+                    sucrip.cuenta = cuenta
                 #end if
             #end if
         #conf.empresa= empresa.Empresa.objects.filter(tienda__empleado__user_ptr_id=user.id).first()
