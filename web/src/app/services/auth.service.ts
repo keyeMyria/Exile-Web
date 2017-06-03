@@ -71,7 +71,7 @@ export class AuthService {
     }
 
     isLogin() {
-        this._cl.get('usuarios/is/login/')
+        this._cl.get('usuarios/is/login/', { hola: 'mundo' })
             .then(res => console.log('then:', res))
             .catch(err => console.log('catch', err));
     }
