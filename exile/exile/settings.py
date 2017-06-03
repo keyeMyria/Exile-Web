@@ -26,8 +26,12 @@ SECRET_KEY = '7&8^v06ea2i&#3%^l1$%bi**(usyk7yup+jzt+_@l#_#im%e60'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     '104.236.33.228',
-    '127.0.0.1'
+    '192.168.1.21',
+    '192.168.1.24',
+    '127.0.0.1',
+    '192.168.189.128'
 ]
 
 
@@ -44,12 +48,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'supra',
+    'supra.auths.oauth',
+    'cuser',
     'frontend',
     'usuarios',
     'operacion',
     'subcripcion',
     'novedades',
-    'informes'
+    'informes',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -60,9 +67,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cuser.middleware.CuserMiddleware'
 ]
 
 ROOT_URLCONF = 'exile.urls'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'exile.routing.channel_routing',
+    }
+}
 
 TEMPLATES = [
     {
@@ -138,3 +156,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/media/'

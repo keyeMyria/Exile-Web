@@ -1,13 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Exile</title>
-</head>
-<body>
-  <h1>Hola mundo cruel</h1>
-  {% verbatim %}
-      {{Aqui va el JavaScript de angular}}
-  {% endverbatim %}
-</body>
-</html>
+{% extends '_base.html' %}
+
+{% block content %}
+  <ul>
+    <li>Usuarios</li>
+  </ul>
+{% endblock content %}
+
+{% block script %}
+  <script>
+    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+    };
+
+    socket.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      // NOTE: We escape JavaScript to prevent XSS attacks.
+      var username = encodeURI(data['username']);
+      var user = $('li').filter(function () {
+        return $(this).data('username') == username;
+      });
+      console.log(user);
+      if(user.length){
+        if (data['is_logged_in']) {
+          user.html(username + ': Online');
+        }
+        else {
+          user.html(username + ': Offline');
+        }
+      }else{
+        console.log("entro")
+        if (data['is_logged_in']) {
+          $("ul").append(username + ': Online');
+        }
+        else {
+          $("ul").append(username + ': Offline');
+        }
+      }
+
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+{% endblock script %}
