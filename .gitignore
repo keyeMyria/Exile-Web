@@ -103,4 +103,4 @@ ENV/
 #Angular
 
 #angular/dist/
-angular/node_modules/**
+**/node_modules/**
