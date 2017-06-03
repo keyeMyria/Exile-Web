@@ -4,11 +4,16 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
 from usuarios import models as usuarios
+from supra import views as supra
 import croniter
 import models
 import urllib2
 import json
-
+supra.SupraConf.ACCECC_CONTROL["allow"] = True
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.24:4200"
+supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
+supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
+supra.SupraConf.body = True
 # Create your views here.
 
 
@@ -184,3 +189,6 @@ def error(request):
 def connections(request):
     return HttpResponse("%s:%s" % (HOST, IO_PORT))
 # end def
+
+
+def
