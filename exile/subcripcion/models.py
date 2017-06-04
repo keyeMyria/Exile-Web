@@ -140,7 +140,7 @@ class Cuenta(models.Model):
 
 class Suscripcion(models.Model):
     plan = models.ForeignKey(Plan)
-    cuenta = models.ForeignKey(Cuenta)
+    cuenta = models.ForeignKey(Cuenta, null=True, blank=True)
     inscripcion = models.DateTimeField(auto_now_add=True, verbose_name='Inscripción',blank=True, null=True)
     inicio = models.DateTimeField(blank=True, null=True)
     fin = models.DateTimeField(blank=True, null=True)

@@ -14,6 +14,8 @@ class Tipo(models.Model):
     creator = CurrentUserField(add_only=True, related_name="created_tipo")
     last_editor = CurrentUserField(related_name="last_edited_tipo")
     cuenta = models.ForeignKey(Cuenta)
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tipo", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
@@ -32,6 +34,8 @@ class Cliente(models.Model):
     creator = CurrentUserField(add_only=True, related_name="created_cliente")
     last_editor = CurrentUserField(related_name="last_edited_cliente")
     cuenta = models.ForeignKey(Cuenta, related_name="mi_cliente")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_cliente", blank=True, null=True)
 
     class Meta:
         verbose_name = "Mi cliente"
@@ -53,6 +57,8 @@ class Lugar(models.Model):
     creator = CurrentUserField(add_only=True, related_name="created_lugar")
     last_editor = CurrentUserField(related_name="last_edited_lugar")
     cuenta = models.ForeignKey(Cuenta)
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_lugar", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
@@ -76,6 +82,8 @@ class Tarea(models.Model):
     unidad_de_repeticion = models.IntegerField(choices=(
         (3, "Mes(es)", ), (4, "Año(s)", ), ), null=True, blank=True, default=3)
     # Por cuando se repite
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tarea", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
@@ -89,6 +97,8 @@ class SubTarea(models.Model):
     descripcion = models.TextField("Descripción", max_length=400)
     creator = CurrentUserField(add_only=True, related_name="created_subtarea")
     last_editor = CurrentUserField(related_name="last_edited_subtarea")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_sub_tarea", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)

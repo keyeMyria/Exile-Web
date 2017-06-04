@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
-from exile.http import response
 from exile.decorator import check_login
 from django.http import HttpResponse
 from django.db.models import Q
@@ -17,7 +16,7 @@ import json as simplejson
 from django.contrib.auth.models import User, Group
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.24:4200"
+supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True
@@ -44,18 +43,14 @@ class LoginE(supra.SupraSession):
 # end class
 
 
+@supra.access_control
 def islogin(request):
+    print request.user
     if request.user.is_authenticated():
-        return response(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
+        return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
-    return response([], 400)
+    return HttpResponse([], 400)
 # end if
-
-
-def logoutUsers(request):
-    logout(request)
-    return response([], 200)
-# end def
 
 
 """
@@ -202,7 +197,7 @@ class CargoDeleteSupra(supra.SupraDeleteView):
 class CargoList(supra.SupraListView):
     model = models.Cargo
     search_key = 'q'
-    list_display = ['nombre', 'date', 'id']
+    list_display = ['nombre', 'date', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
 
