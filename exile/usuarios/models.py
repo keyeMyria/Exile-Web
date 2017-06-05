@@ -60,6 +60,10 @@ class Empleado(Usuario):
     fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
     fecha_retiro = models.DateField(verbose_name="Fecha de Retiro", blank=True, null=True)
     # end class
+
+    class Meta:
+        verbose_name = "Empleado"
+        verbose_name_plural = "Empleado"
 # end class
 
 
@@ -67,6 +71,10 @@ class Grupo(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     empleados = models.ManyToManyField(Empleado)
+    creator = CurrentUserField(add_only=True, related_name="created_grupo")
+    last_editor = CurrentUserField(related_name="last_edited_grupo")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_grupo", blank=True, null=True)
 
     def __unicode__(self):
         return u"%s" % (self.nombre)

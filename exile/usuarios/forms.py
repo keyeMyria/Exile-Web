@@ -134,3 +134,21 @@ class EmpleadoFormEdit(MasterEdit):
                   'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen', 'eliminado']
     # end class
 # end class
+
+
+class GrupoForm(MasterU):
+
+    class Meta:
+        model = usuarios.Grupo
+        fields = ['nombre', 'empleados']
+    # end class
+# end class
+
+
+class GrupoFormEdit(MasterEdit):
+
+    class Meta:
+        model = usuarios.Grupo
+        fields = ['nombre', 'empleados', 'eliminado']
+    # end class
+# end class
