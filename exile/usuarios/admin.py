@@ -5,5 +5,5 @@ from django.contrib import admin
 import models
 # Register your models here.
 
-admin.register.site(models.Asistente)
-admin.register.site(models.Empleado)
+admin.site.register(models.Asistente)
+admin.site.register(models.Empleado)
