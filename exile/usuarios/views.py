@@ -14,6 +14,7 @@ import forms
 import models
 import json as simplejson
 from django.contrib.auth.models import User, Group
+from subcripcion import decorators as asp_subcrip
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
@@ -250,7 +251,7 @@ class EmpleadoSupraForm(supra.SupraFormView):
     model = models.Empleado
     form_class = forms.EmpleadoForm
 
-    @method_decorator(check_login)
+    @method_decorator([check_login,asp_subcrip.user_plan_operario])
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(EmpleadoSupraForm, self).dispatch(request, *args, **kwargs)
