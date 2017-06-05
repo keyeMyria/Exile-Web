@@ -116,6 +116,6 @@ class LugarFormEdit(MasterEdit):
 
     class Meta:
         model = models.Lugar
-        fields = ['nombre', 'direccion', 'latitud', 'longitud']
+        fields = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado']
     # end class
 # end class

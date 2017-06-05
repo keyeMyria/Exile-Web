@@ -220,6 +220,7 @@ class MasterList(supra.SupraListView):
         else:
             queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
                 cuenta__usuario=self.request.user.pk, eliminado=False))
+            print queryset.count()
         if propiedad and orden:
             if orden == "asc":
                 queryset = queryset.order_by(propiedad)
@@ -362,4 +363,39 @@ class LugarSupraForm(supra.SupraFormView):
         # end if
         return self.form_class
     # end class
+# end class
+
+
+class LugarDeleteSupra(supra.SupraDeleteView):
+    model = models.Lugar
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(LugarDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+
+class LugarList(MasterList):
+    model = models.Lugar
+    search_key = 'q'
+    list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
+    search_fields = ['nombre', 'direccion',]
+    paginate_by = 10
+
+    def servicios(self, obj, row):
+        edit = "/operacion/lugar/form/%d/" % (obj.id)
+        delete = "/operacion/lugar/delete/%d/" % (obj.id)
+        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
+    # end def
 # end class

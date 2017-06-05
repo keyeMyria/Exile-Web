@@ -36,9 +36,9 @@ urlpatterns += [
 
 urlpatterns += [
     url(r'^lugar/form/$', views.LugarSupraForm.as_view(), name="lugar"),
-    # url(r'^cliente/list/$', views.ClienteList.as_view(), name="cliente_list"),
+    url(r'^lugar/list/$', views.LugarList.as_view(), name="lugar_list"),
     url(r'^lugar/form/(?P<pk>\d+)/$',
         views.LugarSupraForm.as_view(), name="lugar_edit"),
-    # url(r'^cliente/delete/(?P<pk>\d+)/$',
-    #    views.ClienteDeleteSupra.as_view(), name="cliente_delete"),
+    url(r'^lugar/delete/(?P<pk>\d+)/$',
+        views.LugarDeleteSupra.as_view(), name="lugar_delete"),
 ]
