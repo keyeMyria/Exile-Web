@@ -363,7 +363,7 @@ class GrupoList(MasterList):
     paginate_by = 10
 
     def empleados_list(self, obj, row):
-        return dict(models.Empleado.objects.filter(grupo=obj.pk))
+        return list(models.Empleado.objects.filter(grupo=obj.pk).values('first_name', 'last_name', 'id'))
     # end def
 
     def servicios(self, obj, row):

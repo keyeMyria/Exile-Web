@@ -29,5 +29,6 @@ class Grupo(admin.ModelAdmin):
     list_display = ('cuenta', 'nombre', 'creator', 'last_editor', 'eliminado', 'eliminado_por')
     search_fields = ('nombre', )
     list_filter = ('cuenta', 'creator', 'last_editor')
+    filter_horizontal = ('empleados', )
     icon = '<i class="material-icons">group</i>'
 # end class

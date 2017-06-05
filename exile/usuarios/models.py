@@ -35,7 +35,7 @@ class Usuario(User):
     avatar.allow_tags = True
 
     def __unicode__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'Cuenta: %s - %s %s' % (self.cuenta, self.first_name, self.last_name)
     # end def
 # end class
 
@@ -59,11 +59,6 @@ class Empleado(Usuario):
     cargo = models.ForeignKey(Cargo, blank=True, null=True)
     fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
     fecha_retiro = models.DateField(verbose_name="Fecha de Retiro", blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Empleado"
-        verbose_name_plural = "Empleados"
-    # end class
 
     class Meta:
         verbose_name = "Empleado"
