@@ -6,3 +6,5 @@ from django.apps import AppConfig
 
 class UsuariosConfig(AppConfig):
     name = 'usuarios'
+    icon = '<i class="material-icons">person</i>'
+# end class

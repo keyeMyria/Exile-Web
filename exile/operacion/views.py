@@ -231,7 +231,6 @@ class MasterList(supra.SupraListView):
         return queryset
     # end def
 # end class
-# end class
 
 
 class TipoSupraForm(supra.SupraFormView):
@@ -390,7 +389,7 @@ class LugarList(MasterList):
     model = models.Lugar
     search_key = 'q'
     list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
-    search_fields = ['nombre', 'direccion',]
+    search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
     def servicios(self, obj, row):

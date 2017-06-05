@@ -46,12 +46,46 @@ class LoginE(supra.SupraSession):
 
 @supra.access_control
 def islogin(request):
-    print request.user
     if request.user.is_authenticated():
         return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
     return HttpResponse([], 400)
 # end if
+
+
+class MasterList(supra.SupraListView):
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MasterList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(MasterList, self).get_queryset()
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+            print queryset.count()
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset
+    # end def
+# end class
 
 
 """
@@ -98,7 +132,7 @@ class AsistenteSupraFormDelete(supra.SupraDeleteView):
 # end class
 
 
-class AsistenteList(supra.SupraListView):
+class AsistenteList(MasterList):
     model = models.Asistente
     search_key = 'q'
     list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
@@ -195,7 +229,7 @@ class CargoDeleteSupra(supra.SupraDeleteView):
 # end class
 
 
-class CargoList(supra.SupraListView):
+class CargoList(MasterList):
     model = models.Cargo
     search_key = 'q'
     list_display = ['nombre', 'date', 'id', 'servicios']
@@ -286,7 +320,7 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
 # end class
 
 
-class EmpleadoList(supra.SupraListView):
+class EmpleadoList(MasterList):
     model = models.Empleado
     search_key = 'q'
     list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
@@ -323,11 +357,22 @@ class EmpleadoList(supra.SupraListView):
         delete = "/usuarios/empleado/delete/%d/" % (obj.id)
         return {'add': '/usuarios/empleado/form/', 'edit': edit, 'delete': delete}
     # end def
+# end class
+
+
+"""
+    Servicios grupo
+"""
+
+
+class GrupoSupraForm(supra.SupraFormView):
+    model = models.Grupo
+    form_class = forms.GrupoForm
 
     @method_decorator(check_login)
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
-        return super(EmpleadoList, self).dispatch(request, *args, **kwargs)
+        return super(GrupoSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
 
     def get_queryset(self):
@@ -348,7 +393,52 @@ class EmpleadoList(supra.SupraListView):
             elif orden == "desc":
                 propiedad = "-" + propiedad
                 queryset = queryset.order_by(propiedad)
-        # end if
         return queryset
+
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.GrupoFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class
+
+
+class GrupoSupraFormDelete(supra.SupraDeleteView):
+    model = models.Grupo
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(GrupoSupraFormDelete, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+
+class GrupoList(MasterList):
+    model = models.Grupo
+    search_key = 'q'
+    list_display = ['nombre', 'empleados_list']
+    search_fields = ['nombre', ]
+    paginate_by = 10
+
+    def empleados_list(self, obj, row):
+        return list(models.Empleado.objects.filter(grupo=obj.pk).values('first_name', 'last_name', 'id'))
+    # end def
+
+    def servicios(self, obj, row):
+        edit = "/usuarios/grupo/form/%d/" % (obj.id)
+        delete = "/usuarios/grupo/delete/%d/" % (obj.id)
+        return {'add': '/usuarios/grupo/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class

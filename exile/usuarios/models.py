@@ -35,7 +35,7 @@ class Usuario(User):
     avatar.allow_tags = True
 
     def __unicode__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'Cuenta: %s - %s %s' % (self.cuenta, self.first_name, self.last_name)
     # end def
 # end class
 
@@ -62,8 +62,7 @@ class Empleado(Usuario):
 
     class Meta:
         verbose_name = "Empleado"
-        verbose_name_plural = "Empleados"
-    # end class
+        verbose_name_plural = "Empleado"
 # end class
 
 
@@ -71,6 +70,10 @@ class Grupo(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     empleados = models.ManyToManyField(Empleado)
+    creator = CurrentUserField(add_only=True, related_name="created_grupo")
+    last_editor = CurrentUserField(related_name="last_edited_grupo")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_grupo", blank=True, null=True)
 
     def __unicode__(self):
         return u"%s" % (self.nombre)

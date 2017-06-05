@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'supra.auths.oauth',
     'cuser',
     'frontend',
-    'usuarios',
+    'usuarios.apps.UsuariosConfig',
     'operacion',
     'subcripcion',
     'novedades',
