@@ -21,7 +21,7 @@ urlpatterns = [
 
 urlpatterns += [
     url(r'^cliente/form/$', views.ClienteSupraForm.as_view(), name="cliente"),
-    # url(r'^tipo/list/$', views.TipoList.as_view(), name="tipo_list"),
+    url(r'^cliente/list/$', views.ClienteList.as_view(), name="cliente_list"),
     url(r'^cliente/form/(?P<pk>\d+)/$',
         views.ClienteSupraForm.as_view(), name="cliente_edit"),
     url(r'^cliente/delete/(?P<pk>\d+)/$',
