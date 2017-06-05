@@ -258,7 +258,9 @@ class TipoList(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(TipoList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)
