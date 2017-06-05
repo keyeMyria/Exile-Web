@@ -101,3 +101,21 @@ class ClienteFormEdit(MasterEdit):
         fields = ['nombre', 'tipo', 'identificacion', 'direccion', 'telefono', 'eliminado']
     # end class
 # end class
+
+
+class LugarForm(Master):
+
+    class Meta:
+        model = models.Lugar
+        fields = ['nombre', 'direccion', 'latitud', 'longitud']
+    # end class
+# end class
+
+
+class LugarFormEdit(MasterEdit):
+
+    class Meta:
+        model = models.Lugar
+        fields = ['nombre', 'direccion', 'latitud', 'longitud']
+    # end class
+# end class

@@ -344,3 +344,22 @@ class ClienteList(MasterList):
         return {'add': '/operacion/cliente/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
+
+
+class LugarSupraForm(supra.SupraFormView):
+    model = models.Lugar
+    form_class = forms.LugarForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(LugarSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.LugarFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class
