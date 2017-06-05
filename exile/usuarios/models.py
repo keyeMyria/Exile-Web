@@ -59,6 +59,10 @@ class Empleado(Usuario):
     cargo = models.ForeignKey(Cargo, blank=True, null=True)
     fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
     fecha_retiro = models.DateField(verbose_name="Fecha de Retiro", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Empleado"
+        verbose_name_plural = "Empleados"
     # end class
 
     class Meta:

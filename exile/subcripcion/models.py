@@ -148,11 +148,17 @@ class Suscripcion(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s' % (self.plan.nombre)
+        if self.cuenta :
+            return u'%s --> %s %s' % (self.plan.nombre,self.cuenta.cliente.first_name,self.cuenta.cliente.last_name)
+        # end if
+        return u'%s --> No asignado.' % (self.plan.nombre)
     # end def
 
     def __str__(self):
-        return u'%s' % (self.plan.nombre)
+        if self.cuenta :
+            return u'%s --> %s %s' % (self.plan.nombre,self.cuenta.cliente.first_name,self.cuenta.cliente.last_name)
+        # end if
+        return u'%s --> No asignado.' % (self.plan.nombre)
     # end def
 
     class Meta:
@@ -169,11 +175,11 @@ class Factura(models.Model):
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u'%s' % (self.plan.nombre)
+        return u'%s --> %s %s' % (self.suscripcion.plan.nombre,self.suscripcion.cuenta.cliente.first_name,self.suscripcion.cuenta.cliente.last_name)
     # end def
 
     def __str__(self):
-        return u'%s' % (self.plan.nombre)
+        return u'%s' % (self.suscripcion.plan.nombre)
     # end def
 
     class Meta:
