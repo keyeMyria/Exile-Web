@@ -3,7 +3,7 @@ import { ROUTES } from './sidebar-routes.config';
 
 declare var $: any;
 
-var mda: any = {
+let mda: any = {
     misc: {
         movingTab: '<div class="sidebar-moving-tab"/>',
         isChild: false,
@@ -11,7 +11,7 @@ var mda: any = {
     }
 };
 
-var sidebarTimer;
+let sidebarTimer;
 
 @Component({
     moduleId: module.id,
@@ -30,10 +30,10 @@ export class SidebarComponent implements OnInit {
     ngOnInit() {
         // $.getScript('../../assets/js/sidebar-moving-tab.js');
 
-        var isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+        let isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
         if (isWindows) {
             // if we are on windows OS we activate the perfectScrollbar function
-            var $sidebar = $('.sidebar-wrapper');
+            let $sidebar = $('.sidebar-wrapper');
             $sidebar.perfectScrollbar();
 
         }

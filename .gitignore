@@ -15,7 +15,7 @@ develop-eggs/
 downloads/
 eggs/
 .eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/
@@ -103,4 +103,4 @@ ENV/
 #Angular
 
 #angular/dist/
-angular/node_modules/**
+**/node_modules/**
