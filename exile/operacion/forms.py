@@ -30,47 +30,92 @@ class TareaForm(forms.ModelForm):
 # end class
 
 
-class TipoForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Tipo
-        fields = ['nombre', ]
-    # end class
+class Master(forms.ModelForm):
 
     def clean(self):
         if get_cuenta():
-            return super(TipoForm, self).clean()
+            return super(Master, self).clean()
         # end if
         raise forms.ValidationError(
             "Este usuario no esta asociado a una cuenta")
     # end def
 
     def save(self, commit=False):
-        tipo = super(TipoForm, self).save(commit)
+        master = super(Master, self).save(commit)
         if get_cuenta():
-            tipo.cuenta = get_cuenta()
-            tipo.save()
+            master.cuenta = get_cuenta()
+            master.save()
         # end if
-        return tipo
+        return master
     # end def
 # end class
 
 
-class TipoFormEdit(forms.ModelForm):
+class MasterEdit(forms.ModelForm):
+
+    def save(self, commit=False):
+        master = super(MasterEdit, self).save(commit)
+        if master.eliminado:
+            user = CuserMiddleware.get_user()
+            if user:
+                master.eliminado_por = user
+            # end if
+        # end if
+        master.save()
+        return master
+    # end def
+# end class
+
+
+class TipoForm(Master):
+
+    class Meta:
+        model = models.Tipo
+        fields = ['nombre', ]
+    # end class
+# end class
+
+
+class TipoFormEdit(MasterEdit):
 
     class Meta:
         model = models.Tipo
         fields = ['nombre', 'eliminado']
     # end class
+# end class
 
-    def save(self, commit=False):
-        tipo = super(TipoFormEdit, self).save(commit)
-        if tipo.eliminado:
-            user = CuserMiddleware.get_user()
-            if user:
-                tipo.eliminado_por = user
-            # end if
-        # end if
-        tipo.save()
-        return tipo
+
+class ClienteForm(Master):
+
+    class Meta:
+        model = models.Cliente
+        fields = ['nombre', 'tipo', 'identificacion', 'direccion', 'telefono']
+    # end class
+# end class
+
+
+class ClienteFormEdit(MasterEdit):
+
+    class Meta:
+        model = models.Cliente
+        fields = ['nombre', 'tipo', 'identificacion', 'direccion', 'telefono', 'eliminado']
+    # end class
+# end class
+
+
+class LugarForm(Master):
+
+    class Meta:
+        model = models.Lugar
+        fields = ['nombre', 'direccion', 'latitud', 'longitud']
+    # end class
+# end class
+
+
+class LugarFormEdit(MasterEdit):
+
+    class Meta:
+        model = models.Lugar
+        fields = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado']
+    # end class
 # end class

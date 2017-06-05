@@ -7,13 +7,10 @@ import 'rxjs/add/operator/toPromise';
 
 declare var WebSocket: any;
 
-const headers = new Headers();
-headers.append('Content-Type', 'application/json');
 
-const options = new RequestOptions({
-    headers: headers,
-    withCredentials: true
-});
+
+
+
 
 
 @Injectable()
@@ -23,8 +20,23 @@ export class CallService {
     public host: string;
     public port: string;
 
+
     constructor(private _http: Http) {
         this.protocol = 'http';
+    }
+
+    getOptions(headersList: any, par?: URLSearchParams): RequestOptions {
+        const headers = new Headers();
+        for (const key in headersList) {
+            if (headersList[key]) {
+                headers.append(key, headersList[key]);
+            }
+        }
+        return new RequestOptions({
+            headers: headers,
+            // withCredentials: true,
+            search: par ? par : new URLSearchParams()
+        });
     }
 
     conf(chost: string, cport: string, cprotocol?: string) {
@@ -40,26 +52,43 @@ export class CallService {
         return `${proto}://${this.host}:${this.port}/${url}`;
     }
 
-    get(url: string, params?: any): Promise<Response> {
+    get(url: string, params?: any, head?: any): Promise<Response> {
         console.log('get:', url);
-        const op: URLSearchParams = new URLSearchParams();
+        const query = new URLSearchParams();
         for (const key in params) {
-            if (!!params[key]) {
-                op.set(key.toString(), params[key]);
+            if (params[key]) {
+                query.set(key, params[key]);
             }
         }
-        return this._http.get(this.getUrl(url), options).toPromise();
+        return this._http.get(this.getUrl(url), this.getOptions(head)).toPromise();
 
     }
 
-    post(url: string, body?: any): Promise<Response> {
-        console.log('post:', url);
-        return this._http.post(this.getUrl(url), body, options).toPromise();
-    }
 
-    delete(url: string) {
+    delete(url: string, head?: any) {
         console.log('delete:', url);
-        return this._http.delete(this.getUrl(url), options).toPromise();
+        return this._http.delete(this.getUrl(url), this.getOptions(head)).toPromise();
+    }
+
+    head(url: string, head?: any) {
+        console.log('delete:', url);
+        return this._http.delete(this.getUrl(url), this.getOptions(head)).toPromise();
+    }
+
+    post(url: string, body?: any, head?: any): Promise<Response> {
+        console.log('post:', url);
+        return this._http.post(this.getUrl(url), body, this.getOptions(head)).toPromise();
+    }
+
+
+    put(url: string, body?: any, head?: any): Promise<Response> {
+        console.log('put:', url);
+        return this._http.put(this.getUrl(url), body, this.getOptions(head)).toPromise();
+    }
+
+    patch(url: string, body?: any, head?: any): Promise<Response> {
+        console.log('patch:', url);
+        return this._http.patch(this.getUrl(url), body, this.getOptions(head)).toPromise();
     }
 
     ws(url: string): WebSocket {

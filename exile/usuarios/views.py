@@ -7,7 +7,7 @@ from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
 from exile.decorator import check_login
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
 import forms
@@ -45,8 +45,15 @@ class LoginE(supra.SupraSession):
 
 
 @supra.access_control
+def logoutUser(request):
+    logout(request)
+    return HttpResponse([], 200)
+# end def
+
+
+@supra.access_control
 def islogin(request):
-    print request.user
+    print "########", request.user
     if request.user.is_authenticated():
         return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
@@ -129,7 +136,9 @@ class AsistenteList(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(AsistenteList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)
@@ -220,7 +229,9 @@ class CargoList(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(CargoList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)
@@ -332,7 +343,9 @@ class EmpleadoList(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(EmpleadoList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)

@@ -198,6 +198,42 @@ def connections(request):
 # end def
 
 
+class MasterList(supra.SupraListView):
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MasterList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(MasterList, self).get_queryset()
+        if self.request.GET.get('num_page', False):
+            self.paginate_by = self.request.GET.get('num_page', False)
+        # end if
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+            print queryset.count()
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset
+    # end def
+# end class
+# end class
+
+
 class TipoSupraForm(supra.SupraFormView):
     model = models.Tipo
     form_class = forms.TipoForm
@@ -237,7 +273,7 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 # end class
 
 
-class TipoList(supra.SupraListView):
+class TipoList(MasterList):
     model = models.Tipo
     search_key = 'q'
     list_display = ['nombre', 'servicios']
@@ -249,32 +285,117 @@ class TipoList(supra.SupraListView):
         delete = "/operacion/tipo/delete/%d/" % (obj.id)
         return {'add': '/operacion/tipo/form/', 'edit': edit, 'delete': delete}
     # end def
+# end class
+
+
+class ClienteSupraForm(supra.SupraFormView):
+    model = models.Cliente
+    form_class = forms.ClienteForm
 
     @method_decorator(check_login)
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
-        return super(TipoList, self).dispatch(request, *args, **kwargs)
+        return super(ClienteSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
 
-    def get_queryset(self):
-        queryset = super(TipoList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
-        propiedad = self.request.GET.get('sort_property', False)
-        orden = self.request.GET.get('sort_direction', False)
-        eliminado = self.request.GET.get('eliminado', False)
-        if eliminado == '1':
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=True))
-        else:
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=False))
-        if propiedad and orden:
-            if orden == "asc":
-                queryset = queryset.order_by(propiedad)
-            elif orden == "desc":
-                propiedad = "-" + propiedad
-                queryset = queryset.order_by(propiedad)
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.ClienteFormEdit
         # end if
-        return queryset
+        return self.form_class
+    # end class
+# end class
+
+
+class ClienteDeleteSupra(supra.SupraDeleteView):
+    model = models.Cliente
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(ClienteDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+
+class ClienteList(MasterList):
+    model = models.Cliente
+    search_key = 'q'
+    list_display = ['nombre', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
+    search_fields = ['nombre', 'identificacion', 'telefono', 'direccion']
+    list_filter = ['tipo', ]
+    paginate_by = 10
+
+    def tipoI(self, obj, row):
+        return {"nombre": obj.tipo.nombre, "id": obj.tipo.id}
+    # end def
+
+    def servicios(self, obj, row):
+        edit = "/operacion/cliente/form/%d/" % (obj.id)
+        delete = "/operacion/cliente/delete/%d/" % (obj.id)
+        return {'add': '/operacion/cliente/form/', 'edit': edit, 'delete': delete}
+    # end def
+# end class
+
+
+class LugarSupraForm(supra.SupraFormView):
+    model = models.Lugar
+    form_class = forms.LugarForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(LugarSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.LugarFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class
+
+
+class LugarDeleteSupra(supra.SupraDeleteView):
+    model = models.Lugar
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(LugarDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+
+class LugarList(MasterList):
+    model = models.Lugar
+    search_key = 'q'
+    list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
+    search_fields = ['nombre', 'direccion',]
+    paginate_by = 10
+
+    def servicios(self, obj, row):
+        edit = "/operacion/lugar/form/%d/" % (obj.id)
+        delete = "/operacion/lugar/delete/%d/" % (obj.id)
+        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class

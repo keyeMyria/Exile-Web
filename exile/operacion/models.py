@@ -29,7 +29,7 @@ class Cliente(models.Model):
     identificacion = models.CharField(max_length=100)
     direccion = models.CharField(
         "Dirección", max_length=200, blank=True, null=True)
-    telfono = models.CharField(
+    telefono = models.CharField(
         "Teléfono", max_length=15, blank=True, null=True)
     creator = CurrentUserField(add_only=True, related_name="created_cliente")
     last_editor = CurrentUserField(related_name="last_edited_cliente")
