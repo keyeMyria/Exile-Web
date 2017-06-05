@@ -36,6 +36,27 @@ class MasterU(UserCreationForm):
 # end class
 
 
+class Master(forms.ModelForm):
+
+    def clean(self):
+        if get_cuenta():
+            return super(Master, self).clean()
+        # end if
+        raise forms.ValidationError(
+            "Este usuario no esta asociado a una cuenta")
+    # end def
+
+    def save(self, commit=False):
+        master = super(Master, self).save(commit)
+        if get_cuenta():
+            master.cuenta = get_cuenta()
+            master.save()
+        # end if
+        return master
+    # end def
+# end class
+
+
 class MasterEdit(forms.ModelForm):
 
     def save(self, commit=False):
@@ -85,7 +106,7 @@ class AsistenteFormEdit(MasterEdit):
 # end class
 
 
-class CargoForm(MasterU):
+class CargoForm(Master):
 
     class Meta:
         model = usuarios.Cargo
@@ -136,7 +157,7 @@ class EmpleadoFormEdit(MasterEdit):
 # end class
 
 
-class GrupoForm(MasterU):
+class GrupoForm(Master):
 
     class Meta:
         model = usuarios.Grupo
