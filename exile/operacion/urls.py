@@ -13,3 +13,17 @@ urlpatterns = [
     url(r'^tipo/delete/(?P<pk>\d+)/$',
         views.TipoDeleteSupra.as_view(), name="tipo_delete"),
 ]
+
+
+"""
+    Mis clientes
+"""
+
+urlpatterns += [
+    url(r'^cliente/form/$', views.ClienteSupraForm.as_view(), name="tipo"),
+    # url(r'^tipo/list/$', views.TipoList.as_view(), name="tipo_list"),
+    url(r'^cliente/form/(?P<pk>\d+)/$',
+        views.ClienteSupraForm.as_view(), name="tipo_edit"),
+    # url(r'^tipo/delete/(?P<pk>\d+)/$',
+    #    views.TipoDeleteSupra.as_view(), name="tipo_delete"),
+]

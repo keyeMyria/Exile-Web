@@ -280,3 +280,22 @@ class TipoList(supra.SupraListView):
         return queryset
     # end def
 # end class
+
+
+class ClienteSupraForm(supra.SupraFormView):
+    model = models.Cliente
+    form_class = forms.ClienteForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(ClienteSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.ClienteFormEdit
+        # end if
+        return self.form_class
+    # end class
+# end class

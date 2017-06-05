@@ -6,6 +6,7 @@ from usuarios import models as usuarios
 from django.contrib.auth.forms import UserCreationForm
 from exile.servicios import get_cuenta
 from subcripcion.models import Cuenta
+from cuser.middleware import CuserMiddleware
 
 
 class LoginForm(forms.Form):
@@ -14,7 +15,44 @@ class LoginForm(forms.Form):
 # end class
 
 
-class AsistenteForm(UserCreationForm):
+class MasterU(UserCreationForm):
+
+    def clean(self):
+        if get_cuenta():
+            return super(MasterU, self).clean()
+        # end if
+        raise forms.ValidationError(
+            "Este usuario no esta asociado a una cuenta")
+    # end def
+
+    def save(self, commit=False):
+        usuario = super(MasterU, self).save(commit)
+        if get_cuenta():
+            usuario.cuenta = get_cuenta()
+            usuario.save()
+        # end if
+        return usuario
+    # end def
+# end class
+
+
+class MasterEdit(forms.ModelForm):
+
+    def save(self, commit=False):
+        master = super(MasterEdit, self).save(commit)
+        if master.eliminado:
+            user = CuserMiddleware.get_user()
+            if user:
+                master.eliminado_por = user
+            # end if
+        # end if
+        master.save()
+        return master
+    # end def
+# end class
+
+
+class AsistenteForm(MasterU):
 
     def __init__(self, *args, **kwargs):
         super(AsistenteForm, self).__init__(*args, **kwargs)
@@ -27,26 +65,10 @@ class AsistenteForm(UserCreationForm):
         fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name',
                   'identificacion', 'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
 
-    def clean(self):
-        if get_cuenta():
-            return super(AsistenteForm, self).clean()
-        # end if
-        raise forms.ValidationError(
-            "Este usuario no esta asociado a una cuenta")
-    # end def
-
-    def save(self, commit=False):
-        usuario = super(AsistenteForm, self).save(commit)
-        if get_cuenta():
-            usuario.cuenta = get_cuenta()
-            usuario.save()
-        # end if
-        return usuario
-    # end def
 # end class
 
 
-class AsistenteFormEdit(forms.ModelForm):
+class AsistenteFormEdit(MasterEdit):
 
     def __init__(self, *args, **kwargs):
         super(AsistenteFormEdit, self).__init__(*args, **kwargs)
@@ -63,33 +85,16 @@ class AsistenteFormEdit(forms.ModelForm):
 # end class
 
 
-class CargoForm(forms.ModelForm):
+class CargoForm(MasterU):
 
     class Meta:
         model = usuarios.Cargo
         fields = ['nombre', ]
     # end class
-
-    def clean(self):
-        if get_cuenta():
-            return super(CargoForm, self).clean()
-        # end if
-        raise forms.ValidationError(
-            "Este usuario no esta asociado a una cuenta")
-    # end def
-
-    def save(self, commit=False):
-        cargo = super(CargoForm, self).save(commit)
-        if get_cuenta():
-            cargo.cuenta = get_cuenta()
-            cargo.save()
-        # end if
-        return cargo
-    # end def
 # end class
 
 
-class CargoFormEdit(forms.ModelForm):
+class CargoFormEdit(MasterEdit):
 
     class Meta:
         model = usuarios.Cargo
@@ -98,7 +103,7 @@ class CargoFormEdit(forms.ModelForm):
 # end class
 
 
-class EmpleadoForm(UserCreationForm):
+class EmpleadoForm(MasterU):
 
     def __init__(self, *args, **kwargs):
         super(EmpleadoForm, self).__init__(*args, **kwargs)
@@ -111,26 +116,10 @@ class EmpleadoForm(UserCreationForm):
         fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name',
                   'identificacion', 'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen']
 
-    def clean(self):
-        if get_cuenta():
-            return super(EmpleadoForm, self).clean()
-        # end if
-        raise forms.ValidationError(
-            "Este usuario no esta asociado a una cuenta")
-    # end def
-
-    def save(self, commit=False):
-        usuario = super(EmpleadoForm, self).save(commit)
-        if get_cuenta():
-            usuario.cuenta = get_cuenta()
-            usuario.save()
-        # end if
-        return usuario
-    # end def
 # end class
 
 
-class EmpleadoFormEdit(forms.ModelForm):
+class EmpleadoFormEdit(MasterEdit):
 
     def __init__(self, *args, **kwargs):
         super(EmpleadoFormEdit, self).__init__(*args, **kwargs)
