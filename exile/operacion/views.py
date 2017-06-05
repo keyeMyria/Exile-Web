@@ -299,3 +299,23 @@ class ClienteSupraForm(supra.SupraFormView):
         return self.form_class
     # end class
 # end class
+
+
+class ClienteDeleteSupra(supra.SupraDeleteView):
+    model = models.Cliente
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(ClienteDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
