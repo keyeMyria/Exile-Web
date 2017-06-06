@@ -99,6 +99,8 @@ class Plan(models.Model):
     descripcion = models.CharField(max_length=800, null=True, blank=True)
     operadores = models.IntegerField(verbose_name='Número de operadores',default=0)
     asistentes = models.IntegerField(verbose_name='Número de asistentes',default=0)
+    operario = models.BooleanField(default=True, verbose_name='App empleados')
+    gerente = models.BooleanField(default=True, verbose_name='App gerente')
     duracion = models.IntegerField(verbose_name='Dias de duración en meses',default=0)
     valor = models.FloatField(default=0)
     modulos = models.ManyToManyField(InstModulo)

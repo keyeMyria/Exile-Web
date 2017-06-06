@@ -7,7 +7,7 @@ from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
 from exile.decorator import check_login
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
 import forms
@@ -44,13 +44,6 @@ class LoginE(supra.SupraSession):
         return a
     # end def
 # end class
-
-
-@supra.access_control
-def logoutUser(request):
-    logout(request)
-    return HttpResponse([], 200)
-# end def
 
 
 @supra.access_control
@@ -107,7 +100,7 @@ class AsistenteSupraForm(supra.SupraFormView):
     model = models.Asistente
     form_class = forms.AsistenteForm
 
-    @method_decorator(check_login)
+    @method_decorator([check_login,asp_subcrip.user_plan_asistente])
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)
@@ -162,6 +155,34 @@ class AsistenteList(MasterList):
         edit = "/usuarios/asistente/form/%d/" % (obj.id)
         delete = "/usuarios/asistente/delete/%d/" % (obj.id)
         return {'add': '/usuarios/asistente/form/', 'edit': edit, 'delete': delete}
+    # end def
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(AsistenteList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(AsistenteList, self).get_queryset()
+        self.paginate_by = self.request.GET.get('num_page', False)
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset
     # end def
 # end class
 
@@ -224,6 +245,34 @@ class CargoList(MasterList):
         edit = "/usuarios/cargo/form/%d/" % (obj.id)
         delete = "/usuarios/cargo/delete/%d/" % (obj.id)
         return {'add': '/usuarios/cargo/form/', 'edit': edit, 'delete': delete}
+    # end def
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CargoList, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(CargoList, self).get_queryset()
+        self.paginate_by = self.request.GET.get('num_page', False)
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        # end if
+        return queryset
     # end def
 # end class
 
@@ -325,6 +374,27 @@ class GrupoSupraForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(GrupoSupraForm, self).dispatch(request, *args, **kwargs)
     # end def
+
+    def get_queryset(self):
+        queryset = super(EmpleadoList, self).get_queryset()
+        self.paginate_by = self.request.GET.get('num_page', False)
+        propiedad = self.request.GET.get('sort_property', False)
+        orden = self.request.GET.get('sort_direction', False)
+        eliminado = self.request.GET.get('eliminado', False)
+        if eliminado == '1':
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=True))
+        else:
+            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
+                cuenta__usuario=self.request.user.pk, eliminado=False))
+        if propiedad and orden:
+            if orden == "asc":
+                queryset = queryset.order_by(propiedad)
+            elif orden == "desc":
+                propiedad = "-" + propiedad
+                queryset = queryset.order_by(propiedad)
+        return queryset
+
 
     def get_form_class(self):
         if 'pk' in self.http_kwargs:
