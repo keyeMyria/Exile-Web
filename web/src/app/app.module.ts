@@ -8,14 +8,14 @@ import { AppRouteModule } from './app.route.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
 import { CallService } from './services/call.service';
-
+import { NotificationService } from './services/notification.service';
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpModule,
         CommonModule,
-        AppRouteModule,
+        AppRouteModule
 
     ],
     declarations: [
@@ -23,7 +23,8 @@ import { CallService } from './services/call.service';
     ],
     providers: [
         CallService,
-        AuthService
+        AuthService,
+        NotificationService
     ],
     bootstrap: [AppComponent]
 })

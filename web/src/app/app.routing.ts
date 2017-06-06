@@ -9,7 +9,7 @@ export interface MenuMeta {
     title: string;
     url: string;
     icon: string;
-    children: MenuMeta[];
+    children?: MenuMeta[];
 }
 
 export const AppRoutes: Routes = [
@@ -32,8 +32,9 @@ export const AppRoutes: Routes = [
     { path: '**', component: P404Component }
 ];
 
+import { UsuariosMenuMeta } from './usuarios/usuarios.route';
+
 export const AppMenuMeta: MenuMeta[] = [
-    { title: 'Usuarios', url: '', icon: '', children: null },
-    { title: 'Operación', url: '', icon: '', children: null },
-    { title: 'Novedades', url: '', icon: '', children: null }
+    { title: 'Home', url: '/dashboard', icon: 'dashboard' },
+    { title: 'Usuarios', url: null, icon: 'account_circle', children: UsuariosMenuMeta }
 ];

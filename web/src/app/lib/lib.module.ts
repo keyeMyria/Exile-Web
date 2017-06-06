@@ -7,6 +7,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { CardComponent} from './card/card.component';
 import { BaseComponent } from './base/base.component';
 import { P404Component } from './404/404.component';
+import { TableComponent } from './table/table.component';
 
 const LibComponents = [
     P404Component,
@@ -14,7 +15,8 @@ const LibComponents = [
     CardComponent,
     LoaderComponent,
     SidebarComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    TableComponent
 ];
 
 @NgModule({

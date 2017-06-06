@@ -6,11 +6,6 @@ import { AuthGuard } from './services/auth.guard';
 import { LibModule } from './lib/lib.module';
 import { AuthComponent } from './auth/auth.component';
 
-// import { BaseComponent } from './lib/base/base.component';
-// import { P404Component } from './lib/404/404.component';
-// import { SidebarComponent } from './lib/sidebar/sidebar.component';
-// import { ToolbarComponent } from './lib/toolbar/toolbar.component';
-
 @NgModule({
     imports: [
         BrowserModule,
