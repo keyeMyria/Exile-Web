@@ -11,6 +11,7 @@ from cuser.middleware import CuserMiddleware
 from usuarios import models as usuarios
 from exile.decorator import check_login
 from exile.settings import ORIGIN
+from django.db.models import Q
 
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -102,9 +103,9 @@ class TipoList(MasterList):
     paginate_by = 10
 
     def servicios(self, obj, row):
-        edit = "/operacion/tipo/form/%d/" % (obj.id)
-        delete = "/operacion/tipo/delete/%d/" % (obj.id)
-        return {'add': '/operacion/tipo/form/', 'edit': edit, 'delete': delete}
+        edit = "/novedades/tipo/form/%d/" % (obj.id)
+        delete = "/novedades/tipo/delete/%d/" % (obj.id)
+        return {'add': '/novedades/tipo/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
 
