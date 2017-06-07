@@ -120,34 +120,6 @@ class AsistenteList(supra.SupraListView):
         delete = "/usuarios/asistente/delete/%d/" % (obj.id)
         return {'add': '/usuarios/asistente/form/', 'edit': edit, 'delete': delete}
     # end def
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(AsistenteList, self).dispatch(request, *args, **kwargs)
-    # end def
-
-    def get_queryset(self):
-        queryset = super(AsistenteList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
-        propiedad = self.request.GET.get('sort_property', False)
-        orden = self.request.GET.get('sort_direction', False)
-        eliminado = self.request.GET.get('eliminado', False)
-        if eliminado == '1':
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=True))
-        else:
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=False))
-        if propiedad and orden:
-            if orden == "asc":
-                queryset = queryset.order_by(propiedad)
-            elif orden == "desc":
-                propiedad = "-" + propiedad
-                queryset = queryset.order_by(propiedad)
-        # end if
-        return queryset
-    # end def
 # end class
 
 
@@ -210,34 +182,6 @@ class CargoList(supra.SupraListView):
         edit = "/usuarios/cargo/form/%d/" % (obj.id)
         delete = "/usuarios/cargo/delete/%d/" % (obj.id)
         return {'add': '/usuarios/cargo/form/', 'edit': edit, 'delete': delete}
-    # end def
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(CargoList, self).dispatch(request, *args, **kwargs)
-    # end def
-
-    def get_queryset(self):
-        queryset = super(CargoList, self).get_queryset()
-        self.paginate_by = self.request.GET.get('num_page', False)
-        propiedad = self.request.GET.get('sort_property', False)
-        orden = self.request.GET.get('sort_direction', False)
-        eliminado = self.request.GET.get('eliminado', False)
-        if eliminado == '1':
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=True))
-        else:
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=False))
-        if propiedad and orden:
-            if orden == "asc":
-                queryset = queryset.order_by(propiedad)
-            elif orden == "desc":
-                propiedad = "-" + propiedad
-                queryset = queryset.order_by(propiedad)
-        # end if
-        return queryset
     # end def
 # end class
 
@@ -348,6 +292,11 @@ class EmpleadoList(supra.SupraListView):
             elif orden == "desc":
                 propiedad = "-" + propiedad
                 queryset = queryset.order_by(propiedad)
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.GrupoFormEdit
+
         # end if
         return queryset
     # end def

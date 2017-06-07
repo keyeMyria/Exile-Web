@@ -277,7 +277,7 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.Tipo
-    list_display = ['nombre', 'servicios']
+    list_display = ['nombre', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
 
@@ -330,7 +330,7 @@ class ClienteDeleteSupra(supra.SupraDeleteView):
 
 class ClienteList(MasterList):
     model = models.Cliente
-    list_display = ['nombre', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
+    list_display = ['nombre', 'id', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
     search_fields = ['nombre', 'identificacion', 'telefono', 'direccion']
     list_filter = ['tipo', ]
     paginate_by = 10
@@ -388,7 +388,7 @@ class LugarDeleteSupra(supra.SupraDeleteView):
 
 class LugarList(MasterList):
     model = models.Lugar
-    list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
+    list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
