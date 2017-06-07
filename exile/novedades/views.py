@@ -98,7 +98,7 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.TipoReporte
-    list_display = ['nombre', 'servicios']
+    list_display = ['nombre', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
 
@@ -123,7 +123,7 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 class ReporteListView(MasterList):
     list_filter = ['tipo', 'cliente', 'lugar', 'id']
     list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
-                    'descripcion', 'creatorR', 'fecha', 'estado', 'numero']
+                    'descripcion', 'creatorR', 'fecha', 'estado', 'numero', 'servicios']
     search_fields = ['nombre', 'descripcion',
                      'tipo_nombre', 'numero']
     model = models.Reporte
