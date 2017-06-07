@@ -4,7 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.admin import widgets
 import models
 from cuser.middleware import CuserMiddleware
-
+from django.utils import timezone
+from datetime import datetime
+import pytz
 
 class ModuloForm(forms.ModelForm):
     class Meta:
@@ -34,6 +36,33 @@ class FuncionalidadForm(forms.ModelForm):
         modulo.nombre = modulo.nombre.title()
         modulo.save()
         return modulo
+    # end def
+#end class
+
+
+class FacturaForm(forms.ModelForm):
+    class Meta:
+        model = models.Factura
+        fields = ['suscripcion','paga', 'estado']
+        exclude = []
+    #end class
+
+    def save(self, commit=True):
+        factura = super(FacturaForm, self).save(commit)
+        print 'este es el servicio de factura ',commit
+        if factura.paga :
+            print 'Factura pagada'
+            factura.realizada = timezone.now()
+            suscrip = models.Suscripcion.objects.filter(id=factura.suscripcion.id).first()
+            if suscrip :
+                suscrip.inicio = factura.realizacion
+                suscrip.fin = datetime(suscrip.inicio.year, suscrip.inicio.month + suscrip.plan.duracion, suscrip.inicio.day, 23, 59, 59,tzinfo=pytz.UTC)
+                print suscrip.fin
+                suscrip.save()
+            # end if
+        #end if
+        factura.save()
+        return factura
     # end def
 #end class
 
