@@ -16,10 +16,10 @@ import croniter
 import models
 import urllib2
 import json
-from exile.settings import ORIGIN
+#from exile.settings import ORIGIN
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
+supra.SupraConf.ACCECC_CONTROL["origin"] = 'ORIGIN'
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True

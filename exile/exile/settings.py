@@ -28,13 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '104.236.33.228',
-    '192.168.1.16',
-    '192.168.1.19',
+    '192.168.1.21',
+    '192.168.1.12',
     '127.0.0.1',
     '192.168.189.128'
 ]
 
-ORIGIN = "http://192.168.1.19:4200"
 
 # Application definition
 
@@ -52,13 +51,27 @@ INSTALLED_APPS = [
     'supra.auths.oauth',
     'cuser',
     'frontend',
-    'usuarios.apps.UsuariosConfig',
+    'usuarios',
     'operacion',
     'subcripcion',
     'novedades',
     'informes',
-    'channels'
+    'channels',
+    'django_user_agents',
 ]
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,7 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cuser.middleware.CuserMiddleware'
+    'cuser.middleware.CuserMiddleware',
 ]
 
 ROOT_URLCONF = 'exile.urls'
@@ -154,6 +167,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
