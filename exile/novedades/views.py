@@ -201,3 +201,23 @@ class FotoReporteListView(supra.SupraListView):
         return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
     # end def
 # end class
+
+
+class ReporteDeleteSupra(supra.SupraDeleteView):
+    model = models.Reporte
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(ReporteDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
