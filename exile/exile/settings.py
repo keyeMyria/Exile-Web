@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     '192.168.189.128'
 ]
 
+ORIGIN = "http://192.168.1.19:4200"
+
 
 # Application definition
 
