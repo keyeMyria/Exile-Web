@@ -2,7 +2,8 @@ import json as simplejson
 from django.shortcuts import redirect, get_object_or_404, HttpResponse
 from usuarios import models as usuario
 import models
-
+from datetime import datetime
+import pytz
 
 def user_plan_operario(view_func):
     def _check(request, *args, **kwargs):
@@ -59,10 +60,26 @@ def user_plan_asistente(view_func):
     return _check
 #end def
 
-def user_plan_asistente(view_func):
+def user_plan_validar(view_func):
     def _check(request, *args, **kwargs):
+        print 'Esta llegando a la validar el plan'
         if request.user.is_authenticated():
             cuenta = models.Cuenta.objects.filter(cliente__id=request.user.id).first()
+            if cuenta:
+                suscripcion = models.Suscripcion.objects.filter(cuenta=cuenta, activa=True, factura__paga=True).first()
+                if suscripcion:
+                    if suscripcion.inicio and suscripcion.fin:
+                        print 'Fechas a calcular ',datetime.now(pytz.UTC),'  ',suscripcion.fin,'  '
+                        if datetime.now(pytz.UTC) <= suscripcion.fin:
+                            return view_func(request, *args, **kwargs)
+                        #end if
+                        return HttpResponse(simplejson.dumps({"error": "Su suscripcion esta vencida."}), content_type='application/json', status=403)
+                    #end if
+                    return HttpResponse(simplejson.dumps({"error": "Debe comunicarse con el administrador del sistema."}), content_type='application/json', status=403)
+                #end if
+                return HttpResponse(simplejson.dumps({"error": "Debe adquirir un plan de servicio."}), content_type='application/json', status=403)
+            #end if
+            return HttpResponse(simplejson.dumps({"error": "Debe crear una cuenta."}), content_type='application/json', status=403)
         #end
         return HttpResponse(simplejson.dumps({"error": "Debe iniciar session."}), content_type='application/json', status=403)
     #end def
