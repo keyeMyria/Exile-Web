@@ -61,11 +61,20 @@ class TipoReportFormEdit(MasterEdit):
 # end class
 
 
-class ReporteSupraForm(forms.ModelForm):
+class ReporteSupraForm(Master):
 
     class Meta:
         model = models.Reporte
-        exclude = ()
+        fields = ['nombre', 'descripcion', 'tipo', 'cliente', 'lugar', 'latitud', 'longitud']
+    # end class
+# end class
+
+
+class ReporteSupraFormEdit(MasterEdit):
+
+    class Meta:
+        model = models.Reporte
+        fields = ['nombre', 'descripcion', 'tipo', 'cliente', 'lugar', 'estado', 'latitud', 'longitud', 'eliminado']
     # end class
 # end class
 

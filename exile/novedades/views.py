@@ -120,30 +120,42 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 # end class
 
 
-class ReporteListView(supra.SupraListView):
-    list_filter = ['tipo_de_reporte', 'emisor', 'id']
-    list_display = ['id', 'nombre', 'tipo_n', 'nombreC', 'lugar__nombre', 'latitud', 'longitud', 'cliente', 'lugar', 'tipo_de_reporte',
-                    'descripcion', 'user', 'fecha', 'estado', 'numero']
+class ReporteListView(MasterList):
+    list_filter = ['tipo', 'cliente', 'lugar', 'id']
+    list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
+                    'descripcion', 'creatorR', 'fecha', 'estado', 'numero']
     search_fields = ['nombre', 'descripcion',
-                     'tipo_de_reporte__nombre', 'numero']
+                     'tipo_nombre', 'numero']
     model = models.Reporte
     paginate_by = 10
 
-    class Renderer:
-        nombreC = 'cliente__nombre'
-        tipo_n = 'tipo_de_reporte__nombre'
-        creator = 'usuario__username'
-    # end class
-
-    def get_queryset(self):
-        queryset = super(ReporteListView, self).get_queryset()
-        # Aqui val el filtro por subscripción
-        return queryset.order_by('estado', '-fecha')
+    def tipoR(self, obj, row):
+        return {"nombre": obj.tipo.nombre, "id": obj.tipo.id }
     # end def
 
-    @method_decorator(check_login)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ReporteListView, self).dispatch(request, *args, **kwargs)
+    def clienteR(self, obj, row):
+        if obj.cliente:
+            return {"nombre": obj.cliente.nombre, "id": obj.cliente.id}
+        # end if
+        return {}
+    # end def
+
+    def lugarR(self, obj, row):
+        if obj.lugar:
+            return {"nombre": obj.lugar.nombre, "id": obj.lugar.id}
+        # end if
+        return {}
+    # end def
+
+    def creatorR(self, obj, row):
+        nombre = "%s %s" % (obj.creator.first_name, obj.creator.last_name)
+        return {"username": obj.creator.username, "nombre": nombre}
+    # end def
+
+    def servicios(self, obj, row):
+        edit = "/novedades/reporte/form/%d/" % (obj.id)
+        delete = "/novedades/reporte/delete/%d/" % (obj.id)
+        return {'add': '/novedades/reporte/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
 
@@ -152,19 +164,24 @@ class ReporteForm(supra.SupraFormView):
     model = models.Reporte
     form_class = forms.ReporteSupraForm
     inlines = [FotoReporteInlineForm]
-    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(ReporteForm, self).dispatch(request, *args, **kwargs)
     # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.ReporteSupraFormEdit
+        # end if
+        return self.form_class
+    # end class
 # end class
 
 
 class FotoReporteForm(supra.SupraFormView):
     model = models.FotoReporte
-    body = True
 
     @method_decorator(check_login)
     @csrf_exempt
