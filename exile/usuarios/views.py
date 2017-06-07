@@ -100,7 +100,7 @@ class AsistenteSupraForm(supra.SupraFormView):
     model = models.Asistente
     form_class = forms.AsistenteForm
 
-    @method_decorator([check_login,asp_subcrip.user_plan_asistente])
+    @method_decorator([check_login,asp_subcrip.user_plan_asistente,asp_subcrip.user_plan_validar])
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)
@@ -230,7 +230,7 @@ class EmpleadoSupraForm(supra.SupraFormView):
     model = models.Empleado
     form_class = forms.EmpleadoForm
 
-    @method_decorator([check_login,asp_subcrip.user_plan_operario])
+    @method_decorator([check_login,asp_subcrip.user_plan_asistente,asp_subcrip.user_plan_validar])
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(EmpleadoSupraForm, self).dispatch(request, *args, **kwargs)
