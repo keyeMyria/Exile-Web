@@ -24,7 +24,7 @@ def user_plan_operario(view_func):
                 #end if
                 return HttpResponse(simplejson.dumps({"error": "Debe crear una cuenta."}), content_type='application/json', status=403)
             #end if
-            return HttpResponse(simplejson.dumps({"error": "Debes iniciar sesion."}), content_type='application/json', status=403)
+            return HttpResponse(simplejson.dumps({"error": "Debes iniciar session."}), content_type='application/json', status=403)
         #end if
         return HttpResponse(simplejson.dumps({"error": "Solicitud incorrecta."}), content_type='application/json', status=403)
     #end def
@@ -51,9 +51,20 @@ def user_plan_asistente(view_func):
                 #end if
                 return HttpResponse(simplejson.dumps({"error": "Debe crear una cuenta."}), content_type='application/json', status=403)
             #end if
-            return HttpResponse(simplejson.dumps({"error": "Debes iniciar sesion."}), content_type='application/json', status=403)
+            return HttpResponse(simplejson.dumps({"error": "Debes iniciar session."}), content_type='application/json', status=403)
         #end if
         return HttpResponse(simplejson.dumps({"error": "Solicitud incorrecta."}), content_type='application/json', status=403)
+    #end def
+
+    return _check
+#end def
+
+def user_plan_asistente(view_func):
+    def _check(request, *args, **kwargs):
+        if request.user.is_authenticated():
+            cuenta = models.Cuenta.objects.filter(cliente__id=request.user.id).first()
+        #end
+        return HttpResponse(simplejson.dumps({"error": "Debe iniciar session."}), content_type='application/json', status=403)
     #end def
 
     return _check
