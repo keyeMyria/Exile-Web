@@ -88,11 +88,25 @@ class CuentaAdmin(admin.ModelAdmin):
 #end class
 
 
+class FacturaAdmin(admin.ModelAdmin):
+    list_display = ['suscripcion','cliente','paga', 'estado']
+    search_fields=['suscripcion__cuenta__cliente__first_name', 'suscripcion__cuenta__cliente__last_name']
+    form = forms.FacturaForm
+
+    def cliente(self, obj):
+        return '%s %s'%(obj.suscripcion.cuenta.cliente.first_name, obj.suscripcion.cuenta.cliente.last_name)
+    #end def
+
+    cliente.allow_tags = True
+    cliente.short_description = 'Cliente'
+#end class
+
+
 admin.site.register(models.Funcionalidad)
 admin.site.register(models.Modulo, ModuloAdmin)
 admin.site.register(models.InstModulo, InstModuloAdmin)
 admin.site.register(models.Plan, PlanAdmin)
 admin.site.register(models.Suscripcion)
-admin.site.register(models.Factura)
+admin.site.register(models.Factura, FacturaAdmin)
 admin.site.register(models.Cuenta, CuentaAdmin)
 admin.site.register(models.Cliente, ClienteAdmin)
