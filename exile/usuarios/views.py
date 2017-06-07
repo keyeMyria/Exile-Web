@@ -15,9 +15,11 @@ import models
 import json as simplejson
 from django.contrib.auth.models import User, Group
 from subcripcion import decorators as asp_subcrip
+from exile.settings import ORIGIN
+
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
+supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True
@@ -54,6 +56,7 @@ def islogin(request):
 
 
 class MasterList(supra.SupraListView):
+    search_key = 'search[value]'
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -63,8 +66,8 @@ class MasterList(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(MasterList, self).get_queryset()
-        if self.request.GET.get('num_page', False):
-            self.paginate_by = self.request.GET.get('num_page', False)
+        if self.request.GET.get('length', False):
+            self.paginate_by = self.request.GET.get('length', False)
         # end if
         propiedad = self.request.GET.get('sort_property', False)
         orden = self.request.GET.get('sort_direction', False)
@@ -134,7 +137,6 @@ class AsistenteSupraFormDelete(supra.SupraDeleteView):
 
 class AsistenteList(MasterList):
     model = models.Asistente
-    search_key = 'q'
     list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
                     'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
@@ -231,7 +233,6 @@ class CargoDeleteSupra(supra.SupraDeleteView):
 
 class CargoList(MasterList):
     model = models.Cargo
-    search_key = 'q'
     list_display = ['nombre', 'date', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
@@ -322,7 +323,6 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
 
 class EmpleadoList(MasterList):
     model = models.Empleado
-    search_key = 'q'
     list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
                     'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'ingreso', 'retiro',
                     'imagen', 'id', 'cuenta']
@@ -427,7 +427,6 @@ class GrupoSupraFormDelete(supra.SupraDeleteView):
 
 class GrupoList(MasterList):
     model = models.Grupo
-    search_key = 'q'
     list_display = ['nombre', 'empleados_list']
     search_fields = ['nombre', ]
     paginate_by = 10

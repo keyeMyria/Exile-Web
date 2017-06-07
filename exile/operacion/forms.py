@@ -13,7 +13,7 @@ class TareaForm(forms.ModelForm):
 
     class Meta:
         model = models.Tarea
-        exclude = ()
+        fields = ['nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'unidad_de_repeticion','lugar', 'cliente', 'empleados', 'grupo', 'sub_complete']
         widgets = {
             # "fecha_de_ejecucion": DatePickerWidget(attrs={'class': 'date'}, format="%m/%d/%Y"),
             "repetir_cada": widgets.IntervalWidget()

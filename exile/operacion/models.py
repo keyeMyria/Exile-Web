@@ -71,7 +71,7 @@ class Tarea(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
     fecha_de_ejecucion = models.DateField()
-    repetir_cada = models.TextField(default=0)
+    repetir_cada = models.TextField("Repetir", default=0)
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado)

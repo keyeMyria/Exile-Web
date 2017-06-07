@@ -42,3 +42,18 @@ urlpatterns += [
     url(r'^lugar/delete/(?P<pk>\d+)/$',
         views.LugarDeleteSupra.as_view(), name="lugar_delete"),
 ]
+
+
+"""
+    Tareas
+"""
+
+
+urlpatterns += [
+    url(r'^tarea/form/$', views.TareaSupraForm.as_view(), name="lugar"),
+    # url(r'^lugar/list/$', views.LugarList.as_view(), name="lugar_list"),
+    # url(r'^lugar/form/(?P<pk>\d+)/$',
+    #    views.LugarSupraForm.as_view(), name="lugar_edit"),
+    #url(r'^lugar/delete/(?P<pk>\d+)/$',
+    #    views.LugarDeleteSupra.as_view(), name="lugar_delete"),
+]

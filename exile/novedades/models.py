@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from cuser.fields import CurrentUserField
 from operacion import models as operacion
+from django.contrib.auth.models import User
 from subcripcion.models import Cuenta
 # Create your models here.
 
@@ -13,6 +14,8 @@ class TipoReporte(models.Model):
     nombre = models.CharField(max_length=100)
     creator = CurrentUserField(add_only=True, related_name="created_tipo_re")
     last_editor = CurrentUserField(related_name="last_edited_tipo_re")
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tipo_re", blank=True, null=True)
 
     class Meta:
         verbose_name = "Tipo de reporte"
@@ -31,10 +34,10 @@ class Reporte(models.Model):
         (False, "Abierto"),
         (True, "Cerrado")
     )
-    numero = models.CharField(max_length=100, null=True, blank=True)
+    numero = models.BigIntegerField(blank=True, null=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=400)
-    tipo_de_reporte = models.ForeignKey(TipoReporte, blank=True, null=True)
+    tipo = models.ForeignKey(TipoReporte, blank=True, null=True)
     cliente = models.ForeignKey(operacion.Cliente, blank=True, null=True)
     lugar = models.ForeignKey(operacion.Lugar, blank=True, null=True)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -43,10 +46,12 @@ class Reporte(models.Model):
     estado = models.BooleanField(default=False, choices=cerrado)
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
+    eliminado = models.BooleanField(default=False)
+    eliminado_por = models.ForeignKey(User, related_name="eliminado_por_reporte", blank=True, null=True)
     # resend = models.BooleanField(default=False, verbose_name="Re enviar al cliente")
 
     def __unicode__(self):
-        return u'%s %s, cliente: %s' % (self.nombre, self.fecha.strftime('%Y-%m-%d %H:%M:%S'), self.piscina.cliente())
+        return u'%s %s, creado por: %s' % (self.nombre, self.fecha.strftime('%Y-%m-%d %H:%M:%S'), self.creator.username)
     # end def
 # end class
 

@@ -16,8 +16,10 @@ import croniter
 import models
 import urllib2
 import json
+from exile.settings import ORIGIN
+
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = "http://192.168.1.12:4200"
+supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True
@@ -199,6 +201,7 @@ def connections(request):
 
 
 class MasterList(supra.SupraListView):
+    search_key = 'q'
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -274,7 +277,6 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.Tipo
-    search_key = 'q'
     list_display = ['nombre', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
@@ -328,7 +330,6 @@ class ClienteDeleteSupra(supra.SupraDeleteView):
 
 class ClienteList(MasterList):
     model = models.Cliente
-    search_key = 'q'
     list_display = ['nombre', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
     search_fields = ['nombre', 'identificacion', 'telefono', 'direccion']
     list_filter = ['tipo', ]
@@ -387,7 +388,6 @@ class LugarDeleteSupra(supra.SupraDeleteView):
 
 class LugarList(MasterList):
     model = models.Lugar
-    search_key = 'q'
     list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
@@ -397,4 +397,23 @@ class LugarList(MasterList):
         delete = "/operacion/lugar/delete/%d/" % (obj.id)
         return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
     # end def
+# end class
+
+
+class TareaSupraForm(supra.SupraFormView):
+    model = models.Tarea
+    form_class = forms.TareaForm
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TareaSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_form_class(self):
+        if 'pk' in self.http_kwargs:
+            self.form_class = forms.TipoFormEdit
+        # end if
+        return self.form_class
+    # end class
 # end class
