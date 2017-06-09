@@ -1,4 +1,4 @@
-from channels.routing import route
+from channels.routing import route, route_class
 from usuarios.consumers import ws_connect, ws_disconnect
 
 

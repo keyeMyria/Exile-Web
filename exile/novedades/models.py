@@ -57,7 +57,7 @@ class Reporte(models.Model):
 
 
 class FotoReporte(models.Model):
-    url = models.FileField(upload_to="fotos")
+    foto = models.FileField(upload_to="fotos")
     reporte = models.ForeignKey(Reporte)
 
     class Meta:
@@ -66,8 +66,8 @@ class FotoReporte(models.Model):
     # end class
 
     def foto(self):
-        if self.url:
-            url = self.url
+        if self.foto:
+            url = self.foto
         else:
             url = 'no-imagen.svg'
         # end if
@@ -77,6 +77,6 @@ class FotoReporte(models.Model):
     foto.allow_tags = True
 
     def __unicode__(self):
-        return u"%s" % (self.url, )
+        return u"%s" % (self.foto, )
     # end def
 # end class

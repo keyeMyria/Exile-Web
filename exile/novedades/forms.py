@@ -81,8 +81,8 @@ class ReporteSupraFormEdit(MasterEdit):
 
 class FotoReporteForm(forms.ModelForm):
 
-    def clean_url(self):
-        imagen = self.cleaned_data.get('url', False)
+    def clean_foto(self):
+        imagen = self.cleaned_data.get('foto', False)
         if imagen:
             if hasattr(imagen, '_size') and imagen._size > 1 * 1024 * 1024:
                 raise forms.ValidationError(

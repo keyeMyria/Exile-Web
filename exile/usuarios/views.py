@@ -56,10 +56,9 @@ def islogin(request):
 
 
 class MasterList(supra.SupraListView):
-    search_key = 'search[value]'
+    search_key = 'q'
 
     @method_decorator(check_login)
-    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
