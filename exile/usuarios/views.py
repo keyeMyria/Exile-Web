@@ -22,6 +22,7 @@ supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
+supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
 
 
@@ -59,6 +60,7 @@ class MasterList(supra.SupraListView):
     search_key = 'q'
 
     @method_decorator(check_login)
+    @supra.access_control
     def dispatch(self, request, *args, **kwargs):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
@@ -99,7 +101,7 @@ class AsistenteSupraForm(supra.SupraFormView):
     model = models.Asistente
     form_class = forms.AsistenteForm
 
-    @method_decorator([check_login,asp_subcrip.user_plan_asistente,asp_subcrip.user_plan_validar])
+    # @method_decorator([check_login,asp_subcrip.user_plan_asistente,asp_subcrip.user_plan_validar])
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(AsistenteSupraForm, self).dispatch(request, *args, **kwargs)

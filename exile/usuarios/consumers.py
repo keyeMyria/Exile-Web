@@ -40,10 +40,46 @@ class EchoConsumer(JsonWebsocketConsumer):
 
     def connect(self, message, multiplexer, **kwargs):
         # Send data with the multiplexer
-        multiplexer.send({"status": "I just connected!"})
+        print "tenemos el pk", kwargs["pk"]
+        message.reply_channel.send({"accept": True})
+        multiplexer.send({"status": "I just connected!2"})
+        if kwargs["pk"] is not 0 or not None:
+            Group('noti-%s' % kwargs["pk"]).add(message.reply_channel)
+            Group('noti-%s' % kwargs["pk"]).send({
+                'text': json.dumps({
+                    'username': message.user.username,
+                    'is_logged_in': True
+                })
+            })
+        else:
+            print "soy anonimo"
+            Group('noti-anonimo').add(message.reply_channel)
+            Group('noti-anonimo').send({
+                'text': json.dumps({
+                    'username': "anonimo",
+                    'is_logged_in': True
+                })
+            })
+        # multiplexer.send({"status": "I just connected!"})
 
     def disconnect(self, message, multiplexer, **kwargs):
         print("Stream %s is closed" % multiplexer.stream)
+        if kwargs["pk"] is not 0 or not None:
+            Group('noti-%s' % kwargs["pk"]).send({
+                'text': json.dumps({
+                    'username': message.user.username,
+                    'is_logged_in': False
+                })
+            })
+            Group('noti-%s' % kwargs["pk"]).discard(message.reply_channel)
+        else:
+            Group('noti-anonimo').send({
+                'text': json.dumps({
+                    'username': "anonimo",
+                    'is_logged_in': False
+                })
+            })
+            Group('noti-anonimo').discard(message.reply_channel)
 
     def receive(self, content, multiplexer, **kwargs):
         # Simple echo
@@ -55,11 +91,16 @@ class AnotherConsumer(JsonWebsocketConsumer):
         # Some other actions here
         pass
 
+    def connect(self, message, multiplexer, **kwargs):
+        # Send data with the multiplexer
+        message.reply_channel.send({"accept": True})
+        multiplexer.send({"status": "I just connected!2"})
+
 
 class Demultiplexer(WebsocketDemultiplexer):
 
     # Wire your JSON consumers here: {stream_name : consumer}
     consumers = {
         "echo": EchoConsumer,
-        "other": AnotherConsumer,
+        # "other": AnotherConsumer,
     }

@@ -8,14 +8,18 @@
 
 {% block script %}
   <script>
-    var socket = new WebSocket('ws://' + window.location.host + '/noti-{{cuenta.id}}/');
-
+    {% if cuenta %}
+    var socket = new WebSocket('ws://' + window.location.host + '/test/'+ '{{cuenta.pk}}'+ '/');
+    {% else %}
+    var socket = new WebSocket('ws://' + window.location.host + '/test/0/');
+    {% endif %}
     socket.onopen = function open() {
       console.log('WebSockets connection created.');
     };
 
     socket.onmessage = function message(event) {
       var data = JSON.parse(event.data);
+      console.log(data);
       // NOTE: We escape JavaScript to prevent XSS attacks.
       var username = encodeURI(data['username']);
       var user = $('li').filter(function () {

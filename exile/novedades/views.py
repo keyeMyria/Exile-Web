@@ -10,12 +10,12 @@ from django.utils.decorators import method_decorator
 from cuser.middleware import CuserMiddleware
 from usuarios import models as usuarios
 from exile.decorator import check_login
-#from exile.settings import ORIGIN
+from exile.settings import ORIGIN
 from django.db.models import Q
 
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
-supra.SupraConf.ACCECC_CONTROL["origin"] = 'ORIGIN'
+supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.body = True
