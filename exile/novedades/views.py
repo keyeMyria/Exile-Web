@@ -130,7 +130,10 @@ class ReporteListView(MasterList):
     paginate_by = 10
 
     def tipoR(self, obj, row):
-        return {"nombre": obj.tipo.nombre, "id": obj.tipo.id }
+        if obj.tipo:
+            return {"nombre": obj.tipo.nombre, "id": obj.tipo.id }
+        # end if
+        return {}
     # end def
 
     def clienteR(self, obj, row):
