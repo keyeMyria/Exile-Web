@@ -11,8 +11,8 @@ supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 
 
-@supra.access_control
 def check_login(funcion):
+    @supra.access_control
     def check(request, *args, **kwargs):
         if request.user.is_authenticated():
             return funcion(request, *args, **kwargs)

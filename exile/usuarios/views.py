@@ -40,11 +40,18 @@ class LoginE(supra.SupraSession):
     model = models.Empleado
 
     @method_decorator(csrf_exempt)
-    def dispatch( ):
+    def dispatch(self, request, *args, **kwargs):
         a = super(LoginE, self).dispatch(request, *args, **kwargs)
         return a
     # end def
 # end class
+
+
+@supra.access_control
+def logoutUser(request):
+    logout(request)
+    return HttpResponse(status=200)
+# end def
 
 
 @supra.access_control
