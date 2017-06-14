@@ -60,7 +60,6 @@ class MasterList(supra.SupraListView):
     search_key = 'q'
 
     @method_decorator(check_login)
-    @supra.access_control
     def dispatch(self, request, *args, **kwargs):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
