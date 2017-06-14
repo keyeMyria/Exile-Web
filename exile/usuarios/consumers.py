@@ -4,7 +4,7 @@ from channels.auth import channel_session_user, channel_session_user_from_http
 from subcripcion.models import Cuenta
 from django.db.models import Q
 from channels.generic.websockets import WebsocketDemultiplexer, JsonWebsocketConsumer
-import biding
+import binding
 
 
 @channel_session_user_from_http
@@ -74,17 +74,6 @@ class EchoConsumer(JsonWebsocketConsumer):
         multiplexer.send({"original_message": content})
 
 
-class AnotherConsumer(JsonWebsocketConsumer):
-    def receive(self, content, multiplexer=None, **kwargs):
-        # Some other actions here
-        pass
-
-    def connect(self, message, multiplexer, **kwargs):
-        # Send data with the multiplexer
-        message.reply_channel.send({"accept": True})
-        multiplexer.send({"status": "I just connected!2"})
-
-
 class Demultiplexer(WebsocketDemultiplexer):
 
     # Wire your JSON consumers here: {stream_name : consumer}
@@ -94,17 +83,17 @@ class Demultiplexer(WebsocketDemultiplexer):
     }
 
 """
-    Biding
+    Binding
 """
 
 
 class DemultiplexerBiding(WebsocketDemultiplexer):
 
     consumers = {
-        "cargo": biding.CargoValueBinding.consumer,
-        "empleado": biding.EmpleadoValueBinding.consumer,
-        "asistente": biding.AsistenteValueBinding.consumer,
-        "grupo": biding.GrupoValueBinding.consumer
+        "cargo": binding.CargoValueBinding.consumer,
+        "empleado": binding.EmpleadoValueBinding.consumer,
+        "asistente": binding.AsistenteValueBinding.consumer,
+        "grupo": binding.GrupoValueBinding.consumer
     }
 
     def connection_groups(self, **kwargs):
