@@ -12,7 +12,7 @@ def ws_connect(message):
     message.reply_channel.send({"accept": True})
     if message.user:
         cuenta = Cuenta.objects.filter(
-            Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
+            Q(cliente=message.user.pk) | Q(asistente=message.user.pk) | Q(empleado=message.user.pk)).first()
         if cuenta:
             Group('noti-%d' % cuenta.id).add(message.reply_channel)
             Group('noti-%d' % cuenta.id).send({
@@ -27,7 +27,7 @@ def ws_connect(message):
 def ws_disconnect(message):
     if message.user:
         cuenta = Cuenta.objects.filter(
-            Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
+            Q(cliente=message.user.pk) | Q(asistente=message.user.pk) | Q(empleado=message.user.pk)).first()
         if cuenta:
             Group('noti-%d' % cuenta.id).send({
                 'text': json.dumps({
@@ -50,6 +50,7 @@ class EchoConsumer(JsonWebsocketConsumer):
 
     def connect(self, message, multiplexer, **kwargs):
         # Send data with the multiplexer
+        print "Se conecto"
         if kwargs["pk"] is not 0 or not None:
             Group('noti-%s' % kwargs["pk"]).send({
                 'text': json.dumps({
@@ -78,16 +79,16 @@ class Demultiplexer(WebsocketDemultiplexer):
 
     # Wire your JSON consumers here: {stream_name : consumer}
     consumers = {
-        "echo": EchoConsumer,
-        # "other": AnotherConsumer,
+        "noti": EchoConsumer,
     }
+
 
 """
     Binding
 """
 
 
-class DemultiplexerBiding(WebsocketDemultiplexer):
+class UsuariosDemultiplexerBiding(WebsocketDemultiplexer):
 
     consumers = {
         "cargo": binding.CargoValueBinding.consumer,

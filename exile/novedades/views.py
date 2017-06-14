@@ -62,6 +62,7 @@ class MasterList(supra.SupraListView):
 class TipoSupraForm(supra.SupraFormView):
     model = models.TipoReporte
     form_class = forms.TipoReporteForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -114,6 +115,7 @@ class TipoList(MasterList):
 
 class FotoReporteInlineForm(supra.SupraInlineFormView):
     model = models.FotoReporte
+    response_json = False
 
     @method_decorator(check_login)
     def dispatch(self, request, *args, **kwargs):
@@ -125,9 +127,9 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 class ReporteListView(MasterList):
     list_filter = ['tipo', 'cliente', 'lugar', 'id']
     list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
-                    'descripcion', 'creatorR', 'fecha', 'estado', 'numero', 'servicios']
+                    'descripcion', 'creatorR', 'fecha', 'estado', 'servicios']
     search_fields = ['nombre', 'descripcion',
-                     'tipo_nombre', 'numero']
+                     'tipo_nombre']
     model = models.Reporte
     paginate_by = 10
 
@@ -169,6 +171,7 @@ class ReporteForm(supra.SupraFormView):
     model = models.Reporte
     form_class = forms.ReporteSupraForm
     inlines = [FotoReporteInlineForm]
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -187,6 +190,7 @@ class ReporteForm(supra.SupraFormView):
 
 class FotoReporteForm(supra.SupraFormView):
     model = models.FotoReporte
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt

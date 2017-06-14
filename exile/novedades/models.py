@@ -34,7 +34,6 @@ class Reporte(models.Model):
         (False, "Abierto"),
         (True, "Cerrado")
     )
-    numero = models.BigIntegerField(blank=True, null=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=400)
     tipo = models.ForeignKey(TipoReporte, blank=True, null=True)

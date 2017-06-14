@@ -57,6 +57,11 @@ def logoutUser(request):
 @supra.access_control
 def islogin(request):
     if request.user.is_authenticated():
+        cuenta = models.Cuenta.objects.filter(
+                Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
+        if cuenta:
+            return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "cuenta": cuenta.id }), 200)
+        # end if
         return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
     # end if
     return HttpResponse([], 400)

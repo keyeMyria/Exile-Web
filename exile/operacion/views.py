@@ -241,6 +241,7 @@ class MasterList(supra.SupraListView):
 class TipoSupraForm(supra.SupraFormView):
     model = models.Tipo
     form_class = forms.TipoForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -294,6 +295,7 @@ class TipoList(MasterList):
 class ClienteSupraForm(supra.SupraFormView):
     model = models.Cliente
     form_class = forms.ClienteForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -352,6 +354,7 @@ class ClienteList(MasterList):
 class LugarSupraForm(supra.SupraFormView):
     model = models.Lugar
     form_class = forms.LugarForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -405,6 +408,7 @@ class LugarList(MasterList):
 class TareaSupraForm(supra.SupraFormView):
     model = models.Tarea
     form_class = forms.TareaForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt

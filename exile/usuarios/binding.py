@@ -13,7 +13,6 @@ class CargoValueBinding(WebsocketBinding):
     # end def
 
     def has_permission(self, user, action, pk):
-        print "######", user, action, pk
         return True
     # end def
 # end class

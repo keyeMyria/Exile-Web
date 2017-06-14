@@ -9,7 +9,7 @@
 {% block script %}
   <script>
     {% if cuenta %}
-    var socket = new WebSocket('ws://' + window.location.host + '/test/'+ '{{cuenta.pk}}'+ '/');
+    var socket = new WebSocket('ws://' + window.location.host + '/noti/'+ '{{cuenta.pk}}'+ '/');
 
   /*  var socket2 = new WebSocket('ws://' + window.location.host + '/biding/'+ '{{cuenta.pk}}'+ '/');
     socket2.onopen = function open() {
@@ -21,7 +21,7 @@
       console.log(data);
     }*/
     {% else %}
-    var socket = new WebSocket('ws://' + window.location.host + '/test/0/');
+    var socket = new WebSocket('ws://' + window.location.host + '/noti/0/');
     {% endif %}
     socket.onopen = function open() {
       console.log('WebSockets connection created.');
