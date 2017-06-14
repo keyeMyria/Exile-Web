@@ -61,12 +61,12 @@ class MasterEdit(forms.ModelForm):
 
     def clean(self):
         if get_cuenta():
-            return super(Master, self).clean()
+            return super(MasterEdit, self).clean()
         # end if
         raise forms.ValidationError(
             "Este usuario no esta asociado a una cuenta")
     # end def
-    
+
     def save(self, commit=False):
         master = super(MasterEdit, self).save(commit)
         if master.eliminado:

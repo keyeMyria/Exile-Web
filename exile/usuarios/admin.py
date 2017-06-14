@@ -24,6 +24,15 @@ class Empleado(admin.ModelAdmin):
 # end class
 
 
+@admin.register(models.Asistente)
+class Asistente(admin.ModelAdmin):
+    list_display = ('cuenta', 'first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'avatar')
+    search_fields = ('first_name', 'last_name', 'username', 'identificacion', 'telefono')
+    list_filter = ('cuenta', 'creator', 'last_editor')
+    icon = '<i class="material-icons">person</i>'
+# end class
+
+
 @admin.register(models.Grupo)
 class Grupo(admin.ModelAdmin):
     list_display = ('cuenta', 'nombre', 'creator', 'last_editor', 'eliminado', 'eliminado_por')

@@ -4,13 +4,15 @@ from channels.auth import channel_session_user, channel_session_user_from_http
 from subcripcion.models import Cuenta
 from django.db.models import Q
 from channels.generic.websockets import WebsocketDemultiplexer, JsonWebsocketConsumer
+import biding
 
 
 @channel_session_user_from_http
 def ws_connect(message):
     message.reply_channel.send({"accept": True})
     if message.user:
-        cuenta = Cuenta.objects.filter(Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
+        cuenta = Cuenta.objects.filter(
+            Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
         if cuenta:
             Group('noti-%d' % cuenta.id).add(message.reply_channel)
             Group('noti-%d' % cuenta.id).send({
@@ -24,7 +26,8 @@ def ws_connect(message):
 @channel_session_user
 def ws_disconnect(message):
     if message.user:
-        cuenta = Cuenta.objects.filter(Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
+        cuenta = Cuenta.objects.filter(
+            Q(cliente=message.user.pk) | Q(usuario=message.user.pk)).first()
         if cuenta:
             Group('noti-%d' % cuenta.id).send({
                 'text': json.dumps({
@@ -38,25 +41,19 @@ def ws_disconnect(message):
 class EchoConsumer(JsonWebsocketConsumer):
     http_user = True
 
+    def connection_groups(self, **kwargs):
+        if kwargs["pk"] is not 0 or not None:
+            return ['noti-%s' % kwargs["pk"]]
+        # end if
+        return ['noti-0']
+    # end def
+
     def connect(self, message, multiplexer, **kwargs):
         # Send data with the multiplexer
-        print "tenemos el pk", kwargs["pk"]
-        message.reply_channel.send({"accept": True})
-        multiplexer.send({"status": "I just connected!2"})
         if kwargs["pk"] is not 0 or not None:
-            Group('noti-%s' % kwargs["pk"]).add(message.reply_channel)
             Group('noti-%s' % kwargs["pk"]).send({
                 'text': json.dumps({
                     'username': message.user.username,
-                    'is_logged_in': True
-                })
-            })
-        else:
-            print "soy anonimo"
-            Group('noti-anonimo').add(message.reply_channel)
-            Group('noti-anonimo').send({
-                'text': json.dumps({
-                    'username': "anonimo",
                     'is_logged_in': True
                 })
             })
@@ -71,15 +68,6 @@ class EchoConsumer(JsonWebsocketConsumer):
                     'is_logged_in': False
                 })
             })
-            Group('noti-%s' % kwargs["pk"]).discard(message.reply_channel)
-        else:
-            Group('noti-anonimo').send({
-                'text': json.dumps({
-                    'username': "anonimo",
-                    'is_logged_in': False
-                })
-            })
-            Group('noti-anonimo').discard(message.reply_channel)
 
     def receive(self, content, multiplexer, **kwargs):
         # Simple echo
@@ -104,3 +92,22 @@ class Demultiplexer(WebsocketDemultiplexer):
         "echo": EchoConsumer,
         # "other": AnotherConsumer,
     }
+
+"""
+    Biding
+"""
+
+
+class DemultiplexerBiding(WebsocketDemultiplexer):
+
+    consumers = {
+        "cargo": biding.CargoValueBinding.consumer,
+        "empleado": biding.EmpleadoValueBinding.consumer,
+        "asistente": biding.AsistenteValueBinding.consumer,
+        "grupo": biding.GrupoValueBinding.consumer
+    }
+
+    def connection_groups(self, **kwargs):
+        return ["noti-%s" % kwargs["pk"]]
+    # end def
+# end class

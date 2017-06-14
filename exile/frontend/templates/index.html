@@ -10,6 +10,16 @@
   <script>
     {% if cuenta %}
     var socket = new WebSocket('ws://' + window.location.host + '/test/'+ '{{cuenta.pk}}'+ '/');
+
+  /*  var socket2 = new WebSocket('ws://' + window.location.host + '/biding/'+ '{{cuenta.pk}}'+ '/');
+    socket2.onopen = function open() {
+      console.log('WebSockets 2 connection created.');
+    }
+
+    socket2.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      console.log(data);
+    }*/
     {% else %}
     var socket = new WebSocket('ws://' + window.location.host + '/test/0/');
     {% endif %}

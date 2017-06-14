@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 import views
 
+""
 urlpatterns = [
     url(r'^login/$', views.LoginU.as_view(), name="loginU"),
     #url(r'^logout/$', views.logoutUser, name="loginU"),
@@ -40,9 +41,21 @@ urlpatterns += [
 """
 
 urlpatterns += [
-    url(r'^empleado/form/$', views.EmpleadoSupraForm.as_view(), name="cargo"),
-    url(r'^empleado/form/(?P<pk>\d+)/$', views.EmpleadoSupraForm.as_view(), name="cargo_edit"),
-    url(r'^empleado/list/$', views.EmpleadoList.as_view(), name="cargo_list"),
+    url(r'^empleado/form/$', views.EmpleadoSupraForm.as_view(), name="empleado"),
+    url(r'^empleado/form/(?P<pk>\d+)/$', views.EmpleadoSupraForm.as_view(), name="empleado_edit"),
+    url(r'^empleado/list/$', views.EmpleadoList.as_view(), name="empleado_list"),
     url(r'^empleado/delete/(?P<pk>\d+)/$',
-        views.EmpleadoSupraFormDelete.as_view(), name="cargo_delete"),
+        views.EmpleadoSupraFormDelete.as_view(), name="empleado_delete"),
+]
+
+"""
+    Urls grupos
+"""
+
+urlpatterns += [
+    url(r'^grupo/form/$', views.GrupoSupraForm.as_view(), name="grupos"),
+    url(r'^grupo/form/(?P<pk>\d+)/$', views.GrupoSupraForm.as_view(), name="grupos_edit"),
+    url(r'^grupo/list/$', views.GrupoList.as_view(), name="grupos_list"),
+    url(r'^grupo/delete/(?P<pk>\d+)/$',
+        views.GrupoSupraFormDelete.as_view(), name="grupos_delete"),
 ]
