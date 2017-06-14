@@ -9,6 +9,6 @@ from django.db.models import Q
 
 
 def index(request):
-    cuenta = Cuenta.objects.filter(Q(cliente=request.user.pk) | Q(usuario=request.user.pk)).first()
+    cuenta = Cuenta.objects.filter(Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
     return render(request, 'index.html', {"cuenta": cuenta})
 # end def
