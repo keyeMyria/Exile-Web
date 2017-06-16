@@ -70,7 +70,8 @@ def islogin(request):
 
 class MasterList(supra.SupraListView):
     search_key = 'q'
-
+    list_filter = ["id"]
+    
     @method_decorator(check_login)
     def dispatch(self, request, *args, **kwargs):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
