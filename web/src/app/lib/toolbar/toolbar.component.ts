@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer, ViewChild, ElementRef, Directive  } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { AppMenuMeta } from '../../app.routing';
 

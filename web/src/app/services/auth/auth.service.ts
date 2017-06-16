@@ -1,8 +1,7 @@
-
-import { CallService } from './call.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../auth/user';
+import { CallService } from '../call.service';
+import { User } from '../../auth/user';
 
 declare var document: any;
 
@@ -23,7 +22,7 @@ export class AuthService {
     private addUser(user: User) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
-        if(!this.sokect) {
+        if (!this.sokect) {
             this.sokect = this._cl.ws('users');
         }
     }
@@ -68,7 +67,6 @@ export class AuthService {
 
     logout() {
         this._cl.delete('usuarios/login/')
-            .then(res => res.json())
             .then(data => {
                 this.removeUser();
             })

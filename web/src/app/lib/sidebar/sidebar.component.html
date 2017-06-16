@@ -96,7 +96,7 @@
         <div class="nav-container">
             <ul class="nav">
                 <li *ngFor="let menu of menuInfo" routerLinkActive="active">
-                    <a *ngIf="!!menu.children" data-toggle="collapse" href="#{{menu.title}}">
+                    <a *ngIf="!!menu.children" data-toggle="collapse" href="#menu-{{menu.title}}">
                         <i class="material-icons">{{menu.icon}}</i>
                         <p>{{menu.title}} <b class="caret"></b></p>
                     </a>
@@ -104,14 +104,12 @@
                         <i class="material-icons">{{menu.icon}}</i>
                         <p>{{menu.title}}</p>
                     </a>
-                    <div *ngIf="!!menu.children" class="collapse" id="{{menu.title}}">
+                    <div *ngIf="!!menu.children" class="collapse" id="menu-{{menu.title}}">
                         <ul class="nav">
                             <li *ngFor="let smenu of menu.children" routerLinkActive="active">
                                 <a [routerLink]="[smenu.url]">
-                                    <span class="sidebar-normal">
-                                        <i class="material-icons">{{smenu.icon}}</i>
-                                        {{smenu.title}}
-                                    </span>
+                                    <span class="sidebar-mini"><i class="material-icons">{{smenu.icon}}</i></span>
+                                    <span class="sidebar-normal">{{smenu.title}}</span>
                                 </a>
                             </li>
                         </ul>

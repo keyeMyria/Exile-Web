@@ -1,74 +1,127 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { NotificationService } from '../../services/notification.service';
 declare var $: any;
 
 @Component({
     selector: 'ex-table',
-    templateUrl: './table.component.html'
+    templateUrl: './table.component.html',
 })
 export class TableComponent implements OnInit {
 
     @ViewChild('table') private table: ElementRef;
-    private dataTable: any;
-    data: any[] = [
-        ['Tiger Nixon', 'System Architect', 'Edinburgh', '5421', '2011/04/25', '$320,800'],
-        ['Garrett Winters', 'Accountant', 'Tokyo', '8422', '2011/07/25', '$170,750'],
-        ['Ashton Cox', 'Junior Technical Author', 'San Francisco', '1562', '2009/01/12', '$86,000'],
-        ['Cedric Kelly', 'Senior Javascript Developer', 'Edinburgh', '6224', '2012/03/29', '$433,060'],
-        ['Airi Satou', 'Accountant', 'Tokyo', '5407', '2008/11/28', '$162,700'],
-        ['Brielle Williamson', 'Integration Specialist', 'New York', '4804', '2012/12/02', '$372,000'],
-        ['Herrod Chandler', 'Sales Assistant', 'San Francisco', '9608', '2012/08/06', '$137,500'],
-        ['Rhona Davidson', 'Integration Specialist', 'Tokyo', '6200', '2010/10/14', '$327,900'],
-        ['Colleen Hurst', 'Javascript Developer', 'San Francisco', '2360', '2009/09/15', '$205,500'],
-        ['Sonya Frost', 'Software Engineer', 'Edinburgh', '1667', '2008/12/13', '$103,600'],
-        ['Jena Gaines', 'Office Manager', 'London', '3814', '2008/12/19', '$90,560'],
-        ['Quinn Flynn', 'Support Lead', 'Edinburgh', '9497', '2013/03/03', '$342,000'],
-        ['Charde Marshall', 'Regional Director', 'San Francisco', '6741', '2008/10/16', '$470,600'],
-        ['Haley Kennedy', 'Senior Marketing Designer', 'London', '3597', '2012/12/18', '$313,500'],
-        ['Tatyana Fitzpatrick', 'Regional Director', 'London', '1965', '2010/03/17', '$385,750'],
-        ['Michael Silva', 'Marketing Designer', 'London', '1581', '2012/11/27', '$198,500'],
-        ['Paul Byrd', 'Chief Financial Officer (CFO)', 'New York', '3059', '2010/06/09', '$725,000'],
-        ['Gloria Little', 'Systems Administrator', 'New York', '1721', '2009/04/10', '$237,500'],
-        ['Bradley Greer', 'Software Engineer', 'London', '2558', '2012/10/13', '$132,000'],
-        ['Dai Rios', 'Personnel Lead', 'Edinburgh', '2290', '2012/09/26', '$217,500'],
-        ['Jenette Caldwell', 'Development Lead', 'New York', '1937', '2011/09/03', '$345,000'],
-        ['Yuri Berry', 'Chief Marketing Officer (CMO)', 'New York', '6154', '2009/06/25', '$675,000'],
-        ['Caesar Vance', 'Pre-Sales Support', 'New York', '8330', '2011/12/12', '$106,450'],
-        ['Doris Wilder', 'Sales Assistant', 'Sidney', '3023', '2010/09/20', '$85,600'],
-        ['Angelica Ramos', 'Chief Executive Officer (CEO)', 'London', '5797', '2009/10/09', '$1,200,000'],
-        ['Gavin Joyce', 'Developer', 'Edinburgh', '8822', '2010/12/22', '$92,575'],
-        ['Jennifer Chang', 'Regional Director', 'Singapore', '9239', '2010/11/14', '$357,650'],
-        ['Brenden Wagner', 'Software Engineer', 'San Francisco', '1314', '2011/06/07', '$206,850'],
-        ['Fiona Green', 'Chief Operating Officer (COO)', 'San Francisco', '2947', '2010/03/11', '$850,000'],
-        ['Shou Itou', 'Regional Marketing', 'Tokyo', '8899', '2011/08/14', '$163,000'],
-        ['Michelle House', 'Integration Specialist', 'Sidney', '2769', '2011/06/02', '$95,400'],
-        ['Suki Burks', 'Developer', 'London', '6832', '2009/10/22', '$114,500'],
-        ['Prescott Bartlett', 'Technical Author', 'London', '3606', '2011/05/07', '$145,000'],
-        ['Gavin Cortez', 'Team Leader', 'San Francisco', '2860', '2008/10/26', '$235,500'],
-        ['Martena Mccray', 'Post-Sales support', 'Edinburgh', '8240', '2011/03/09', '$324,050'],
-        ['Unity Butler', 'Marketing Designer', 'San Francisco', '5384', '2009/12/09', '$85,675']
-    ];
 
-    constructor() { }
+    private dataTable: any;
+    public service: any;
+    public columns: any[] = [];
+    public columnDefs: any[] = [];
+    public conf: any;
+    public selectedItems: any[] = [];
+    public multiSelectable = false;
+
+    constructor(private _ns: NotificationService) {  }
 
     ngOnInit() {
-        this.dataTable = $(this.table.nativeElement).DataTable({
-            columns: [
-                { title: 'Name' },
-                { title: 'Position' },
-                { title: 'Office' },
-                { title: 'Extn.' },
-                { title: 'Start date' },
-                { title: 'Salary' }
-            ]
-        });
-        this.dataTable.clear();
-        this.dataTable.rows.add(this.data);
-        this.dataTable.draw();
-    }
-    
-    setData(sourcedata) {
-        this.data = sourcedata;
+        const table = this.table.nativeElement;
+        this.conf = {
+            processing: true,
+            serverSide: true,
+            pagingType: 'full_numbers',
+            responsive: true,
+            ajax: (data, callback, settings) => {
+                const op = {
+                    page: Math.ceil(data.start / data.length) + 1,
+                    num_page: data.length,
+                    sort_property: this.columns[data.order[0].column].data,
+                    sort_direction: data.order[0].dir,
+                    q: data.search.value
+                };
+                this.ajax(data.draw, op, callback);
+            },
+            columns: this.columns,
+            language: {
+                sProcessing: `
+                    <div class="loader">
+                        <svg class="circular" viewBox="25 25 50 50">
+                            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                        </svg>
+                    </div>`,
+                sLengthMenu: 'Mostrar _MENU_ registros',
+                sZeroRecords: 'No se encontraron resultados',
+                sEmptyTable: 'Ningun dato disponible',
+                sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+                sInfoEmpty: 'Ningun dato disponible',
+                sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+                sInfoPostFix: '',
+                sSearch: 'Buscar:',
+                sUrl: '',
+                sInfoThousands: ',',
+                sLoadingRecords: 'Cargando...',
+                oPaginate: {
+                    sFirst: 'Primero',
+                    sLast: 'Ultimo',
+                    sNext: 'Siguiente',
+                    sPrevious: 'Anterior'
+                },
+                oAria: {
+                    sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+                    sSortDescending: ': Activar para ordenar la columna de manera descendente'
+                }
+            }
+        };
+        this.dataTable = $(table).DataTable(this.conf);
+        this._selectionInit(table);
     }
 
+    _selectionInit(table) {
+        if (this.multiSelectable) {
+            const self = this;
+            $(table).on('click', 'tbody tr', function(event){
+                self._onSelectedRow(this);
+                event.preventDefault();
+            });
+            // $(table).on('change', 'tbody tr td input[type=checkbox][name=selectedItems]', function(){
+            //     if ($(this).is(':checked')) {
+            //         console.log('check');
+            //         // self._onSelectedRow(this);
+            //     }
+            // });
+        }
+    }
+
+    _onSelectedRow(tr) {
+        const self = this;
+        const table = this.table.nativeElement;
+        const check = $(tr).find('input[type=checkbox][name=selectedItems]');
+        $(tr).toggleClass('selected');
+        check.prop('checked', !check.is(':checked'));
+        this.selectedItems = [];
+        $.each($(table).find('tr.selected'), function() {
+            self.selectedItems.push(self.dataTable.row(this).data());
+        });
+    }
+
+    preAjax(data) {
+        return data;
+    }
+
+    ajax(draw: number, dataSource: any, cb: any): void {
+        dataSource = this.preAjax(dataSource);
+        this.service.list(dataSource)
+            .then(res => res.json())
+            .then(data => {
+                console.log('res');
+                cb({ 'draw': draw, 'recordsTotal': data.count, 'recordsFiltered': data.num_rows, 'data': data.object_list });
+            })
+            .catch(err => {
+                cb({ 'recordsTotal': 0, 'recordsFiltered': 0, 'data': [] });
+                this._ns.error('Ha ocurrido un error al consultar los datos');
+            });
+    }
+
+    renderCheckRow(data, type, full, meta) {
+        return `
+        <div class="checkbox">
+            <label><input type="checkbox" name="selectedItems" value="${data}"/></label>
+        </div>`;
+    }
 }

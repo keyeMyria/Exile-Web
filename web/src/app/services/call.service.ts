@@ -34,11 +34,10 @@ export class CallService {
                     query.set(key, par[key]);
                 }
             }
-            options.search = par;
+            options.search = query;
         }
         options.headers = headers;
         options.withCredentials = true;
-        console.log(options);
         return options;
     }
 
@@ -56,34 +55,28 @@ export class CallService {
     }
 
     get(url: string, params?: any, head?: any): Promise<Response> {
-        console.log('get:', url);
         return this._http.get(this.getUrl(url), this.getOptions(head, params)).toPromise();
 
     }
 
     delete(url: string, head?: any) {
-        console.log('delete:', url);
         return this._http.delete(this.getUrl(url), this.getOptions(head)).toPromise();
     }
 
     head(url: string, head?: any) {
-        console.log('delete:', url);
         return this._http.delete(this.getUrl(url), this.getOptions(head)).toPromise();
     }
 
     post(url: string, body?: any, head?: any): Promise<Response> {
-        console.log('post:', url);
         return this._http.post(this.getUrl(url), body, this.getOptions(head)).toPromise();
     }
 
 
     put(url: string, body?: any, head?: any): Promise<Response> {
-        console.log('put:', url);
         return this._http.put(this.getUrl(url), body, this.getOptions(head)).toPromise();
     }
 
     patch(url: string, body?: any, head?: any): Promise<Response> {
-        console.log('patch:', url);
         return this._http.patch(this.getUrl(url), body, this.getOptions(head)).toPromise();
     }
 

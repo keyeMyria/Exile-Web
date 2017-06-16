@@ -6,7 +6,7 @@ import { AppRouteModule } from './app.route.module';
 
 
 import { AppComponent } from './app.component';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { CallService } from './services/call.service';
 import { NotificationService } from './services/notification.service';
 
@@ -24,7 +24,7 @@ import { NotificationService } from './services/notification.service';
     providers: [
         CallService,
         AuthService,
-        NotificationService
+        NotificationService,
     ],
     bootstrap: [AppComponent]
 })

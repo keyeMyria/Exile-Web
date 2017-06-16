@@ -22,27 +22,23 @@
         "scripts": [
             "../node_modules/jquery/dist/jquery.js",
             "../node_modules/bootstrap/dist/js/bootstrap.js",
-            "../src/assets/js/core/material.min.js",
             "../node_modules/arrive/src/arrive.js",
             "../node_modules/moment/moment.js",
             "../node_modules/chartist/dist/chartist.js",
             "../node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
-
-            "../node_modules/bootstrap-notify/bootstrap-notify.js",
             "../node_modules/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js",
-            "../src/assets/js/plugins/jquery-jvectormap.js",
             "../node_modules/nouislider/distribute/nouislider.min.js",
             "../node_modules/bootstrap-select/dist/js/bootstrap-select.js",
-
-            "../node_modules/datatables/media/js/jquery.dataTables.js",
+            "../node_modules/datatablesnet/js/jquery.dataTables.js",
+            "../node_modules/datatablesnet-bs/js/dataTables.bootstrap.js",
             "../node_modules/fullcalendar/dist/fullcalendar.js",
-            "../src/assets/js/core/jquery.perfect-scrollbar.min.js",
-
             "../node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js",
+            "../src/assets/js/plugins/jasny-bootstrap.min.js",
+            "../src/assets/js/plugins/bootstrap-notify.js",
+            "../src/assets/js/core/material.min.js",
+            "../src/assets/js/core/jquery.perfect-scrollbar.min.js",
             "../src/assets/js/plugins/sweetalert2.min.js",
-
             "../src/assets/js/core/jquery.validate.min.js"
-
         ],
         "environmentSource": "environments/environment.ts",
         "environments": {
