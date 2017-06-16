@@ -3,13 +3,13 @@ import { Routes } from '@angular/router';
 import { BaseComponent } from './lib/base/base.component';
 import { P404Component } from './lib/404/404.component';
 import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './services/auth.guard';
+import { AuthGuard } from './services/auth/auth.guard';
 
 export interface MenuMeta {
     title: string;
     url: string;
     icon: string;
-    children: MenuMeta[];
+    children?: MenuMeta[];
 }
 
 export const AppRoutes: Routes = [
@@ -32,8 +32,9 @@ export const AppRoutes: Routes = [
     { path: '**', component: P404Component }
 ];
 
+import { UsuariosMenuMeta } from './usuarios/usuarios.route';
+
 export const AppMenuMeta: MenuMeta[] = [
-    { title: 'Usuarios', url: '', icon: '', children: null },
-    { title: 'Operación', url: '', icon: '', children: null },
-    { title: 'Novedades', url: '', icon: '', children: null }
+    { title: 'Home', url: '/dashboard', icon: 'dashboard' },
+    { title: 'Usuarios', url: null, icon: 'account_circle', children: UsuariosMenuMeta }
 ];

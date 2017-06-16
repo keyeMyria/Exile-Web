@@ -1,17 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LibModule } from '../lib/lib.module';
 import { UsuariosRoutes } from './usuarios.route';
-import { AsistenteComponent } from './asistente/asistente.component';
+import { AsistenteComponent, AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
 import { EmpleadoComponent } from './empleado/empleado.component';
+import { AsistenteService } from '../services/usuarios/asistente.service';
 
 @NgModule({
     imports: [
-        RouterModule.forChild(UsuariosRoutes),
-        CommonModule
+        CommonModule,
+        LibModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule.forChild(UsuariosRoutes)
     ],
-    declarations: [AsistenteComponent, EmpleadoComponent],
-    providers: []
+    declarations: [
+        AsistenteComponent, AsistenteListComponent, AsistenteEditComponent,
+        EmpleadoComponent
+    ],
+    providers: [ AsistenteService ]
 })
 export class UsuariosModule { }
