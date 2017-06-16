@@ -71,7 +71,7 @@ def islogin(request):
 class MasterList(supra.SupraListView):
     search_key = 'q'
     list_filter = ["id"]
-    
+
     @method_decorator(check_login)
     def dispatch(self, request, *args, **kwargs):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
@@ -92,7 +92,7 @@ class MasterList(supra.SupraListView):
         else:
             queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
                 cuenta__asistente=self.request.user.pk, eliminado=False) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=True))
+                    cuenta__asistente=self.request.user.pk, eliminado=False))
         # end if
         if propiedad and orden:
             if orden == "asc":

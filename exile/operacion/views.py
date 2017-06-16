@@ -224,7 +224,7 @@ class MasterList(supra.SupraListView):
         else:
             queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
                 cuenta__asistente=self.request.user.pk, eliminado=False) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=True))
+                    cuenta__asistente=self.request.user.pk, eliminado=False))
         # end if
         if propiedad and orden:
             if orden == "asc":
