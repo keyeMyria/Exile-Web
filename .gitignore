@@ -107,3 +107,4 @@ ENV/
 
 #angular/dist/
 **/node_modules/**
+#!**/node_modules/bootstrap*

@@ -1,8 +1,7 @@
-
-import { CallService } from './call.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../auth/user';
+import { CallService } from '../call.service';
+import { User } from '../../auth/user';
 
 declare var document: any;
 
@@ -17,62 +16,67 @@ export class AuthService {
     constructor(private _cl: CallService, private _rt: Router) { }
 
     isLoggedIn(): boolean {
-        // return true;
         return !!this.getUser();
     }
 
-    addUser(user: User) {
+    private addUser(user: User) {
         this.user = user;
-        // localStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('user', JSON.stringify(this.user));
+        if (!this.sokect) {
+            this.sokect = this._cl.ws('users');
+        }
+    }
+
+    private removeUser(err?) {
+        console.log(err);
+        this.user = null;
+        this.redirectUrl = null;
+        if (!!this.sokect) {
+            this.sokect.close();
+        }
+        localStorage.removeItem('user');
+        this._rt.navigate(['/login']);
     }
 
     getUser(): User {
         if (this.user) {
             return this.user;
         } else {
+            this.isLogin();
             const u = JSON.parse(localStorage.getItem('user'));
             if (u) {
                 this.addUser(u);
                 return u;
             }
+            return null;
         }
-        return null;
     }
 
     login(body: any) {
         if (!body.username && !body.password) {
             return;
         }
-        this._rt.navigate([this.redirectUrl || '/dashboard']);
         this._cl.post('usuarios/login/', body)
+            .then(res => res.json())
             .then(data => {
-                this.sokect = this._cl.ws('users');
-                this.sokect.onmessage = (evn) => {
-                    console.log(JSON.parse(evn.data));
-                };
-                this.addUser(data.json());
+                this.addUser(data);
                 this._rt.navigate([this.redirectUrl || '/dashboard']);
             })
             .catch(err => console.log('error', err));
     }
 
-
-
     logout() {
         this._cl.delete('usuarios/login/')
-            .then(res => {
-                this.user = null;
-                this.redirectUrl = null;
-                // this.sokect.close();
-                localStorage.removeItem('user');
-                this._rt.navigate(['/login']);
+            .then(data => {
+                this.removeUser();
             })
             .catch(err => console.log('error', err));
     }
 
     isLogin() {
-        this._cl.get('usuarios/is/login/', { hola: 'mundo' })
-            .then(res => console.log('then:', res))
-            .catch(err => console.log('catch', err));
+        return this._cl.get('usuarios/is/login/')
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => this.removeUser(err));
     }
 }
