@@ -2,15 +2,13 @@ import { Component, OnInit} from '@angular/core';
 import { Router, Event, NavigationEnd, NavigationStart } from '@angular/router';
 
 declare var $: any;
-declare var $1: any;
 
 @Component({
-    selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
 export class AuthComponent implements OnInit {
 
-    private test: Date = new Date();
+    public test: Date = new Date();
 
     constructor(private _router: Router) {
         this._router.events.subscribe(this.ckeckRouterEvents);
@@ -26,11 +24,11 @@ export class AuthComponent implements OnInit {
     }
 
     checkFullPageBackgroundImage() {
-        let $page = $('.full-page');
-        let image_src = $page.data('image');
+        const $page = $('.full-page');
+        const image_src = $page.data('image');
 
         if (image_src !== undefined) {
-            let image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>';
+            const image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>';
             $page.append(image_container);
         }
     };

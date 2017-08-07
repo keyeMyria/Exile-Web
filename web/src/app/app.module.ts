@@ -1,32 +1,29 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
+import { HttpModule } from '@angular/http';
+import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { AppRouteModule } from './app.route.module';
-
-
 import { AppComponent } from './app.component';
-import { AuthService } from './services/auth/auth.service';
-import { CallService } from './services/call.service';
-import { NotificationService } from './services/notification.service';
-
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { CallService } from '../lib/services/call.service';
+import { LibModule } from '../lib/lib.module'
 @NgModule({
+    declarations: [
+        AppComponent
+    ],
     imports: [
         BrowserModule,
         HttpModule,
         CommonModule,
-        AppRouteModule
-
+        BrowserAnimationsModule,
+        LibModule,
+        AppRouteModule,
+        AuthModule
     ],
-    declarations: [
-        AppComponent
-    ],
-    providers: [
-        CallService,
-        AuthService,
-        NotificationService,
-    ],
+    providers: [CallService],
     bootstrap: [AppComponent]
 })
-
 export class AppModule { }

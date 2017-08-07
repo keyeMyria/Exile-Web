@@ -108,3 +108,4 @@ ENV/
 #angular/dist/
 **/node_modules/**
 #!**/node_modules/bootstrap*
+web/src/assets/.sass-cache

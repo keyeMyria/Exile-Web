@@ -3,24 +3,15 @@
         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
             <form novalidate (submit)="login()" [formGroup]="form">
                 <div class="card card-login card-hidden">
-                    <div class="card-header text-center" data-background-color="rose">
-                        <h4 class="card-title">Inicia sesión con</h4>
-                        <div class="social-line">
-                            <a href="#btn" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-facebook-square"></i>
-                            </a>
-                            <a href="#pablo" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-twitter"></i>
-                            </a>
-                            <a href="#eugen" class="btn btn-just-icon btn-simple">
-                                <i class="fa fa-google-plus"></i>
-                            </a>
-                        </div>
+                    <div class="card-header text-center" data-background-color="orange">
+                        <h4 class="card-title">Bienvenido</h4>
                     </div>
-                    <p class="category text-center">
-                        O bien,
-                    </p>
                     <div class="card-content">
+                        <div *ngIf="ready" class="loader">
+                            <svg class="circular" viewBox="25 25 50 50">
+                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+                            </svg>
+                        </div>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">face</i>
@@ -40,9 +31,8 @@
                             </div>
                         </div>
                     </div>
-                    <!--  -->
                     <div class="footer text-center">
-                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
+                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Inicia sesión</button>
                     </div>
                 </div>
             </form>
