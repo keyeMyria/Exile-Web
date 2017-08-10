@@ -1,5 +1,8 @@
 from django.conf.urls import include, url
 import views
+from trigger import auto_triggers
+
+auto_triggers()
 
 urlpatterns = [
     url(r'^login/$', views.LoginU.as_view(), name="loginU"),

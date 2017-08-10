@@ -31,10 +31,20 @@ ALLOWED_HOSTS = [
     '192.168.1.16',
     '192.168.1.19',
     '127.0.0.1',
-    '192.168.189.128'
+    '192.168.189.128',
+    '192.168.1.52',
+    '192.168.1.5',
 ]
 
 ORIGIN = "http://192.168.1.19:4200"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mariobarrios@exile.com.co'
+EMAIL_HOST_PASSWORD = 'grwlbpmnvfxlofjz'
 
 # Application definition
 
@@ -50,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'supra',
     'supra.auths.oauth',
+    'trigger',
     'cuser',
     'frontend',
     'usuarios.apps.UsuariosConfig',
@@ -68,7 +79,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cuser.middleware.CuserMiddleware'
+    'cuser.middleware.CuserMiddleware',
+    'trigger.default.Middleware'
 ]
 
 ROOT_URLCONF = 'exile.urls'
