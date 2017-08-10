@@ -33,7 +33,7 @@ class SubTareaForm(forms.ModelForm):
 
     class Meta:
         model = models.SubTarea
-        fields = ['tarea', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por'] 
+        fields = ['tarea', 'nombre', 'descripcion'] 
     # end class
 
 # end class
