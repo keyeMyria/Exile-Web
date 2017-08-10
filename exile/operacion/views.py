@@ -423,3 +423,36 @@ class TareaSupraForm(supra.SupraFormView):
         return self.form_class
     # end class
 # end class
+
+
+class TareaDeleteSupra(supra.SupraDeleteView):
+    model = models.Tarea
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TareaDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.eliminado = True
+        user = CuserMiddleware.get_user()
+        self.object.eliminado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
+# end class
+
+class TareaList(MasterList):
+    model = models.Tarea
+    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios']
+    search_fields = ['nombre', 'direccion', ]
+    paginate_by = 10
+
+    def servicios(self, obj, row):
+        edit = "/operacion/lugar/form/%d/" % (obj.id)
+        delete = "/operacion/lugar/delete/%d/" % (obj.id)
+        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
+    # end def
+# end class

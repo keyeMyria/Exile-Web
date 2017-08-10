@@ -81,7 +81,7 @@ CACHES = {
 }
 
 # Name of cache backend to cache user agents. If it not specified default
-# cache alias will be used. Set to `None` to disable caching.
+# cache alias will be used. Set to `None` to disable caching.x y
 USER_AGENTS_CACHE = 'default'
 
 
@@ -94,10 +94,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cuser.middleware.CuserMiddleware',
-<<<<<<< HEAD
     'trigger.default.Middleware'
-=======
->>>>>>> b6c810b6b44003678d43cd52bde63e3ef899d32a
 ]
 
 ROOT_URLCONF = 'exile.urls'
