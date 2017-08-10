@@ -29,6 +29,26 @@ class TareaForm(forms.ModelForm):
     # end def
 # end class
 
+class SubTareaForm(forms.ModelForm):
+
+    class Meta:
+        model = models.SubTarea
+        fields = ['tarea', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por']
+        widgets = {
+            # "fecha_de_ejecucion": DatePickerWidget(attrs={'class': 'date'}, format="%m/%d/%Y"),
+            "repetir_cada": widgets.IntervalWidget()
+        }
+    # end class
+
+    def __init__(self, *args, **kwargs):
+        super(TareaForm, self).__init__(*args, **kwargs)
+        self.fields['fecha_de_ejecucion'].input_formats = (
+            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(
+            choices=self.fields['unidad_de_repeticion'].choices)
+    # end def
+# end class
+
 
 class Master(forms.ModelForm):
 
