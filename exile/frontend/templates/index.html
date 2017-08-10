@@ -8,14 +8,28 @@
 
 {% block script %}
   <script>
-    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+    {% if cuenta %}
+    var socket = new WebSocket('ws://' + window.location.host + '/noti/'+ '{{cuenta.pk}}'+ '/');
 
+  /*  var socket2 = new WebSocket('ws://' + window.location.host + '/biding/'+ '{{cuenta.pk}}'+ '/');
+    socket2.onopen = function open() {
+      console.log('WebSockets 2 connection created.');
+    }
+
+    socket2.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      console.log(data);
+    }*/
+    {% else %}
+    var socket = new WebSocket('ws://' + window.location.host + '/noti/0/');
+    {% endif %}
     socket.onopen = function open() {
       console.log('WebSockets connection created.');
     };
 
     socket.onmessage = function message(event) {
       var data = JSON.parse(event.data);
+      console.log(data);
       // NOTE: We escape JavaScript to prevent XSS attacks.
       var username = encodeURI(data['username']);
       var user = $('li').filter(function () {
@@ -24,18 +38,20 @@
       console.log(user);
       if(user.length){
         if (data['is_logged_in']) {
-          user.html(username + ': Online');
+          console.log("Existe");
+          console.log(user);
+          user.text(username + ': Online');
         }
         else {
-          user.html(username + ': Offline');
+          user.text(username + ': Offline');
         }
       }else{
         console.log("entro")
         if (data['is_logged_in']) {
-          $("ul").append(username + ': Online');
+          $("ul").append("<li>"+username + ': Online'+"</li>");
         }
         else {
-          $("ul").append(username + ': Offline');
+          $("ul").append("<li>"+username + ': Offline'+"</li>");
         }
       }
 

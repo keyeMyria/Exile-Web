@@ -4806,9 +4806,8 @@ h2.title {
   -ms-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
   transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1); }
   .main-panel .main-content {
-    margin-top: 70px;
     padding: 30px 15px;
-    min-height: calc(100vh - 123px); }
+    min-height: calc(100vh - 72px); }
     .main-panel .main-content .container-fluid h3:first-child {
       margin-top: 0; }
   .main-panel > .footer {
@@ -6576,7 +6575,8 @@ select.form-control {
   box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); }
   .fileinput .thumbnail.img-circle {
     border-radius: 50%;
-    max-width: 100px; }
+    max-width: 100px;
+    max-height: 100px; }
 
 .fileinput .thumbnail > img {
   max-height: 100%; }
@@ -6735,7 +6735,7 @@ select.form-control {
   .alert.alert-rose i {
     color: #e91e63; }
   .alert.alert-with-icon {
-    margin-top: 43px;
+    margin-top: 56px !important;
     padding-left: 66px; }
     .alert.alert-with-icon i[data-notify="icon"] {
       display: block;
@@ -6863,7 +6863,7 @@ form .form-footer .checkbox {
   padding-top: 5px; }
 
 .card .form-horizontal .label-on-left {
-  padding: 28px 5px 0 0;
+  padding: 28px 5px 0 10px;
   text-align: right; }
 .card .form-horizontal .label-on-right {
   padding: 28px 0 0 5px;
@@ -6935,6 +6935,7 @@ form .form-footer .checkbox {
     display: block;
     position: absolute;
     left: 0;
+    top: -7px;
     content: "";
     background-color: rgba(0, 0, 0, 0.84);
     height: 20px;
@@ -7900,6 +7901,7 @@ fieldset[disabled] .checkbox, fieldset[disabled] .checkbox input[type=checkbox],
 .navbar {
   border: 0;
   border-radius: 3px;
+  margin-bottom: 0;
   border-bottom: 1px solid #ededf3;
   padding: 10px 0; }
   .navbar .navbar-brand {

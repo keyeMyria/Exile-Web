@@ -219,11 +219,13 @@ class MasterList(supra.SupraListView):
         eliminado = self.request.GET.get('eliminado', False)
         if eliminado == '1':
             queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=True))
+                cuenta__asistente=self.request.user.pk, eliminado=True) | Q(
+                    cuenta__asistente=self.request.user.pk, eliminado=True))
         else:
             queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__usuario=self.request.user.pk, eliminado=False))
-            print queryset.count()
+                cuenta__asistente=self.request.user.pk, eliminado=False) | Q(
+                    cuenta__asistente=self.request.user.pk, eliminado=False))
+        # end if
         if propiedad and orden:
             if orden == "asc":
                 queryset = queryset.order_by(propiedad)
@@ -239,6 +241,7 @@ class MasterList(supra.SupraListView):
 class TipoSupraForm(supra.SupraFormView):
     model = models.Tipo
     form_class = forms.TipoForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -277,7 +280,7 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.Tipo
-    list_display = ['nombre', 'servicios']
+    list_display = ['nombre', 'id', 'servicios']
     search_fields = ['nombre', ]
     paginate_by = 10
 
@@ -292,6 +295,7 @@ class TipoList(MasterList):
 class ClienteSupraForm(supra.SupraFormView):
     model = models.Cliente
     form_class = forms.ClienteForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -330,7 +334,7 @@ class ClienteDeleteSupra(supra.SupraDeleteView):
 
 class ClienteList(MasterList):
     model = models.Cliente
-    list_display = ['nombre', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
+    list_display = ['nombre', 'id', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
     search_fields = ['nombre', 'identificacion', 'telefono', 'direccion']
     list_filter = ['tipo', ]
     paginate_by = 10
@@ -350,6 +354,7 @@ class ClienteList(MasterList):
 class LugarSupraForm(supra.SupraFormView):
     model = models.Lugar
     form_class = forms.LugarForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -388,7 +393,7 @@ class LugarDeleteSupra(supra.SupraDeleteView):
 
 class LugarList(MasterList):
     model = models.Lugar
-    list_display = ['nombre', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
+    list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
@@ -403,6 +408,7 @@ class LugarList(MasterList):
 class TareaSupraForm(supra.SupraFormView):
     model = models.Tarea
     form_class = forms.TareaForm
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt

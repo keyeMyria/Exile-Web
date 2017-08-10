@@ -61,19 +61,28 @@ class TipoReportFormEdit(MasterEdit):
 # end class
 
 
-class ReporteSupraForm(forms.ModelForm):
+class ReporteSupraForm(Master):
 
     class Meta:
         model = models.Reporte
-        exclude = ()
+        fields = ['nombre', 'descripcion', 'tipo', 'cliente', 'lugar', 'latitud', 'longitud']
+    # end class
+# end class
+
+
+class ReporteSupraFormEdit(MasterEdit):
+
+    class Meta:
+        model = models.Reporte
+        fields = ['nombre', 'descripcion', 'tipo', 'cliente', 'lugar', 'estado', 'latitud', 'longitud', 'eliminado']
     # end class
 # end class
 
 
 class FotoReporteForm(forms.ModelForm):
 
-    def clean_url(self):
-        imagen = self.cleaned_data.get('url', False)
+    def clean_foto(self):
+        imagen = self.cleaned_data.get('foto', False)
         if imagen:
             if hasattr(imagen, '_size') and imagen._size > 1 * 1024 * 1024:
                 raise forms.ValidationError(

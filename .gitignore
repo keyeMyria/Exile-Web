@@ -100,7 +100,11 @@ ENV/
 # mypy
 .mypy_cache/
 
+# python
+.pyc
+
 #Angular
 
 #angular/dist/
 **/node_modules/**
+#!**/node_modules/bootstrap*

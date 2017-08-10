@@ -4,9 +4,10 @@ from trigger import auto_triggers
 
 auto_triggers()
 
+""
 urlpatterns = [
     url(r'^login/$', views.LoginU.as_view(), name="loginU"),
-    #url(r'^logout/$', views.logoutUser, name="loginU"),
+    url(r'^logout/$', views.logoutUser, name="loginU"),
     url(r'^login/empleado/$', views.LoginE.as_view(), name="LoginE"),
     url(r'^is/login/$', views.islogin, name="isLogin"),
 ]
@@ -50,15 +51,14 @@ urlpatterns += [
         views.EmpleadoSupraFormDelete.as_view(), name="empleado_delete"),
 ]
 
-
 """
-    Urls grupo
+    Urls grupos
 """
 
 urlpatterns += [
-    url(r'^grupo/form/$', views.GrupoSupraForm.as_view(), name="grupo"),
-    url(r'^grupo/form/(?P<pk>\d+)/$', views.GrupoSupraForm.as_view(), name="grupo_edit"),
-    url(r'^grupo/list/$', views.GrupoList.as_view(), name="grupo_list"),
+    url(r'^grupo/form/$', views.GrupoSupraForm.as_view(), name="grupos"),
+    url(r'^grupo/form/(?P<pk>\d+)/$', views.GrupoSupraForm.as_view(), name="grupos_edit"),
+    url(r'^grupo/list/$', views.GrupoList.as_view(), name="grupos_list"),
     url(r'^grupo/delete/(?P<pk>\d+)/$',
-        views.GrupoSupraFormDelete.as_view(), name="grupo_delete"),
+        views.GrupoSupraFormDelete.as_view(), name="grupos_delete"),
 ]

@@ -109,7 +109,7 @@ class SubTarea(models.Model):
 class Completado(models.Model):
     tarea = models.ForeignKey(Tarea)
     fecha = models.DateTimeField(auto_now_add=True)
-    terminado = models.BooleanField(default=False)
+    terminado = models.BooleanField(default=True)
     creator = CurrentUserField(add_only=True, related_name="created_completado")
     last_editor = CurrentUserField(related_name="last_edited_completado")
 

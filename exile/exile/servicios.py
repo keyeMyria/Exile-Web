@@ -9,7 +9,7 @@ def get_cuenta():
     user = CuserMiddleware.get_user()
     if user:
         cuenta = Cuenta.objects.filter(
-            Q(cliente=user.pk) | Q(usuario=user.pk)).first()
+            Q(cliente=user.pk) | Q(asistente=user.pk) | Q(empleado=user.pk)).first()
         return cuenta
     # end if
     return None

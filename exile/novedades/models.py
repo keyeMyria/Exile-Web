@@ -34,7 +34,6 @@ class Reporte(models.Model):
         (False, "Abierto"),
         (True, "Cerrado")
     )
-    numero = models.CharField(max_length=100, null=True, blank=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=400)
     tipo = models.ForeignKey(TipoReporte, blank=True, null=True)
@@ -51,13 +50,13 @@ class Reporte(models.Model):
     # resend = models.BooleanField(default=False, verbose_name="Re enviar al cliente")
 
     def __unicode__(self):
-        return u'%s %s, cliente: %s' % (self.nombre, self.fecha.strftime('%Y-%m-%d %H:%M:%S'), self.piscina.cliente())
+        return u'%s %s, creado por: %s' % (self.nombre, self.fecha.strftime('%Y-%m-%d %H:%M:%S'), self.creator.username)
     # end def
 # end class
 
 
 class FotoReporte(models.Model):
-    url = models.FileField(upload_to="fotos")
+    foto = models.FileField(upload_to="fotos")
     reporte = models.ForeignKey(Reporte)
 
     class Meta:
@@ -66,8 +65,8 @@ class FotoReporte(models.Model):
     # end class
 
     def foto(self):
-        if self.url:
-            url = self.url
+        if self.foto:
+            url = self.foto
         else:
             url = 'no-imagen.svg'
         # end if
@@ -77,6 +76,6 @@ class FotoReporte(models.Model):
     foto.allow_tags = True
 
     def __unicode__(self):
-        return u"%s" % (self.url, )
+        return u"%s" % (self.foto, )
     # end def
 # end class
