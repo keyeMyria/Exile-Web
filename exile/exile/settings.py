@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
     '*'
 ]
 
-ORIGIN = "http://192.168.1.19:4200"
+ORIGIN = "*"
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
