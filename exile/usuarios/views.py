@@ -58,11 +58,11 @@ def logoutUser(request):
 def islogin(request):
     if request.user.is_authenticated():
         cuenta = models.Cuenta.objects.filter(
-                Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
+            Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
         if cuenta:
-            return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "notificacionesWs": "/noti/%d"%(cuenta.id) }), 200)
+            return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "cuenta": cuenta.id ,  "notificacionesWs": "/noti/%d" % (cuenta.id)}), 200)
         # end if
-        return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username}), 200)
+        return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name}), 200)
     # end if
     return HttpResponse([], 400)
 # end if
