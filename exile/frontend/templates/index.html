@@ -1,64 +1,81 @@
 {% extends '_base.html' %}
 
 {% block content %}
-  <ul>
-    <li>Usuarios</li>
-  </ul>
+  <div class="container">
+      <div class="row">
+          <div class="col col-12" id="usuarios">
+              <h4>Usuarios Conectados</h4>
+              <ul class="list-group">
+
+              </ul>
+          </div>
+          <div class="col col-12" id="databiding">
+              <h4>Databiding</h4>
+              <ul class="list-group">
+
+              </ul>
+          </div>
+      </div>
+  </div>
 {% endblock content %}
 
 {% block script %}
   <script>
+    const webSocketBridge = new channels.WebSocketBridge();
     {% if cuenta %}
-    var socket = new WebSocket('ws://' + window.location.host + '/noti/'+ '{{cuenta.pk}}'+ '/');
-
-  /*  var socket2 = new WebSocket('ws://' + window.location.host + '/biding/'+ '{{cuenta.pk}}'+ '/');
-    socket2.onopen = function open() {
-      console.log('WebSockets 2 connection created.');
-    }
-
-    socket2.onmessage = function message(event) {
-      var data = JSON.parse(event.data);
-      console.log(data);
-    }*/
+    const ws_url = "/es/{{cuenta.pk}}/";
     {% else %}
-    var socket = new WebSocket('ws://' + window.location.host + '/noti/0/');
+    const ws_url = "/es/0";
     {% endif %}
-    socket.onopen = function open() {
-      console.log('WebSockets connection created.');
-    };
-
-    socket.onmessage = function message(event) {
-      var data = JSON.parse(event.data);
-      console.log(data);
-      // NOTE: We escape JavaScript to prevent XSS attacks.
-      var username = encodeURI(data['username']);
-      var user = $('li').filter(function () {
-        return $(this).data('username') == username;
-      });
-      console.log(user);
-      if(user.length){
-        if (data['is_logged_in']) {
-          console.log("Existe");
-          console.log(user);
-          user.text(username + ': Online');
-        }
-        else {
-          user.text(username + ': Offline');
-        }
+    webSocketBridge.connect(ws_url);
+    webSocketBridge.listen(function(data) {
+      var estatus;
+      var clase;
+      if(data.is_logged_in){
+          estatus = "Online";
+          clase = "list-group-item-info";
       }else{
-        console.log("entro")
-        if (data['is_logged_in']) {
-          $("ul").append("<li>"+username + ': Online'+"</li>");
-        }
-        else {
-          $("ul").append("<li>"+username + ': Offline'+"</li>");
-        }
+           estatus = "Offline";
+           clase = "list-group-item-danger";
       }
+      $("#usuarios .list-group").append('<li class="list-group-item '+clase+'">'+data.username+' - '+estatus+'</li>');
+    });
 
-    };
 
-    if (socket.readyState == WebSocket.OPEN) {
-      socket.onopen();
+    webSocketBridge.demultiplex('cargo', function(action, stream) {
+      console.log(action, stream);
+      render(action, stream);
+    });
+    webSocketBridge.demultiplex('empleado', function(action, stream) {
+      console.log(action, stream);
+      render(action, stream);
+
+    });
+    webSocketBridge.demultiplex('asistente', function(action, stream) {
+      console.log(action, stream);
+      render(action, stream);
+
+    });
+    webSocketBridge.demultiplex('grupo', function(action, stream) {
+      console.log(action, stream);
+      render(action, stream);
+
+    });
+    webSocketBridge.demultiplex('tipo', function(action, stream) {
+      console.log(action, stream);
+      render(action, stream);
+    });
+
+
+    webSocketBridge.socket.addEventListener('open', function() {
+        console.log("Connected to WebSocket");
+    });
+    webSocketBridge.socket.addEventListener('close', function() {
+        console.log("Disconnected to WebSocket");
+    });
+
+    function render(data, stream){
+        $("#databiding .list-group").append('<li class="list-group-item list-group-item-success">Stream: <b>'+stream+'</b>, Acción: '+data.action+' Model: '+data.model+'</li>');
     }
   </script>
 {% endblock script %}

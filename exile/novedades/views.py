@@ -126,7 +126,7 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 
 
 class ReporteListView(MasterList):
-    list_filter = ['tipo', 'cliente', 'lugar', 'id']
+    list_filter = ['tipo', 'cliente', 'lugar', 'id', 'estado']
     list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
                     'descripcion', 'creatorR', 'fecha', 'estado', 'servicios']
     search_fields = ['nombre', 'descripcion',

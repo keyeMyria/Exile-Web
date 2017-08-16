@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'informes',
     'channels',
     'django_user_agents',
+    'chat'
 ]
 
 # Cache backend is optional, but recommended to speed up user agent parsing
@@ -177,7 +178,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
