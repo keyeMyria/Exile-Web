@@ -12,10 +12,12 @@ croniter==0.3.17
 cryptography==1.9
 daphne==1.2.0
 Django==1.11.1
+django-cors-headers==2.1.0
 django-cuser==2017.3.16
 django-material==0.13.1
 django-trigger==1.0.5
 django-trigger-smtp==1.0.5
+django-user-agents==0.3.0
 enum34==1.1.6
 h2==2.6.2
 hpack==3.0.0
@@ -39,11 +41,9 @@ pytz==2017.2
 redis==2.10.5
 service-identity==17.0.0
 six==1.10.0
-supra==1.1.40
-python-memcached
-pyyaml ua-parser user-agents
-django-user-agents
-supra==1.1.52
+supra==1.1.55
 Twisted==17.1.0
 txaio==2.7.1
+ua-parser==0.7.3
+user-agents==1.1.0
 zope.interface==4.4.1
