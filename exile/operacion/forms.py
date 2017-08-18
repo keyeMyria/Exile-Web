@@ -29,6 +29,15 @@ class TareaForm(forms.ModelForm):
     # end def
 # end class
 
+class SubTareaForm(forms.ModelForm):
+
+    class Meta:
+        model = models.SubTarea
+        fields = ['tarea', 'nombre', 'descripcion'] 
+    # end class
+
+# end class
+
 
 class Master(forms.ModelForm):
 

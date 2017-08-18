@@ -26,16 +26,18 @@ SECRET_KEY = '7&8^v06ea2i&#3%^l1$%bi**(usyk7yup+jzt+_@l#_#im%e60'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '104.236.33.228',
-    '192.168.1.16',
-    '192.168.1.19',
-    '127.0.0.1',
-    '192.168.189.128'
+    '*'
 ]
 
-ORIGIN = "http://192.168.1.19:4200"
+ORIGIN = "*"
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mariobarrios@exile.com.co'
+EMAIL_HOST_PASSWORD = 'grwlbpmnvfxlofjz'
 
 # Application definition
 
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'supra',
     'supra.auths.oauth',
+    'trigger',
     'cuser',
     'frontend',
     'usuarios.apps.UsuariosConfig',
@@ -60,6 +63,7 @@ INSTALLED_APPS = [
     'informes',
     'channels',
     'django_user_agents',
+    'chat'
 ]
 
 # Cache backend is optional, but recommended to speed up user agent parsing
@@ -71,7 +75,7 @@ CACHES = {
 }
 
 # Name of cache backend to cache user agents. If it not specified default
-# cache alias will be used. Set to `None` to disable caching.
+# cache alias will be used. Set to `None` to disable caching.x y
 USER_AGENTS_CACHE = 'default'
 
 
@@ -84,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cuser.middleware.CuserMiddleware',
+    'trigger.default.Middleware'
 ]
 
 ROOT_URLCONF = 'exile.urls'
@@ -173,7 +178,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
