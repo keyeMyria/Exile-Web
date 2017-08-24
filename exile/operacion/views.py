@@ -424,7 +424,6 @@ class TareaSupraForm(supra.SupraFormView):
     # end class
 # end class
 
-
 class TareaDeleteSupra(supra.SupraDeleteView):
     model = models.Tarea
 
@@ -446,9 +445,13 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios']
+    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios', 'completado']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
+
+    def completado(self, obj, row):
+        return Completado.object.filter(tarea=obj).first()
+    # end def
 
     def servicios(self, obj, row):
         edit = "/operacion/lugar/form/%d/" % (obj.id)
@@ -500,13 +503,65 @@ class SubTareaDeleteSupra(supra.SupraDeleteView):
 
 class SubTareaList(MasterList):
     model = models.SubTarea
-    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios']
-    search_fields = ['nombre', 'direccion', ]
+    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios', 'completado']
+    search_fields = ['nombre', 'direccion']
     paginate_by = 10
+
+    def completado(self, obj, row):
+        return CompletadoSub.object.filter(subtarea=obj).first()
+    # end def
 
     def servicios(self, obj, row):
         edit = "/operacion/lugar/form/%d/" % (obj.id)
         delete = "/operacion/lugar/delete/%d/" % (obj.id)
         return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
     # end def
+# end class
+
+class CompletadoSubForm(supra.SupraFormView):
+    model = models.CompletadoSub
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CompletadoSubForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+# end class
+
+class CompletadoSubDelete(supra.SupraDeleteView):
+    model = models.CompletadoSub
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CompletadoSubDelete, self).dispatch(request, *args, **kwargs)
+    # end def
+
+# end class
+
+class CompletadoForm(supra.SupraFormView):
+    model = models.Completado
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CompletadoForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
+# end class
+
+class CompletadoDelete(supra.SupraDeleteView):
+    model = models.CompletadoSub
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(TareaSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+
 # end class

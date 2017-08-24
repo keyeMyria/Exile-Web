@@ -74,7 +74,7 @@ class Tarea(models.Model):
     repetir_cada = models.TextField("Repetir", default=0)
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
-    empleados = models.ManyToManyField(usuarios.Empleado)
+    empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
     creator = CurrentUserField(add_only=True, related_name="created_tarea")
     last_editor = CurrentUserField(related_name="last_edited_tarea")
     grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
@@ -107,7 +107,7 @@ class SubTarea(models.Model):
 
 
 class Completado(models.Model):
-    tarea = models.ForeignKey(Tarea)
+    tarea = models.OneToOneField(Tarea)
     fecha = models.DateTimeField(auto_now_add=True)
     terminado = models.BooleanField(default=True)
     creator = CurrentUserField(add_only=True, related_name="created_completado")
@@ -128,7 +128,7 @@ class Multimedia(models.Model):
 
 
 class CompletadoSub(models.Model):
-    subtarea = models.ForeignKey(SubTarea)
+    subtarea = models.OneToOneField(SubTarea)
     creator = CurrentUserField(add_only=True, related_name="created_completadosub")
     last_editor = CurrentUserField(related_name="last_edited_completadosub")
     fecha = models.DateTimeField(auto_now_add=True)
