@@ -114,7 +114,7 @@ class Completado(models.Model):
     last_editor = CurrentUserField(related_name="last_edited_completado")
 
     def __unicode__(self):
-        return u'Tarea %s completada %s' % (self.tarea.nombre)
+        return u'Tarea %s completada' % (self.tarea.nombre, )
     # end def
 # end class
 

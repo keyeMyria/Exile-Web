@@ -153,24 +153,18 @@ class AsistenteSupraFormDelete(supra.SupraDeleteView):
 
 class AsistenteList(MasterList):
     model = models.Asistente
-    list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
-                    'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
+    list_display = ['first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'email', 'direccion',
+                    'telefono', 'fijo', 'creator', 'last_editor', 'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
                      'identificacion', 'email', 'username']
     paginate_by = 10
 
-    def nombre(self, obj, row):
-        return {'first_name': obj.first_name, 'last_name': obj.last_name}
-    # end def
 
-    def date(self, obj, row):
-        return obj.fecha_nacimiento.strftime("%Y-%m-%d")
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/usuarios/asistente/form/%d/" % (obj.id)
-        delete = "/usuarios/asistente/delete/%d/" % (obj.id)
-        return {'add': '/usuarios/asistente/form/', 'edit': edit, 'delete': delete}
+    def avatar(self, obj, now):
+        if obj.imagen:
+            return "/media/%s" % (obj.imagen)
+        # end if
+        return None
     # end def
 # end class
 
@@ -222,19 +216,9 @@ class CargoDeleteSupra(supra.SupraDeleteView):
 
 class CargoList(MasterList):
     model = models.Cargo
-    list_display = ['nombre', 'date', 'id', 'servicios']
+    list_display = ['nombre', 'fecha', 'id']
     search_fields = ['nombre', ]
     paginate_by = 10
-
-    def date(self, obj, row):
-        return obj.fecha.strftime("%Y-%m-%d")
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/usuarios/cargo/form/%d/" % (obj.id)
-        delete = "/usuarios/cargo/delete/%d/" % (obj.id)
-        return {'add': '/usuarios/cargo/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -271,7 +255,7 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(EmpleadoSupraFormDelete, self).dispatch(request, *args, **kwargs)
     # end def
-"""
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.eliminado = True
@@ -280,46 +264,17 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
         self.object.save()
         return HttpResponse(status=200)
     # end def
-"""
 # end class
 
 
 class EmpleadoList(MasterList):
     model = models.Empleado
-    list_display = ['nombre', 'username', 'identificacion', 'date', 'email', 'direccion',
-                    'telefono', 'fijo', 'servicios', 'creator', 'last_editor', 'ingreso', 'retiro',
+    list_display = ['first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'email', 'direccion',
+                    'telefono', 'fijo', 'creator', 'last_editor', 'fecha_ingreso', 'fecha_retiro',
                     'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
                      'identificacion', 'email', 'username']
     paginate_by = 10
-
-    def nombre(self, obj, row):
-        return {'first_name': obj.first_name, 'last_name': obj.last_name}
-    # end def
-
-    def date(self, obj, row):
-        return obj.fecha_nacimiento.strftime("%Y-%m-%d")
-    # end def
-
-    def ingreso(self, obj, row):
-        if obj.fecha_ingreso:
-            return obj.fecha_ingreso.strftime("%Y-%m-%d")
-        # end if
-        return obj.fecha_ingreso
-    # end def
-
-    def retiro(self, obj, row):
-        if obj.fecha_retiro:
-            return obj.fecha_retiro.strftime("%Y-%m-%d")
-        # end if
-        return obj.fecha_retiro
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/usuarios/empleado/form/%d/" % (obj.id)
-        delete = "/usuarios/empleado/delete/%d/" % (obj.id)
-        return {'add': '/usuarios/empleado/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -377,11 +332,5 @@ class GrupoList(MasterList):
 
     def empleados_list(self, obj, row):
         return list(models.Empleado.objects.filter(grupo=obj.pk).values('first_name', 'last_name', 'id'))
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/usuarios/grupo/form/%d/" % (obj.id)
-        delete = "/usuarios/grupo/delete/%d/" % (obj.id)
-        return {'add': '/usuarios/grupo/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
