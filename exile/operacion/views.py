@@ -406,7 +406,6 @@ class LugarList(MasterList):
 
 class TareaSupraForm(supra.SupraFormView):
     model = models.Tarea
-    form_class = forms.TareaForm
     response_json = False
 
     @method_decorator(check_login)
@@ -417,9 +416,9 @@ class TareaSupraForm(supra.SupraFormView):
 
     def get_form_class(self):
         if 'pk' in self.http_kwargs:
-            self.form_class = forms.TipoFormEdit
+            self.form_class = forms.TareaFormEdit
         # end if
-        return self.form_class
+        return forms.TareaForm
     # end class
 # end class
 
@@ -444,22 +443,27 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios', 'completado']
+    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json')]
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
     def completado(self, obj, row):
-        return Completado.object.filter(tarea=obj).first()
+        completado = models.Completado.objects.filter(tarea=obj).first()
+        if completado:
+            return completado.pk
+        # end if
     # end def
 
-    def servicios(self, obj, row):
-        edit = "/operacion/lugar/form/%d/" % (obj.id)
-        delete = "/operacion/lugar/delete/%d/" % (obj.id)
-        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
+    def subtareas(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'tarea': obj.pk}
+        # end class
+        subtareas = SubTareaList(dict_only=True).dispatch(request=request())
+        return json.dumps(subtareas['object_list'])
     # end def
+
 # end class
-
-
 
 class SubTareaSupraForm(supra.SupraFormView):
     model = models.SubTarea
@@ -500,21 +504,20 @@ class SubTareaDeleteSupra(supra.SupraDeleteView):
     # end def
 # end class
 
-class SubTareaList(MasterList):
+class SubTareaList(supra.SupraListView):
     model = models.SubTarea
-    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'servicios', 'completado']
+    list_display = ['tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'completado']
     search_fields = ['nombre', 'direccion']
-    paginate_by = 10
+    list_filter = ['tarea']
+    
 
     def completado(self, obj, row):
-        return CompletadoSub.object.filter(subtarea=obj).first()
+        completado = models.CompletadoSub.objects.filter(subtarea=obj).first()
+        if completado:
+            return completado.pk
+        # end if
     # end def
 
-    def servicios(self, obj, row):
-        edit = "/operacion/lugar/form/%d/" % (obj.id)
-        delete = "/operacion/lugar/delete/%d/" % (obj.id)
-        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 class CompletadoSubForm(supra.SupraFormView):
@@ -554,13 +557,13 @@ class CompletadoForm(supra.SupraFormView):
 # end class
 
 class CompletadoDelete(supra.SupraDeleteView):
-    model = models.CompletadoSub
+    model = models.Completado
     response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
-        return super(TareaSupraForm, self).dispatch(request, *args, **kwargs)
+        return super(CompletadoDelete, self).dispatch(request, *args, **kwargs)
     # end def
 
 # end class
