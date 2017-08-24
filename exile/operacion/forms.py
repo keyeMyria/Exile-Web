@@ -14,8 +14,7 @@ class Master(forms.ModelForm):
         if get_cuenta():
             return super(Master, self).clean()
         # end if
-        raise forms.ValidationError(
-            "Este usuario no esta asociado a una cuenta")
+        raise forms.ValidationError("Este usuario no esta asociado a una cuenta")
     # end def
 
     def save(self, commit=False):
@@ -57,14 +56,12 @@ class TareaFormBase(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TareaForm, self).__init__(*args, **kwargs)
-        self.fields['fecha_de_ejecucion'].input_formats = (
-            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
-        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(
-            choices=self.fields['unidad_de_repeticion'].choices)
+        self.fields['fecha_de_ejecucion'].input_formats = ('%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(choices=self.fields['unidad_de_repeticion'].choices)
     # end def
 # end class
 
-class TareaForm(TareaFormBase, Master):
+class TareaForm(TareaFormBase):
     pass
 # end class
 
