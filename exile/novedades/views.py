@@ -18,6 +18,7 @@ supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
+supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
 
 
@@ -125,7 +126,7 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 
 
 class ReporteListView(MasterList):
-    list_filter = ['tipo', 'cliente', 'lugar', 'id']
+    list_filter = ['tipo', 'cliente', 'lugar', 'id', 'estado']
     list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
                     'descripcion', 'creatorR', 'fecha', 'estado', 'servicios']
     search_fields = ['nombre', 'descripcion',

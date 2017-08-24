@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import login, logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,6 +26,8 @@ urlpatterns = [
     url(r'^novedades/', include('novedades.urls')),
     url(r'^subscripcion/', include('subcripcion.urls', namespace='suscripcion')),
     url(r'^operacion/', include('operacion.urls', namespace='operacion')),
+    url(r'^accounts/login/$', login),
+    url(r'^accounts/logout/$', logout),
 ]
 
 if settings.DEBUG:

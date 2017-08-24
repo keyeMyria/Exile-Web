@@ -26,17 +26,10 @@ SECRET_KEY = '7&8^v06ea2i&#3%^l1$%bi**(usyk7yup+jzt+_@l#_#im%e60'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '104.236.33.228',
-    '192.168.1.16',
-    '192.168.1.19',
-    '127.0.0.1',
-    '192.168.189.128',
-    '192.168.1.52',
-    '192.168.1.5',
+    '*'
 ]
 
-ORIGIN = "http://192.168.1.19:4200"
+ORIGIN = "*"
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -70,6 +63,7 @@ INSTALLED_APPS = [
     'informes',
     'channels',
     'django_user_agents',
+    'chat'
 ]
 
 # Cache backend is optional, but recommended to speed up user agent parsing
@@ -184,7 +178,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
