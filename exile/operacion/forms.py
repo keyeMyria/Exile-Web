@@ -8,37 +8,6 @@ from exile.servicios import get_cuenta
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
 
-
-class TareaForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Tarea
-        fields = ['nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'unidad_de_repeticion','lugar', 'cliente', 'empleados', 'grupo', 'sub_complete']
-        widgets = {
-            # "fecha_de_ejecucion": DatePickerWidget(attrs={'class': 'date'}, format="%m/%d/%Y"),
-            "repetir_cada": widgets.IntervalWidget()
-        }
-    # end class
-
-    def __init__(self, *args, **kwargs):
-        super(TareaForm, self).__init__(*args, **kwargs)
-        self.fields['fecha_de_ejecucion'].input_formats = (
-            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
-        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(
-            choices=self.fields['unidad_de_repeticion'].choices)
-    # end def
-# end class
-
-class SubTareaForm(forms.ModelForm):
-
-    class Meta:
-        model = models.SubTarea
-        fields = ['tarea', 'nombre', 'descripcion'] 
-    # end class
-
-# end class
-
-
 class Master(forms.ModelForm):
 
     def clean(self):
@@ -75,6 +44,50 @@ class MasterEdit(forms.ModelForm):
     # end def
 # end class
 
+class TareaFormBase(forms.ModelForm):
+
+    class Meta:
+        model = models.Tarea
+        fields = ['nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'unidad_de_repeticion','lugar', 'cliente', 'empleados', 'grupo', 'sub_complete']
+        widgets = {
+            # "fecha_de_ejecucion": DatePickerWidget(attrs={'class': 'date'}, format="%m/%d/%Y"),
+            "repetir_cada": widgets.IntervalWidget()
+        }
+    # end class
+
+    def __init__(self, *args, **kwargs):
+        super(TareaForm, self).__init__(*args, **kwargs)
+        self.fields['fecha_de_ejecucion'].input_formats = (
+            '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
+        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(
+            choices=self.fields['unidad_de_repeticion'].choices)
+    # end def
+# end class
+
+class TareaForm(TareaFormBase, Master):
+    pass
+# end class
+
+class TareaFormEdit(TareaFormBase, MasterEdit):
+    pass
+# end class
+
+class SubTareaFormBase(forms.ModelForm):
+
+    class Meta:
+        model = models.SubTarea
+        fields = ['tarea', 'nombre', 'descripcion'] 
+    # end class
+
+# end class
+
+class SubTareaForm(SubTareaFormBase, Master):
+    pass
+# end class
+
+class SubTareaFormEdit(SubTareaFormBase, MasterEdit):
+    pass
+# end class
 
 class TipoForm(Master):
 
