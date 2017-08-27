@@ -6,14 +6,15 @@ import { LoginComponent } from './login/login.component';
 import { LockComponent } from './lock/lock.component';
 import { RegistroComponent } from './registro/registro.component';
 import { AuthRoutes } from './auth.route';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard'
 import { AuthComponent } from './auth.component';
+import { SampleModule } from 'componentex';
+
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        SampleModule,
         RouterModule.forChild(AuthRoutes)
     ],
     declarations: [
@@ -22,9 +23,6 @@ import { AuthComponent } from './auth.component';
         LockComponent,
         RegistroComponent
     ],
-    providers: [
-        AuthService,
-        AuthGuard
-    ]
+    providers: []
 })
 export class AuthModule { }

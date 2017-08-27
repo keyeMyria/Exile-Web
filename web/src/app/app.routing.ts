@@ -1,17 +1,11 @@
 import { Routes } from '@angular/router';
-import { BaseComponent } from '../lib/base/base.component';
-import { P404Component } from '../lib/404/404.component';
-import { AuthGuard } from './auth/auth.guard';
+import { BaseComponent, P404Component, Menu } from 'componentex';
+import { AuthGuard } from 'componentex';
 
-export interface MenuMeta {
-    title: string;
-    icon: string;
-    url?: string;
-    children?: MenuMeta[];
-}
+
 
 export const AppRoutes: Routes = [
-    { path: '', redirectTo: 'operacion/turno', pathMatch: 'full' },
+    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     {
         path: '', component: BaseComponent, canActivate: [AuthGuard], data: { preload: true }, children: [
             { path: '', loadChildren: './home/home.module#HomeModule' },
@@ -23,7 +17,5 @@ export const AppRoutes: Routes = [
 
 import { UsuariosMenuMeta } from './usuarios/route';
 
-export const AppMenuMeta: MenuMeta[] = [
-    { title: 'Inico', url: '/dashboard', icon: 'dashboard' },
-    { title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta }
-];
+Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
+Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })

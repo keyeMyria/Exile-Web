@@ -3,17 +3,16 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
-import { LibModule } from '../../lib/lib.module';
 import { UsuariosRoutes } from './route';
 import { AsistenteService } from './asistente/asistente.service';
 import { AsistenteComponent, AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
 import { AdminComponent, EditAdminComponent, ListAdminComponent } from './admin/admin.component';
 import { AdminService } from './admin/admin.service';
-
+import { SampleModule } from 'componentex';
 @NgModule({
     imports: [
         CommonModule,
-        LibModule,
+        SampleModule,
         FormsModule,
         ReactiveFormsModule,
         DateValueAccessorModule,

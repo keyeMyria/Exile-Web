@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { TableComponent, RenderInput, FormComponent } from '../../../lib/components';
+import { TableComponent, RenderInput, FormComponent } from 'componentex';
 import { AsistenteService } from './asistente.service';
 
 declare var $: any;

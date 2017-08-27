@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CallService } from '../lib/services/call.service';
+import { CallService, AuthService } from 'componentex';
 
 declare var $: any;
 
@@ -10,30 +10,33 @@ declare var $: any;
 })
 
 export class AppComponent implements OnInit {
-    title = 'angular'
-    constructor(private _cs: CallService) {
-        this._cs.conf({ host: '104.236.33.228', port: '8015' });
+    constructor(private _cs: CallService, private _as: AuthService) {
+        this._cs.conf({ host: '104.236.33.228', port: '8000' });
+        this._as.conf('usuarios/login/', 'usuarios/is/login/');
         // this._cs.conf({ host: 'isabela.com.co' });
-        const noc = new Greeter('Hola mundo');
-        console.log(noc);
     }
     ngOnInit() {
         $.material.init();
     }
 }
-
-function classDecorator<T extends { new (...args: any[]): {} }>(constructor: T) {
-    return class extends constructor {
-        newProperty = 'new property';
-        hello = 'override';
-    }
-}
-
-@classDecorator
-class Greeter {
-    property = 'property';
-    hello: string;
-    constructor(m: string) {
-        this.hello = m;
-    }
-}
+// function classDecorator(filter: Object) {
+//     console.log(filter);
+//     return function <T extends { new(...args: any[]): {} }>(constructor: T) {
+//         return class extends constructor {
+//             newProperty = 'new property';
+//             hello = filter;
+//         }
+//     }
+// }
+//
+// @classDecorator('hola2')
+// class Greeter {
+//     property = 'property';
+//     hello: string;
+//     constructor(m: string) {
+//         this.hello = m;
+//     }
+// }
+//
+// const noc = new Greeter('Hola mundo');
+// console.log(noc);

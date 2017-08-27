@@ -19,7 +19,7 @@
             "testTsconfig": "tsconfig.spec.json",
             "prefix": "app",
             "styles": [
-                "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+                "style.scss"
             ],
             "scripts": [
                 "../node_modules/jquery/dist/jquery.js",
@@ -35,6 +35,7 @@
                 "../node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.js",
                 "../node_modules/fullcalendar/dist/fullcalendar.js",
                 "../node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js",
+                "../node_modules/hammerjs/hammer.min.js",
                 "../src/assets/js/plugins/bootstrap-datetimepicker.js",
                 "../src/assets/js/plugins/jquery.select-bootstrap.js",
                 "../src/assets/js/plugins/jasny-bootstrap.min.js",
@@ -43,6 +44,7 @@
                 "../src/assets/js/core/jquery.perfect-scrollbar.min.js",
                 "../src/assets/js/plugins/sweetalert2.min.js",
                 "../src/assets/js/plugins/jquery.fileDownload.js",
+                "../src/assets/js/plugins/websocketbridge.js",
                 "../src/assets/js/core/jquery.validate.min.js"
             ],
             "environmentSource": "environments/environment.ts",

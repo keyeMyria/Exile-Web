@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, Event, NavigationEnd, NavigationStart } from '@angular/router';
 
 declare var $: any;

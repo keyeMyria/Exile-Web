@@ -3,27 +3,27 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SampleModule } from 'componentex';
 
 import { AppRouteModule } from './app.route.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { AuthService } from './auth/auth.service';
-import { CallService } from '../lib/services/call.service';
-import { LibModule } from '../lib/lib.module'
+
+
 @NgModule({
     declarations: [
         AppComponent
     ],
     imports: [
-        BrowserModule,
-        HttpModule,
         CommonModule,
+        HttpModule,
+        BrowserModule,
         BrowserAnimationsModule,
-        LibModule,
+        SampleModule.forRoot(),
         AppRouteModule,
-        AuthModule
+        AuthModule,
     ],
-    providers: [CallService],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

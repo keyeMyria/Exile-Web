@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService } from 'componentex';
 
 declare var $: any;
 declare var swal: any;
@@ -22,6 +22,10 @@ export class LoginComponent implements OnInit {
             username: ['', Validators.required],
             password: ['', Validators.required]
         });
+        this.form.patchValue({
+            username: 'asistente1',
+            password: 'admin123456'
+        });
     }
 
     isValid(): boolean {
@@ -29,15 +33,18 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
+        console.log('login');
         this.ready = true;
         this._ls.login(this.form.value)
-            .then(data => this.ready = false)
+            .then(data => {
+                this.ready = false
+            })
             .catch(err => {
                 this.ready = false;
                 if (!!err) {
                     swal({
-                        title: 'Inicio de sesión fallido',
-                        text: 'El correo electrónico o la contraseña no son válidos.',
+                        title: err.title,
+                        text: err.text,
                         type: 'warning',
                         confirmButtonColor: '#213b78',
                     });
