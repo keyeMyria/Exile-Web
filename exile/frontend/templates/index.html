@@ -23,9 +23,9 @@
   <script>
     const webSocketBridge = new channels.WebSocketBridge();
     {% if cuenta %}
-    const ws_url = "/es/{{cuenta.pk}}/";
+    const ws_url = "/noti/{{cuenta.pk}}/";
     {% else %}
-    const ws_url = "/es/0";
+    const ws_url = "/noti/0/";
     {% endif %}
     webSocketBridge.connect(ws_url);
     webSocketBridge.listen(function(data) {
