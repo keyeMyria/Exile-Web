@@ -279,15 +279,9 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.Tipo
-    list_display = ['nombre', 'id', 'servicios']
+    list_display = ['nombre', 'id']
     search_fields = ['nombre', ]
     paginate_by = 10
-
-    def servicios(self, obj, row):
-        edit = "/operacion/tipo/form/%d/" % (obj.id)
-        delete = "/operacion/tipo/delete/%d/" % (obj.id)
-        return {'add': '/operacion/tipo/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -333,20 +327,10 @@ class ClienteDeleteSupra(supra.SupraDeleteView):
 
 class ClienteList(MasterList):
     model = models.Cliente
-    list_display = ['nombre', 'id', 'tipoI', 'identificacion', 'direccion', 'telefono', 'servicios']
+    list_display = ['nombre', 'id', 'tipo__nombre', 'tipo', 'identificacion', 'direccion', 'telefono']
     search_fields = ['nombre', 'identificacion', 'telefono', 'direccion']
     list_filter = ['tipo', ]
     paginate_by = 10
-
-    def tipoI(self, obj, row):
-        return {"nombre": obj.tipo.nombre, "id": obj.tipo.id}
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/operacion/cliente/form/%d/" % (obj.id)
-        delete = "/operacion/cliente/delete/%d/" % (obj.id)
-        return {'add': '/operacion/cliente/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -392,15 +376,9 @@ class LugarDeleteSupra(supra.SupraDeleteView):
 
 class LugarList(MasterList):
     model = models.Lugar
-    list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado', 'servicios']
+    list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
-
-    def servicios(self, obj, row):
-        edit = "/operacion/lugar/form/%d/" % (obj.id)
-        delete = "/operacion/lugar/delete/%d/" % (obj.id)
-        return {'add': '/operacion/lugar/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -509,7 +487,7 @@ class SubTareaList(supra.SupraListView):
     list_display = ['tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'completado']
     search_fields = ['nombre', 'direccion']
     list_filter = ['tarea']
-    
+
 
     def completado(self, obj, row):
         completado = models.CompletadoSub.objects.filter(subtarea=obj).first()
