@@ -7,11 +7,6 @@ import { AsistenteService } from './asistente.service';
 declare var $: any;
 
 @Component({
-    template: '<router-outlet></router-outlet>'
-})
-export class AsistenteComponent { }
-
-@Component({
     template: `<ex-form #f icon="supervisor_account" title="Asistente"
         [form]="form"
         [service]="service"
