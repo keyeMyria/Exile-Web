@@ -5,11 +5,6 @@ import { FormComponent, TableComponent, RenderInput } from 'componentex';
 import { CargoService } from './cargo.service';
 
 @Component({
-    template: '<router-outlet></router-outlet>',
-})
-export class CargoComponent { }
-
-@Component({
     templateUrl: './list.cargo.component.html'
 })
 export class CargoListComponent {
@@ -29,6 +24,7 @@ export class CargoListComponent {
             render: TableComponent.renderCheckRow
         },
         { data: 'nombre' },
+        { data: 'fecha' }
     ]
 
     constructor(private _as: CargoService) { }
@@ -42,7 +38,7 @@ export class CargoListComponent {
         [columns]="columns"
         [renderinputs]="renderinputs"></ex-form>`
 })
-export class EditComponent implements OnInit {
+export class EditCargoComponent implements OnInit {
 
     form: FormGroup;
     columns: string[];
@@ -61,5 +57,9 @@ export class EditComponent implements OnInit {
         ];
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this._form.successful = data => {
+            this._rt.navigate(['usuarios/cargo']);
+        }
+    }
 }
