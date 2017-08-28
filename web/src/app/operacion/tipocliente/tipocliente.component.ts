@@ -1,15 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TableComponent } from 'componentex';
+import { TipoclienteService } from './tipocliente.service';
 
 @Component({
-  selector: 'app-tipocliente',
-  templateUrl: './tipocliente.component.html',
-  styleUrls: ['./tipocliente.component.scss']
+    templateUrl: './list.tipocliente.component.html'
 })
-export class TipoclienteComponent implements OnInit {
+export class TipoclienteListComponent implements OnInit {
+    service = this._s;
+    multiselect = true;
+    aggregable = false;
+    editable = false;
+    deleteable = false;
+    // order = [[2, 'asc']]
 
-  constructor() { }
+    @ViewChild('table') private table: TableComponent;
 
-  ngOnInit() {
-  }
+    columns = [
+        {
+            className: 'text-center',
+            orderable: false,
+            searchable: false,
+            data: 'id',
+            render: TableComponent.renderCheckRow
+        },
+        { data: 'nombre' }
+    ];
 
+
+    constructor(private _s: TipoclienteService) { }
+
+    ngOnInit() {
+
+    }
 }
