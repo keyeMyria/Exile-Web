@@ -340,6 +340,11 @@
         @include shadow-big-color($brand-primary);
     }
 
+    [data-background-color="ingecol"]{
+        background: linear-gradient(60deg, $indigo-600, #213b78);
+        @include shadow-big-color($brand-primary);
+    }
+
     [data-icon-bg-color="purple"]{
         @include alert-icon-color($brand-primary);
     }

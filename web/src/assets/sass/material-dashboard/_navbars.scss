@@ -10,6 +10,11 @@
   @extend .animation-transition-fast;
 
   padding: 10px 0;
+  
+  &.ingecol {
+    background-color: #f3801f;
+    color: #ffffff;
+  }
 
   .navbar-brand {
     position: relative;

@@ -1,0 +1,48 @@
+@import "colors";
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.green {
+    color: $green-500;
+}
+
+.red {
+    color: $red-500;
+}
+@media (max-width: 768px) {
+    .btn-responsive {
+        width: 100%;
+    }
+}
+
+.truncate {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ex-responsive-header{
+    @media (max-width: 991px){
+        float: left;
+    }
+
+}
+.ex-responsive{
+    > ul{
+        @media (max-width: 768px){
+            float: right;
+        }
+        > li {
+            display: inline-block;
+        }
+    }
+}

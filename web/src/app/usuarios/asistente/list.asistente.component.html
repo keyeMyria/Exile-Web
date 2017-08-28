@@ -1,34 +1,9 @@
-<ex-card>
-    <div header><i class="material-icons">supervisor_account</i></div>
-    <nav class="navbar navbar-default" style="border-bottom:none;padding:0">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" >
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <h4 class="navbar-brand" style="margin:0">Asistente</h4>
-            </div>
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li >
-                        <button [routerLink]="['edit']" class="btn btn-primary btn-just-icon btn-round">
-                            <i class="material-icons">add</i>
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <ex-table #table>
-        <th></th>
-        <th>Usuario</th>
-        <th>Nombre</th>
-        <th>Identificacion</th>
-        <th>Correo</th>
-        <th>Celular</th>
-        <th></th>
-    </ex-table>
-</ex-card>
+<ex-table #table title="Asistente" icon="supervisor_account" [order]="order" [service]="service" [multiselect]="multiselect" [columns]="columns">
+    <th></th>
+    <th>Usuario</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Identificación</th>
+    <th>Correo</th>
+    <th>Celular</th>
+</ex-table>

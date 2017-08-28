@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LibModule } from '../lib/lib.module';
+import { SampleModule } from 'componentex';
 
 import { HomeRoutes } from './home.route';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -10,7 +10,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 @NgModule({
     imports: [
         CommonModule,
-        LibModule,
+        SampleModule,
         RouterModule.forChild(HomeRoutes)
     ],
     declarations: [

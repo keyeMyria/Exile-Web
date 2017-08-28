@@ -14,8 +14,7 @@ class Master(forms.ModelForm):
         if get_cuenta():
             return super(Master, self).clean()
         # end if
-        raise forms.ValidationError(
-            "Este usuario no esta asociado a una cuenta")
+        raise forms.ValidationError("Este usuario no esta asociado a una cuenta")
     # end def
 
     def save(self, commit=False):
@@ -62,7 +61,7 @@ class TareaFormBase(forms.ModelForm):
     # end def
 # end class
 
-class TareaForm(TareaFormBase, Master):
+class TareaForm(TareaFormBase):
     pass
 # end class
 

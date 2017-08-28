@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from 'componentex';
 
 declare var $: any;
+declare var swal: any;
 
 @Component({
     selector: 'ex-login',
@@ -13,6 +14,7 @@ declare var $: any;
 export class LoginComponent implements OnInit {
 
     form: FormGroup;
+    ready = false;
 
     constructor(private _ar: ActivatedRoute, private _ls: AuthService, private _fb: FormBuilder) {
 
@@ -31,7 +33,23 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        this._ls.login(this.form.value);
+        console.log('login');
+        this.ready = true;
+        this._ls.login(this.form.value)
+            .then(data => {
+                this.ready = false
+            })
+            .catch(err => {
+                this.ready = false;
+                if (!!err) {
+                    swal({
+                        title: err.title,
+                        text: err.text,
+                        type: 'warning',
+                        confirmButtonColor: '#213b78',
+                    });
+                }
+            });
     }
 
     isLogin() {

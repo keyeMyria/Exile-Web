@@ -107,4 +107,5 @@ ENV/
 
 #angular/dist/
 **/node_modules/**
-#!**/node_modules/bootstrap*
+!**/node_modules/componentex
+web/src/assets/.sass-cache

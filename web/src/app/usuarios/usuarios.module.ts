@@ -2,24 +2,33 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LibModule } from '../lib/lib.module';
-import { UsuariosRoutes } from './usuarios.route';
+import { DateValueAccessorModule } from 'angular-date-value-accessor';
+import { UsuariosRoutes } from './route';
+import { AsistenteService } from './asistente/asistente.service';
 import { AsistenteComponent, AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
-import { EmpleadoComponent } from './empleado/empleado.component';
-import { AsistenteService } from '../services/usuarios/asistente.service';
-
+import { AdminComponent, EditAdminComponent, ListAdminComponent } from './admin/admin.component';
+import { AdminService } from './admin/admin.service';
+import { SampleModule } from 'componentex';
 @NgModule({
     imports: [
         CommonModule,
-        LibModule,
+        SampleModule,
         FormsModule,
         ReactiveFormsModule,
+        DateValueAccessorModule,
         RouterModule.forChild(UsuariosRoutes)
     ],
     declarations: [
-        AsistenteComponent, AsistenteListComponent, AsistenteEditComponent,
-        EmpleadoComponent
+        AsistenteComponent,
+        AsistenteListComponent,
+        AsistenteEditComponent,
+        AdminComponent,
+        EditAdminComponent,
+        ListAdminComponent
     ],
-    providers: [ AsistenteService ]
+    providers: [
+        AsistenteService,
+        AdminService
+    ]
 })
 export class UsuariosModule { }

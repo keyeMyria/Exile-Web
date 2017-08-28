@@ -75,9 +75,9 @@
         max-height: 42px;
 
         img{
-            width: 90px;
-            top: 16px;
-            left: 18px;
+            width: 150px;
+            top: 10px;
+            left: 40px;
             position: absolute;
         }
     }
@@ -421,6 +421,9 @@
     }
     &[data-active-color="rose"]{
         @include set-background-color-button($brand-rose);
+    }
+    &[data-active-color="ingecol"]{
+        @include set-background-color-button(#213b78);
     }
     &[data-active-color="white"]{
         @include set-background-color-button($white-color);
