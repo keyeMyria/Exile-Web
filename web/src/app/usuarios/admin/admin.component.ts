@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { FormComponent, TableComponent, RenderInput } from 'componentex';
+import { FormComponent, TableComponent, RenderInput } from 'componentex';
 import { AdminService } from './admin.service';
 
 @Component({
@@ -20,11 +20,11 @@ export class EditAdminComponent implements OnInit {
 
     form: FormGroup;
     columns: string[];
-    // renderinputs: RenderInput[];
+    renderinputs: RenderInput[];
     service = this._as;
 
 
-    // @ViewChild('f') private _form: FormComponent;
+    @ViewChild('f') private _form: FormComponent;
 
     constructor(private _fb: FormBuilder, private _as: AdminService, private _rt: Router) {
         this.form = this._fb.group({
@@ -58,9 +58,9 @@ export class EditAdminComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this._form.successful = data => {
-        //     this._rt.navigate(['usuarios/admin']);
-        // }
+        this._form.successful = data => {
+            this._rt.navigate(['usuarios/admin']);
+        }
     }
 }
 
@@ -78,14 +78,14 @@ export class ListAdminComponent {
             orderable: false,
             searchable: false,
             data: 'id',
-            // render: TableComponent.renderCheckRow
+            render: TableComponent.renderCheckRow
         },
         {
             className: 'text-center',
             orderable: false,
             searchable: false,
             data: 'avatar',
-            // render: TableComponent.renderAvatar
+            render: TableComponent.renderAvatar
         },
         { data: 'username' },
         { data: 'first_name' },
