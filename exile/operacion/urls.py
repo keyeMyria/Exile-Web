@@ -47,8 +47,7 @@ urlpatterns += [
     url(r'^tarea/list/$', views.TareaList.as_view(), name="tarea_list"),
     url(r'^tarea/form/(?P<pk>\d+)/$', views.TareaSupraForm.as_view(), name="tarea_edit"),
     url(r'^tarea/delete/(?P<pk>\d+)/$', views.TareaDeleteSupra.as_view(), name="tarea_delete"),
-    url(r'^completado/$', views.CompletadoForm.as_view(), name="completado_delete"),
-    url(r'^completado/(?P<pk>\d+)/$', views.CompletadoForm.as_view(), name="completado_delete"),
+    url(r'^completado/form/$', views.CompletadoForm.as_view(), name="completado_add"),
     url(r'^completado/delete/(?P<pk>\d+)/$', views.CompletadoDelete.as_view(), name="completado_delete"),
 ]
 
@@ -60,7 +59,6 @@ urlpatterns += [
     url(r'^sub/tarea/form/$', views.SubTareaSupraForm.as_view(), name="sub_tarea"),
     url(r'^sub/tarea/form/(?P<pk>\d+)/$', views.SubTareaSupraForm.as_view(), name="sub_tarea_edit"),
     url(r'^sub/tarea/delete/(?P<pk>\d+)/$', views.SubTareaDeleteSupra.as_view(), name="sub_tarea_delete"),
-    url(r'^sub/completado/$', views.CompletadoSubForm.as_view(), name="subcompletado_delete"),
-    url(r'^sub/completado/(?P<pk>\d+)/$', views.CompletadoSubForm.as_view(), name="subcompletado_delete"),
+    url(r'^sub/completado/form/$', views.CompletadoSubForm.as_view(), name="subcompletado_delete"),
     url(r'^sub/completado/delete/(?P<pk>\d+)/$', views.CompletadoSubDelete.as_view(), name="subcompletado_delete"),
 ]
