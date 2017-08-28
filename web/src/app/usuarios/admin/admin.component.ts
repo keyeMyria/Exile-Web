@@ -41,19 +41,19 @@ export class EditAdminComponent implements OnInit {
             fijo: ['', [Validators.maxLength(15)]]
         });
         this.columns = ['col1', 'col2'];
-        // this.renderinputs = [
-        //     { column: 'col2', title: 'Nombre de Usuario', type: 'text', name: 'username' },
-        //     { column: 'col2', title: 'Contraseña', type: 'password', name: 'password1', noitem: true },
-        //     { column: 'col2', title: 'Confirmar contraseña', type: 'password', name: 'password2', noitem: true },
-        //     { column: 'col2', title: 'Correo', type: 'email', name: 'email' },
-        //     { column: 'col1', title: 'Nombre', type: 'text', name: 'first_name' },
-        //     { column: 'col1', title: 'Apellido', type: 'text', name: 'last_name' },
-        //     { column: 'col1', title: 'Identificación', type: 'text', name: 'identificacion' },
-        //     { column: 'col1', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
-        //     { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
-        //     { column: 'col1', title: 'Celular', type: 'text', name: 'telefono' },
-        //     { column: 'col1', title: 'Telefono', type: 'text', name: 'fijo' }
-        // ]
+        this.renderinputs = [
+            { column: 'col2', title: 'Nombre de Usuario', type: 'text', name: 'username' },
+            { column: 'col2', title: 'Contraseña', type: 'password', name: 'password1', noitem: true },
+            { column: 'col2', title: 'Confirmar contraseña', type: 'password', name: 'password2', noitem: true },
+            { column: 'col2', title: 'Correo', type: 'email', name: 'email' },
+            { column: 'col1', title: 'Nombre', type: 'text', name: 'first_name' },
+            { column: 'col1', title: 'Apellido', type: 'text', name: 'last_name' },
+            { column: 'col1', title: 'Identificación', type: 'text', name: 'identificacion' },
+            { column: 'col1', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
+            { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
+            { column: 'col1', title: 'Celular', type: 'text', name: 'telefono' },
+            { column: 'col1', title: 'Telefono', type: 'text', name: 'fijo' }
+        ]
 
     }
 

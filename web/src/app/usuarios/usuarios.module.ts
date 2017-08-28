@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { UsuariosRoutes } from './route';
 import { AsistenteService } from './asistente/asistente.service';
-import { AsistenteComponent, AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
+import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
 import { AdminComponent, EditAdminComponent, ListAdminComponent } from './admin/admin.component';
 import { AdminService } from './admin/admin.service';
 import { SampleModule } from 'componentex';
+import { CargoComponent } from './cargo/cargo.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -19,12 +20,12 @@ import { SampleModule } from 'componentex';
         RouterModule.forChild(UsuariosRoutes)
     ],
     declarations: [
-        AsistenteComponent,
         AsistenteListComponent,
         AsistenteEditComponent,
         AdminComponent,
         EditAdminComponent,
-        ListAdminComponent
+        ListAdminComponent,
+        CargoComponent
     ],
     providers: [
         AsistenteService,
