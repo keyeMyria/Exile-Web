@@ -6,8 +6,8 @@ import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { UsuariosRoutes } from './route';
 import { AsistenteService } from './asistente/asistente.service';
 import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
-import { AdminComponent, EditAdminComponent, ListAdminComponent } from './admin/admin.component';
-import { AdminService } from './admin/admin.service';
+import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/empleado.component';
+import { EmpleadoService } from './empleado/empleado.service';
 import { SampleModule } from 'componentex';
 import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component';
 import { CargoService } from './cargo/cargo.service';
@@ -24,15 +24,14 @@ import { CargoService } from './cargo/cargo.service';
     declarations: [
         AsistenteListComponent,
         AsistenteEditComponent,
-        AdminComponent,
-        EditAdminComponent,
-        ListAdminComponent,
+        EditEmpleadoComponent,
+        ListEmpleadoComponent,
         CargoListComponent,
         EditCargoComponent
     ],
     providers: [
         AsistenteService,
-        AdminService,
+        EmpleadoService,
         CargoService
     ]
 })
