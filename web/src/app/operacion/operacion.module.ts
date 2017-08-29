@@ -7,6 +7,8 @@ import { OperacionRoutes } from './route';
 
 import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
 import { TipoclienteService } from './tipocliente/tipocliente.service';
+import { ClienteService } from './cliente/cliente.service';
+import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -17,10 +19,13 @@ import { TipoclienteService } from './tipocliente/tipocliente.service';
     ],
     declarations: [
         TipoclienteListComponent,
-        TipoclienteEditComponent
+        TipoclienteEditComponent,
+        ClienteEditComponent,
+        ClienteListComponent
     ],
     providers: [
-        TipoclienteService
+        TipoclienteService,
+        ClienteService
     ]
 })
 export class OperacionModule { }
