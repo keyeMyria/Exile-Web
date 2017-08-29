@@ -421,7 +421,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json')]
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
@@ -484,7 +484,7 @@ class SubTareaDeleteSupra(supra.SupraDeleteView):
 
 class SubTareaList(supra.SupraListView):
     model = models.SubTarea
-    list_display = ['tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'completado']
+    list_display = ['id', 'tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'completado']
     search_fields = ['nombre', 'direccion']
     list_filter = ['tarea']
 
