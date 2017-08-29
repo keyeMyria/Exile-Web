@@ -9,7 +9,9 @@ import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asis
 import { AdminComponent, EditAdminComponent, ListAdminComponent } from './admin/admin.component';
 import { AdminService } from './admin/admin.service';
 import { SampleModule } from 'componentex';
-import { CargoComponent } from './cargo/cargo.component';
+import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component';
+import { CargoService } from './cargo/cargo.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -25,11 +27,13 @@ import { CargoComponent } from './cargo/cargo.component';
         AdminComponent,
         EditAdminComponent,
         ListAdminComponent,
-        CargoComponent
+        CargoListComponent,
+        EditCargoComponent
     ],
     providers: [
         AsistenteService,
-        AdminService
+        AdminService,
+        CargoService
     ]
 })
 export class UsuariosModule { }
