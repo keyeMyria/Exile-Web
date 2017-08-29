@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { UsuariosRoutes } from './route';
