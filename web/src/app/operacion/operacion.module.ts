@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SampleModule } from 'componentex';
 import { OperacionRoutes } from './route';
 
-import { TipoclienteListComponent } from './tipocliente/tipocliente.component';
+import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
 import { TipoclienteService } from './tipocliente/tipocliente.service';
 @NgModule({
     imports: [
@@ -16,7 +16,8 @@ import { TipoclienteService } from './tipocliente/tipocliente.service';
         RouterModule.forChild(OperacionRoutes)
     ],
     declarations: [
-        TipoclienteListComponent
+        TipoclienteListComponent,
+        TipoclienteEditComponent
     ],
     providers: [
         TipoclienteService

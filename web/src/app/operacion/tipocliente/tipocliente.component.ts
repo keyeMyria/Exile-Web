@@ -5,7 +5,7 @@ import { TipoclienteService } from './tipocliente.service';
 @Component({
     templateUrl: './list.tipocliente.component.html'
 })
-export class TipoclienteListComponent implements OnInit {
+export class TipoclienteListComponent {
     service = this._s;
     multiselect = true;
     aggregable = false;
@@ -26,10 +26,44 @@ export class TipoclienteListComponent implements OnInit {
         { data: 'nombre' }
     ];
 
-
     constructor(private _s: TipoclienteService) { }
 
-    ngOnInit() {
+}
 
+import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { RenderInput, FormComponent } from 'componentex';
+
+@Component({
+    template: `<ex-form #f icon="account_box" title="Tipo de Cliente"
+        [form]="form"
+        [service]="service"
+        [columns]="columns"
+        [renderinputs]="renderinputs"></ex-form>`
+})
+export class TipoclienteEditComponent implements OnInit {
+
+    form: FormGroup;
+    columns: string[];
+    renderinputs: RenderInput[];
+    service = this._s;
+
+    @ViewChild('f') private _form: FormComponent;
+
+    constructor(private _fb: FormBuilder, private _s: TipoclienteService, private _rt: Router) {
+        this.form = this._fb.group({
+            nombre: ['', Validators.required],
+        });
+        this.columns = ['col1'];
+        this.renderinputs = [
+            { column: 'col1', title: 'Nombre', type: 'text', name: 'nombre' },
+        ];
     }
+
+    ngOnInit() {
+        this._form.back = () => {
+            this._rt.navigate(['operacion/tipo/cliente']);
+        }
+    }
+
 }
