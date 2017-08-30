@@ -33,7 +33,7 @@ export class ClienteListComponent implements AfterViewInit {
     constructor(private _s: ClienteService) { }
 
     ngAfterViewInit() {
-        this.table.success = data => console.log(data);
+        // this.table.success = data => console.log(data);
     }
 
 }
@@ -43,7 +43,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { RenderInput, FormComponent } from 'componentex';
 
 @Component({
-    template: `<ex-form #f icon="account_box" title="Tipo de Cliente"
+    template: `<ex-form #f icon="account_box" title="Cliente"
         [form]="form"
         [service]="service"
         [columns]="columns"
