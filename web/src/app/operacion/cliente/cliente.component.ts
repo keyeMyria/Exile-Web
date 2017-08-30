@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TableComponent } from 'componentex';
 import { ClienteService } from './cliente.service';
-
+import { TipoclienteService } from '../tipocliente/tipocliente.service';
 @Component({
     templateUrl: './list.cliente.component.html'
 })
@@ -47,7 +47,24 @@ import { RenderInput, FormComponent } from 'componentex';
         [form]="form"
         [service]="service"
         [columns]="columns"
-        [renderinputs]="renderinputs"></ex-form>`
+        [renderinputs]="renderinputs">
+            <div top-form class="row">
+                <div class="col-lg-12">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <label class="col-lg-3 label-on-left" for="id_cargo">Tipo de Cliente:</label>
+                            <div class="col-lg-9">
+                                <div class="form-group label-floating is-empty">
+                                    <label class="control-label"></label>
+                                    <ex-autocomplete name="tipo" [service]="_c" [form]="form"
+                                        [item]="_form.item" [itemVal]="itemTipo"></ex-autocomplete>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ex-form>`
 })
 export class ClienteEditComponent implements OnInit {
 
@@ -58,7 +75,7 @@ export class ClienteEditComponent implements OnInit {
 
     @ViewChild('f') private _form: FormComponent;
 
-    constructor(private _fb: FormBuilder, private _s: ClienteService, private _rt: Router) {
+    constructor(private _fb: FormBuilder, private _s: ClienteService, private _rt: Router, private _c: TipoclienteService) {
         this.form = this._fb.group({
             nombre: ['', Validators.required],
             identificacion: ['', Validators.required],
@@ -70,7 +87,6 @@ export class ClienteEditComponent implements OnInit {
         this.renderinputs = [
             { column: 'col1', title: 'Nombre', type: 'text', name: 'nombre' },
             { column: 'col1', title: 'Identificación', type: 'text', name: 'identificacion' },
-            { column: 'col1', title: 'Tipo', type: 'text', name: 'tipo' },
             { column: 'col1', title: 'Telefono', type: 'text', name: 'telefono' },
             { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
         ];
@@ -81,5 +97,7 @@ export class ClienteEditComponent implements OnInit {
             this._rt.navigate(['operacion/cliente']);
         }
     }
+
+    itemTipo = data => data.nombre;
 
 }

@@ -15,10 +15,3 @@ export const AppRoutes: Routes = [
     },
     // { path: '**', component: P404Component }
 ];
-
-import { UsuariosMenuMeta } from './usuarios/route';
-import { OperacionMenuMeta } from './operacion/route';
-
-Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
-Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })
-Menu.instance.addMenu({ title: 'Operacion', icon: 'build', children: OperacionMenuMeta })
