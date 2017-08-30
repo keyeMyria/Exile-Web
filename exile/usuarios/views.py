@@ -270,7 +270,7 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
 class EmpleadoList(MasterList):
     model = models.Empleado
     list_display = ['first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'email', 'direccion',
-                    'telefono', 'fijo', 'creator', 'last_editor', 'fecha_ingreso', 'fecha_retiro',
+                    'telefono', 'fijo', 'creator', 'last_editor', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'cargo__nombre',
                     'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
                      'identificacion', 'email', 'username']

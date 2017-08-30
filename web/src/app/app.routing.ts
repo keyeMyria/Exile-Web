@@ -1,40 +1,24 @@
 import { Routes } from '@angular/router';
+import { BaseComponent, P404Component, Menu } from 'componentex';
+import { AuthGuard } from 'componentex';
 
-import { BaseComponent } from './lib/base/base.component';
-import { P404Component } from './lib/404/404.component';
-import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './services/auth/auth.guard';
 
-export interface MenuMeta {
-    title: string;
-    url: string;
-    icon: string;
-    children?: MenuMeta[];
-}
 
 export const AppRoutes: Routes = [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     {
-        path: '', component: AuthComponent, children: [
-            { path: '', loadChildren: './auth/auth.module#AuthModule' }
-        ]
-    },
-    {
-        path: '', component: BaseComponent, canActivate: [AuthGuard], children: [
+        path: '', component: BaseComponent, canActivate: [AuthGuard], data: { preload: true }, children: [
             { path: '', loadChildren: './home/home.module#HomeModule' },
             { path: 'usuarios', loadChildren: './usuarios/usuarios.module#UsuariosModule' },
-            { path: 'operacion', loadChildren: './operacion/operacion.module#OperacionModule' },
-            { path: 'novedades', loadChildren: './novedades/novedades.module#NovedadesModule' },
-            { path: 'informes', loadChildren: './informes/informes.module#InformesModule' },
-            { path: 'perfil', loadChildren: './usuarios/usuarios.module#UsuariosModule' },
+            { path: 'operacion', loadChildren: './operacion/operacion.module#OperacionModule' }
         ]
     },
-    { path: '**', component: P404Component }
+    // { path: '**', component: P404Component }
 ];
 
-import { UsuariosMenuMeta } from './usuarios/usuarios.route';
+import { UsuariosMenuMeta } from './usuarios/route';
+import { OperacionMenuMeta } from './operacion/route';
 
-export const AppMenuMeta: MenuMeta[] = [
-    { title: 'Home', url: '/dashboard', icon: 'dashboard' },
-    { title: 'Usuarios', url: null, icon: 'account_circle', children: UsuariosMenuMeta }
-];
+Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
+Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })
+Menu.instance.addMenu({ title: 'Operacion', icon: 'build', children: OperacionMenuMeta })

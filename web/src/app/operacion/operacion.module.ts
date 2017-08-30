@@ -1,19 +1,26 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SampleModule } from 'componentex';
+import { OperacionRoutes } from './route';
 
-import { OperacionRoutes } from './operacion.route';
-import { ClienteComponent } from './cliente/cliente.component';
-import { LugaresComponent } from './lugares/lugares.component';
-import { TareasComponent } from './tareas/tareas.component';
-import { CalendarioComponent } from './calendario/calendario.component';
-
+import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
+import { TipoclienteService } from './tipocliente/tipocliente.service';
 @NgModule({
     imports: [
-        RouterModule.forChild(OperacionRoutes),
-        CommonModule
+        CommonModule,
+        SampleModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule.forChild(OperacionRoutes)
     ],
-    declarations: [ClienteComponent, LugaresComponent, TareasComponent, CalendarioComponent],
-    providers: []
+    declarations: [
+        TipoclienteListComponent,
+        TipoclienteEditComponent
+    ],
+    providers: [
+        TipoclienteService
+    ]
 })
 export class OperacionModule { }

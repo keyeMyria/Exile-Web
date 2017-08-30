@@ -1,25 +1,38 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LibModule } from '../lib/lib.module';
-import { UsuariosRoutes } from './usuarios.route';
-import { AsistenteComponent, AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
-import { EmpleadoComponent } from './empleado/empleado.component';
-import { AsistenteService } from '../services/usuarios/asistente.service';
+import { DateValueAccessorModule } from 'angular-date-value-accessor';
+import { UsuariosRoutes } from './route';
+import { AsistenteService } from './asistente/asistente.service';
+import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
+import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/empleado.component';
+import { EmpleadoService } from './empleado/empleado.service';
+import { SampleModule } from 'componentex';
+import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component';
+import { CargoService } from './cargo/cargo.service';
 
 @NgModule({
     imports: [
         CommonModule,
-        LibModule,
+        SampleModule,
         FormsModule,
         ReactiveFormsModule,
+        DateValueAccessorModule,
         RouterModule.forChild(UsuariosRoutes)
     ],
     declarations: [
-        AsistenteComponent, AsistenteListComponent, AsistenteEditComponent,
-        EmpleadoComponent
+        AsistenteListComponent,
+        AsistenteEditComponent,
+        EditEmpleadoComponent,
+        ListEmpleadoComponent,
+        CargoListComponent,
+        EditCargoComponent
     ],
-    providers: [ AsistenteService ]
+    providers: [
+        AsistenteService,
+        EmpleadoService,
+        CargoService
+    ]
 })
 export class UsuariosModule { }

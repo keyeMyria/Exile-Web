@@ -1,28 +1,42 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { CallService } from './services/call.service';
+import { Component, OnInit } from '@angular/core';
+import { CallService, AuthService } from 'componentex';
 
 declare var $: any;
-// declare var fetch: any;
+
 @Component({
-    selector: 'exile-app',
-    templateUrl: './app.component.html'
+    selector: 'ex-nomina',
+    template: '<router-outlet></router-outlet>',
+    styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent implements OnInit {
-    constructor(private elRef: ElementRef, private _cl: CallService) {
-        this._cl.conf('104.236.33.228', '8000');
-        // this._cl.conf('192.168.1.16', '8000');
+    constructor(private _cs: CallService, private _as: AuthService) {
+        this._cs.conf({ host: '104.236.33.228', port: '8000' });
+        this._as.conf('usuarios/login/', 'usuarios/is/login/');
+        // this._cs.conf({ host: 'isabela.com.co' });
     }
-
     ngOnInit() {
-        const body = document.getElementsByTagName('body')[0];
-        const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
-        if (isWindows) {
-            body.classList.add('perfect-scrollbar-on');
-        } else {
-            body.classList.add('perfect-scrollbar-off');
-        }
         $.material.init();
     }
 }
+// function classDecorator(filter: Object) {
+//     console.log(filter);
+//     return function <T extends { new(...args: any[]): {} }>(constructor: T) {
+//         return class extends constructor {
+//             newProperty = 'new property';
+//             hello = filter;
+//         }
+//     }
+// }
+//
+// @classDecorator('hola2')
+// class Greeter {
+//     property = 'property';
+//     hello: string;
+//     constructor(m: string) {
+//         this.hello = m;
+//     }
+// }
+//
+// const noc = new Greeter('Hola mundo');
+// console.log(noc);
