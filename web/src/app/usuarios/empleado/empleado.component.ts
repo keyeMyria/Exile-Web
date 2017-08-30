@@ -3,14 +3,10 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormComponent, TableComponent, RenderInput } from 'componentex';
 import { EmpleadoService } from './empleado.service';
-
+import { CargoService } from '../cargo/cargo.service';
 
 @Component({
-    template: `<ex-form #f icon="account_circle" title="Empleador"
-        [form]="form"
-        [service]="service"
-        [columns]="columns"
-        [renderinputs]="renderinputs"></ex-form>`
+    templateUrl: './empleado.form.html'
 })
 export class EditEmpleadoComponent implements OnInit {
 
@@ -19,10 +15,9 @@ export class EditEmpleadoComponent implements OnInit {
     renderinputs: RenderInput[];
     service = this._as;
 
-
     @ViewChild('f') private _form: FormComponent;
 
-    constructor(private _fb: FormBuilder, private _as: EmpleadoService, private _rt: Router) {
+    constructor(private _fb: FormBuilder, private _as: EmpleadoService, public _c: CargoService, private _rt: Router) {
         this.form = this._fb.group({
             username: ['', [Validators.required, Validators.maxLength(150)]],
             password1: ['', [/*Validators.required*/]],
@@ -36,7 +31,9 @@ export class EditEmpleadoComponent implements OnInit {
             fecha_retiro: ['',],
             direccion: ['', [Validators.maxLength(120)]],
             telefono: ['', [Validators.maxLength(15)]],
-            fijo: ['', [Validators.maxLength(15)]]
+            fijo: ['', [Validators.maxLength(15)]],
+            cargo: [[], [Validators.pattern(/\d/)]],
+
         });
         this.columns = ['col1', 'col2'];
         this.renderinputs = [
@@ -62,6 +59,9 @@ export class EditEmpleadoComponent implements OnInit {
             this._rt.navigate(['usuarios/empleado']);
         }
     }
+
+    itemCargo = item => item.cargo__nombre;
+
 }
 
 @Component({
@@ -94,9 +94,7 @@ export class ListEmpleadoComponent {
         { data: 'cargo__nombre' },
         { data: 'email' },
         { data: 'telefono' },
-        { data: 'fijo' },
-        { data: 'fecha_ingreso' },
-        { data: 'fecha_retiro' },
+        { data: 'fijo' }
     ];
 
 

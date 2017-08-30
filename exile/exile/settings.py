@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'supra',
     'supra.auths.oauth',
-    'trigger',
     'cuser',
     'frontend',
     'usuarios.apps.UsuariosConfig',

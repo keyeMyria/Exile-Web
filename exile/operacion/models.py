@@ -6,8 +6,6 @@ from usuarios import models as usuarios
 from django.contrib.auth.models import User
 from cuser.fields import CurrentUserField
 from subcripcion.models import Cuenta
-# Create your models here.
-
 
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -90,7 +88,6 @@ class Tarea(models.Model):
     # end def
 # end class
 
-
 class SubTarea(models.Model):
     tarea = models.ForeignKey(Tarea)
     nombre = models.CharField(max_length=100)
@@ -120,7 +117,7 @@ class Completado(models.Model):
 
 
 class Multimedia(models.Model):
-    completado = models.ForeignKey(Completado)
+    tarea = models.ForeignKey(Tarea)
     archivo = models.FileField()
     audio = models.BooleanField()
     foto = models.BooleanField()
