@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CallService, AuthService } from 'componentex';
+import { Menu } from 'componentex';
+import { UsuariosMenuMeta } from './usuarios/route';
+import { OperacionMenuMeta } from './operacion/route';
 
 declare var $: any;
 
@@ -17,26 +20,8 @@ export class AppComponent implements OnInit {
     }
     ngOnInit() {
         $.material.init();
+        Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
+        Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })
+        Menu.instance.addMenu({ title: 'Operacion', icon: 'build', children: OperacionMenuMeta })
     }
 }
-// function classDecorator(filter: Object) {
-//     console.log(filter);
-//     return function <T extends { new(...args: any[]): {} }>(constructor: T) {
-//         return class extends constructor {
-//             newProperty = 'new property';
-//             hello = filter;
-//         }
-//     }
-// }
-//
-// @classDecorator('hola2')
-// class Greeter {
-//     property = 'property';
-//     hello: string;
-//     constructor(m: string) {
-//         this.hello = m;
-//     }
-// }
-//
-// const noc = new Greeter('Hola mundo');
-// console.log(noc);

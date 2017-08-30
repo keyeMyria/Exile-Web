@@ -6,7 +6,13 @@ import { SampleModule } from 'componentex';
 import { OperacionRoutes } from './route';
 
 import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
+import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
+import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
+
 import { TipoclienteService } from './tipocliente/tipocliente.service';
+import { ClienteService } from './cliente/cliente.service';
+import { LugarService } from './lugar/lugar.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -17,10 +23,16 @@ import { TipoclienteService } from './tipocliente/tipocliente.service';
     ],
     declarations: [
         TipoclienteListComponent,
-        TipoclienteEditComponent
+        TipoclienteEditComponent,
+        ClienteEditComponent,
+        ClienteListComponent,
+        LugarEditComponent,
+        LugarListComponent,
     ],
     providers: [
-        TipoclienteService
+        TipoclienteService,
+        ClienteService,
+        LugarService
     ]
 })
 export class OperacionModule { }

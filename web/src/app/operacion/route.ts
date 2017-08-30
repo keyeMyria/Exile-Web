@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
 import { MenuMeta, RouteComponent } from 'componentex';
 import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
+import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
+import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
+
 import { TipoclienteService } from './tipocliente/tipocliente.service';
+import { ClienteService } from './cliente/cliente.service';
+import { LugarService } from './lugar/lugar.service';
 
 export const OperacionRoutes: Routes = [
     {
@@ -16,8 +21,26 @@ export const OperacionRoutes: Routes = [
                     }
                 ]
             },
-            { path: 'cliente', component: RouteComponent, data: { miga: 'Cliente' }, children: [] },
-            { path: 'lugar', component: RouteComponent, data: { miga: 'Lugares de Trabajo' }, children: [] },
+            {
+                path: 'cliente', component: RouteComponent, data: { miga: 'Cliente' }, children: [
+                    { path: '', component: ClienteListComponent },
+                    {
+                        path: ':id/edit', component: ClienteEditComponent,
+                        data: { miga: 'Editar' },
+                        resolve: { item: ClienteService }
+                    }
+                ]
+            },
+            {
+                path: 'lugar', component: RouteComponent, data: { miga: 'Lugares de Trabajo' }, children: [
+                    { path: '', component: LugarListComponent },
+                    {
+                        path: ':id/edit', component: LugarEditComponent,
+                        data: { miga: 'Editar' },
+                        resolve: { item: LugarService }
+                    }
+                ]
+            },
             { path: 'tarea', component: RouteComponent, data: { miga: 'Tareas' }, children: [] },
             { path: 'calendario', component: RouteComponent, data: { miga: 'Calendario' }, children: [] }
         ]
