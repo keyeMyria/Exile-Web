@@ -96,7 +96,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('192.168.99.100', 6379)],
         },
         'ROUTING': 'exile.routing.channel_routing',
     }
