@@ -524,7 +524,7 @@ class CompletadoSubDelete(supra.SupraDeleteView):
 
 class CompletadoForm(supra.SupraFormView):
     model = models.Completado
-    response_json = False
+    response_json = True
 
     @method_decorator(check_login)
     @csrf_exempt
