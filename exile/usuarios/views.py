@@ -287,7 +287,6 @@ class GrupoSupraForm(supra.SupraFormView):
     model = models.Grupo
     form_class = forms.GrupoForm
     response_json = False
-    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt

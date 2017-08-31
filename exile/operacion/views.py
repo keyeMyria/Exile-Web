@@ -500,7 +500,6 @@ class SubTareaList(supra.SupraListView):
 
 class CompletadoSubForm(supra.SupraFormView):
     model = models.CompletadoSub
-    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -524,6 +523,7 @@ class CompletadoSubDelete(supra.SupraDeleteView):
 
 class CompletadoForm(supra.SupraFormView):
     model = models.Completado
+    response_json = True
 
     @method_decorator(check_login)
     @csrf_exempt
