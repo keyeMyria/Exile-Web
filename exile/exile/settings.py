@@ -91,12 +91,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'exile.urls'
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [(redis_host, 6379)],
         },
         'ROUTING': 'exile.routing.channel_routing',
     }
