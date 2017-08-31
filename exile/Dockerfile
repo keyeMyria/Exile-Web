@@ -1,6 +1,8 @@
 # Use an official Python runtime as a parent image
 FROM ksketo/python-pillow
-
+ENV PYTHONUNBUFFERED 1
+ENV REDIS_HOST "redis"
+RUN mkdir /exile
 # Set the working directory to /exile
 WORKDIR /exile
 
@@ -9,8 +11,9 @@ ADD . /exile
 
 # Install any needed packages specified in dependencias.txt
 RUN pip install -r dependencias.txt
+RUN python manage.py migrate
 
 # Run python when the container launches
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 #To REmove Zombies use: docker rmi $(docker images -f "dangling=true" -q)
