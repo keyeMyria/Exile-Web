@@ -3,6 +3,7 @@ import { CallService, AuthService } from 'componentex';
 import { Menu } from 'componentex';
 import { UsuariosMenuMeta } from './usuarios/route';
 import { OperacionMenuMeta } from './operacion/route';
+import { ConfiguracionMenuMeta } from './configuracion/route';
 
 declare var $: any;
 
@@ -22,6 +23,8 @@ export class AppComponent implements OnInit {
         $.material.init();
         Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
         Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })
-        Menu.instance.addMenu({ title: 'Operacion', icon: 'build', children: OperacionMenuMeta })
+        Menu.instance.addMenu({ title: 'Operación', icon: 'build', children: OperacionMenuMeta })
+        Menu.instance.addMenu({ title: 'Configuración', icon: 'settings', children: ConfiguracionMenuMeta })
+
     }
 }

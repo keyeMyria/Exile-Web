@@ -9,8 +9,8 @@ import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asis
 import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/empleado.component';
 import { EmpleadoService } from './empleado/empleado.service';
 import { SampleModule } from 'componentex';
-import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component';
-import { CargoService } from './cargo/cargo.service';
+import { CargoService } from '../configuracion/cargo/cargo.service';
+
 
 @NgModule({
     imports: [
@@ -26,8 +26,7 @@ import { CargoService } from './cargo/cargo.service';
         AsistenteEditComponent,
         EditEmpleadoComponent,
         ListEmpleadoComponent,
-        CargoListComponent,
-        EditCargoComponent
+
     ],
     providers: [
         AsistenteService,
