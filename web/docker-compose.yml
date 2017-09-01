@@ -1,0 +1,16 @@
+version: '2'
+services:
+    web:
+        build: .
+        ports:
+            - "4200"
+            - "49153"
+        volumes:
+            - .:/exileweb
+    http-server:
+        build: .
+        ports:
+            - "8080:8080"
+        command: bash -c "ng build --prod &&  http-server ./dist"
+        depends_on:
+            - web
