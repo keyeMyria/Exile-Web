@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormComponent, TableComponent, RenderInput } from 'componentex';
 import { EmpleadoService } from './empleado.service';
-import { CargoService } from '../cargo/cargo.service';
+import { CargoService } from '../../configuracion/cargo/cargo.service';
 
 @Component({
     templateUrl: './empleado.form.html'
@@ -15,7 +15,7 @@ export class EditEmpleadoComponent implements OnInit {
     renderinputs: RenderInput[];
     service = this._as;
 
-    @ViewChild('f') private _form: FormComponent;
+    @ViewChild('f') public _form: FormComponent;
 
     constructor(private _fb: FormBuilder, private _as: EmpleadoService, public _c: CargoService, private _rt: Router) {
         this.form = this._fb.group({
@@ -37,19 +37,19 @@ export class EditEmpleadoComponent implements OnInit {
         });
         this.columns = ['col1', 'col2'];
         this.renderinputs = [
-            { column: 'col2', title: 'Nombre de Usuario', type: 'text', name: 'username' },
+            { column: 'col1', title: 'Nombre de Usuario', type: 'text', name: 'username' },
             { column: 'col2', title: 'Contraseña', type: 'password', name: 'password1', noitem: true },
             { column: 'col2', title: 'Confirmar contraseña', type: 'password', name: 'password2', noitem: true },
-            { column: 'col2', title: 'Correo', type: 'email', name: 'email' },
             { column: 'col1', title: 'Nombre', type: 'text', name: 'first_name' },
             { column: 'col1', title: 'Apellido', type: 'text', name: 'last_name' },
             { column: 'col1', title: 'Identificación', type: 'text', name: 'identificacion' },
-            { column: 'col1', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
-            { column: 'col1', title: 'Fecha de ingreso', type: 'text', name: 'fecha_ingreso', class: 'datepicker' },
-            { column: 'col1', title: 'Fecha de retiro', type: 'text', name: 'fecha_retiro', class: 'datepicker' },
+            { column: 'col1', title: 'Correo', type: 'email', name: 'email' },
+            { column: 'col2', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
+            { column: 'col2', title: 'Fecha de ingreso', type: 'text', name: 'fecha_ingreso', class: 'datepicker' },
+            { column: 'col2', title: 'Fecha de retiro', type: 'text', name: 'fecha_retiro', class: 'datepicker' },
             { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
-            { column: 'col1', title: 'Celular', type: 'text', name: 'telefono' },
-            { column: 'col1', title: 'Telefono', type: 'text', name: 'fijo' }
+            { column: 'col2', title: 'Celular', type: 'text', name: 'telefono' },
+            { column: 'col2', title: 'Telefono', type: 'text', name: 'fijo' }
         ]
 
     }
@@ -94,7 +94,9 @@ export class ListEmpleadoComponent {
         { data: 'cargo__nombre' },
         { data: 'email' },
         { data: 'telefono' },
-        { data: 'fijo' }
+        { data: 'fijo' },
+        { data: 'fecha_ingreso' },
+        { data: 'fecha_retiro' }
     ];
 
 

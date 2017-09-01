@@ -5,13 +5,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SampleModule } from 'componentex';
 import { OperacionRoutes } from './route';
 
-import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
 
-import { TipoclienteService } from './tipocliente/tipocliente.service';
 import { ClienteService } from './cliente/cliente.service';
 import { LugarService } from './lugar/lugar.service';
+import { TipoclienteService } from '../configuracion/tipocliente/tipocliente.service';
 
 @NgModule({
     imports: [
@@ -22,17 +21,15 @@ import { LugarService } from './lugar/lugar.service';
         RouterModule.forChild(OperacionRoutes)
     ],
     declarations: [
-        TipoclienteListComponent,
-        TipoclienteEditComponent,
         ClienteEditComponent,
         ClienteListComponent,
         LugarEditComponent,
         LugarListComponent,
     ],
     providers: [
-        TipoclienteService,
         ClienteService,
-        LugarService
+        LugarService,
+        TipoclienteService
     ]
 })
 export class OperacionModule { }

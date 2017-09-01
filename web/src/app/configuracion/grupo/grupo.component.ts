@@ -2,19 +2,19 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FormComponent, TableComponent, RenderInput } from 'componentex';
-import { CargoService } from './cargo.service';
+import { GrupoService } from './grupo.service';
+import { EmpleadoService } from '../../usuarios/empleado/empleado.service';
+
 
 @Component({
-    templateUrl: './list.cargo.component.html'
+    templateUrl: './grupo.component.html'
 })
-export class CargoListComponent {
+export class ListGrupoComponent {
 
-    @ViewChild('table') private table: TableComponent;
-
-    icon = 'turned_in';
-    title = 'Cargos';
     service = this._as;
     multiselect = true;
+    order = [[2, 'asc']]
+    icon = 'group';
     columns = [
         {
             className: 'text-center',
@@ -23,33 +23,31 @@ export class CargoListComponent {
             data: 'id',
             render: TableComponent.renderCheckRow
         },
+
         { data: 'nombre' },
-        { data: 'fecha' }
-    ]
+    ];
 
-    constructor(private _as: CargoService) { }
 
+    constructor(private _as: GrupoService) { }
 }
 
+
 @Component({
-    template: `<ex-form #f icon="turned_in" title="Cargo"
-        [form]="form"
-        [service]="service"
-        [columns]="columns"
-        [renderinputs]="renderinputs"></ex-form>`
+    templateUrl: './grupo.form.html'
 })
-export class EditCargoComponent implements OnInit {
+export class EditGrupoComponent implements OnInit {
 
     form: FormGroup;
     columns: string[];
     renderinputs: RenderInput[];
     service = this._s;
 
-    @ViewChild('f') private _form: FormComponent;
+    @ViewChild('f') public _form: FormComponent;
 
-    constructor(private _fb: FormBuilder, private _s: CargoService, private _rt: Router) {
+    constructor(private _fb: FormBuilder, private _s: GrupoService, public _p: EmpleadoService, private _rt: Router) {
         this.form = this._fb.group({
-            nombre: ['', Validators.required]
+            nombre: ['', Validators.required],
+            empleados: [[], Validators.required]
         });
         this.columns = ['col1'];
         this.renderinputs = [
@@ -57,9 +55,18 @@ export class EditCargoComponent implements OnInit {
         ];
     }
 
+    nombre = item => {
+        return `${item.first_name} ${item.last_name} - ${item.cargo__nombre}`;
+    }
+
     ngOnInit() {
+        this._form.setReady(true);
         this._form.successful = data => {
-            this._rt.navigate(['usuarios/cargo']);
+            this._rt.navigate(['configuracion/grupo']);
         }
+    }
+
+    completeAjax(event) {
+        this._form.setReady(false);
     }
 }

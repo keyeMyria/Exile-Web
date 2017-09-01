@@ -62,7 +62,7 @@ export class TipoclienteEditComponent implements OnInit {
 
     ngOnInit() {
         this._form.back = () => {
-            this._rt.navigate(['operacion/tipo/cliente']);
+            this._rt.navigate(['configuracion/tipo/cliente']);
         }
     }
 

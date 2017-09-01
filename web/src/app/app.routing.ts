@@ -10,7 +10,8 @@ export const AppRoutes: Routes = [
         path: '', component: BaseComponent, canActivate: [AuthGuard], data: { preload: true }, children: [
             { path: '', loadChildren: './home/home.module#HomeModule' },
             { path: 'usuarios', loadChildren: './usuarios/usuarios.module#UsuariosModule' },
-            { path: 'operacion', loadChildren: './operacion/operacion.module#OperacionModule' }
+            { path: 'operacion', loadChildren: './operacion/operacion.module#OperacionModule' },
+            { path: 'configuracion', loadChildren: './configuracion/configuracion.module#ConfiguracionModule' }
         ]
     },
     // { path: '**', component: P404Component }
