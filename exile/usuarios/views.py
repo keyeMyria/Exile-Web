@@ -325,7 +325,7 @@ class GrupoSupraFormDelete(supra.SupraDeleteView):
 
 class GrupoList(MasterList):
     model = models.Grupo
-    list_display = ['nombre', 'empleados']
+    list_display = ['nombre', 'empleados', 'id']
     search_fields = ['nombre', ]
     paginate_by = 10
 
