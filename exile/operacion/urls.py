@@ -62,3 +62,15 @@ urlpatterns += [
     url(r'^sub/completado/form/$', views.CompletadoSubForm.as_view(), name="subcompletado_delete"),
     url(r'^sub/completado/delete/(?P<pk>\d+)/$', views.CompletadoSubDelete.as_view(), name="subcompletado_delete"),
 ]
+
+"""
+    Multimedia
+"""
+
+
+urlpatterns += [
+    url(r'^multimedia/form/$', views.MultimediaSupraForm.as_view(), name="multimedia"),
+    url(r'^multimedia/list/$', views.MultimediaList.as_view(), name="multimedia_list"),
+    url(r'^multimedia/form/(?P<pk>\d+)/$', views.MultimediaSupraForm.as_view(), name="multimedia_edit"),
+    url(r'^multimedia/delete/(?P<pk>\d+)/$', views.MultimediaDeleteSupra.as_view(), name="multimedia_delete"),
+]

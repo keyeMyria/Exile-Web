@@ -1,8 +1,9 @@
 version: "2"
-
 services:
   redis:
-    image: redis:latest
+    image: "redis:latest"
+    ports:
+      - 6379:6379
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000

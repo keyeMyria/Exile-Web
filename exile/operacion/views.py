@@ -373,14 +373,12 @@ class LugarDeleteSupra(supra.SupraDeleteView):
     # end def
 # end class
 
-
 class LugarList(MasterList):
     model = models.Lugar
     list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 # end class
-
 
 class TareaSupraForm(supra.SupraFormView):
     model = models.Tarea
@@ -440,7 +438,6 @@ class TareaList(MasterList):
         subtareas = SubTareaList(dict_only=True).dispatch(request=request())
         return json.dumps(subtareas['object_list'])
     # end def
-
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -495,7 +492,6 @@ class SubTareaList(supra.SupraListView):
             return completado.pk
         # end if
     # end def
-
 # end class
 
 class CompletadoSubForm(supra.SupraFormView):
@@ -506,7 +502,6 @@ class CompletadoSubForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoSubForm, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoSubDelete(supra.SupraDeleteView):
@@ -518,7 +513,6 @@ class CompletadoSubDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoSubDelete, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoForm(supra.SupraFormView):
@@ -530,7 +524,6 @@ class CompletadoForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoForm, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoDelete(supra.SupraDeleteView):
@@ -542,5 +535,33 @@ class CompletadoDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoDelete, self).dispatch(request, *args, **kwargs)
     # end def
+# end class
 
+class MultimediaList(supra.SupraListView):
+    model = models.Multimedia
+    list_display = ['tarea', 'archivo', 'audio', 'foto']
+    search_fields = ['tarea', ]
+    paginate_by = 10
+# end class
+
+class MultimediaSupraForm(supra.SupraFormView):
+    model = models.Multimedia
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+class MultimediaDeleteSupra(supra.SupraDeleteView):
+    model = models.Multimedia
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaDelete, self).dispatch(request, *args, **kwargs)
+    # end def
 # end class
