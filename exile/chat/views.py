@@ -13,6 +13,6 @@ def index(request):
     rooms = Room.objects.order_by("title")
 
     # Render that in the index template
-    return render(request, "index.html", {
+    return render(request, "chat.html", {
         "rooms": rooms,
     })
