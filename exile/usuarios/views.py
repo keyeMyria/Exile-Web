@@ -287,7 +287,6 @@ class GrupoSupraForm(supra.SupraFormView):
     model = models.Grupo
     form_class = forms.GrupoForm
     response_json = False
-    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -326,11 +325,18 @@ class GrupoSupraFormDelete(supra.SupraDeleteView):
 
 class GrupoList(MasterList):
     model = models.Grupo
-    list_display = ['nombre', 'empleados_list']
+    list_display = ['nombre', 'empleados', 'id']
     search_fields = ['nombre', ]
     paginate_by = 10
 
-    def empleados_list(self, obj, row):
-        return list(models.Empleado.objects.filter(grupo=obj.pk).values('first_name', 'last_name', 'id'))
+    def empleados(self, obj, row):
+        lista = []
+        if obj:
+            empleados = models.Empleado.objects.filter(grupo=obj.pk).values('id')
+            for e in empleados:
+                lista.append(e['id'])
+            # end class
+            return lista
+        return lista
     # end def
 # end class

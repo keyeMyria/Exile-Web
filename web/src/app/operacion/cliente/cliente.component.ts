@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TableComponent } from 'componentex';
 import { ClienteService } from './cliente.service';
-import { TipoclienteService } from '../tipocliente/tipocliente.service';
+import { TipoclienteService } from '../../configuracion/tipocliente/tipocliente.service';
+
 @Component({
     templateUrl: './list.cliente.component.html'
 })
@@ -73,9 +74,9 @@ export class ClienteEditComponent implements OnInit {
     renderinputs: RenderInput[];
     service = this._s;
 
-    @ViewChild('f') private _form: FormComponent;
+    @ViewChild('f') public _form: FormComponent;
 
-    constructor(private _fb: FormBuilder, private _s: ClienteService, private _rt: Router, private _c: TipoclienteService) {
+    constructor(private _fb: FormBuilder, private _s: ClienteService, private _rt: Router, public _c: TipoclienteService) {
         this.form = this._fb.group({
             nombre: ['', Validators.required],
             identificacion: ['', Validators.required],

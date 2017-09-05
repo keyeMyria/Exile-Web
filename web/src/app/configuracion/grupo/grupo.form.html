@@ -1,0 +1,16 @@
+<ex-form #f icon="turned_in" title="Grupo" [form]="form" [service]="service" [columns]="columns" [renderinputs]="renderinputs">
+    <div bottom-form class="row">
+        <div class="col-lg-12">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_tipocontrato">Empleados</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <ex-multi #multi name="empleados" (complete)="completeAjax($event)" placeholder="Seleccione los empleados" [form]="form" [service]="_p" [render]="nombre" [item]="_form.item"></ex-multi>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ex-form>
