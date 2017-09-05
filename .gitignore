@@ -111,4 +111,4 @@ ENV/
 web/src/assets/.sass-cache
 
 #mongo data
-exile/data/
+exile/data
