@@ -7,9 +7,8 @@ import { AuthComponent } from './auth/auth.component';
 // import { SelectiveStrategy } from './selective-strategy.service';
 @NgModule({
     imports: [
-        RouterModule.forRoot(AppRoutes, { useHash: true/*, preloadingStrategy: SelectiveStrategy*/ })
+        RouterModule.forRoot(AppRoutes, { useHash: true })
     ],
-    // providers: [SelectiveStrategy],
     exports: [RouterModule]
 })
 export class AppRouteModule { }
