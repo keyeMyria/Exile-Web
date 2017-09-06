@@ -17,6 +17,17 @@ import models
 import urllib2
 import json
 from exile.settings import ORIGIN
+from djcelery.models import PeriodicTask, IntervalSchedule
+
+def test_add(request):
+    schedule, created = IntervalSchedule.objects.get_or_create(every=10, period='seconds')
+    PeriodicTask.objects.get_or_create(
+        interval=schedule,                  # we created this above.
+        name='Importing contacts',          # simply describes this periodic task.
+        task='periodic2', 
+    )
+    return HttpResponse("Ok")
+# end def
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN

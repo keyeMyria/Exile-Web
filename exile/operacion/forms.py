@@ -7,6 +7,7 @@ import widgets
 from exile.servicios import get_cuenta
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
+from djcelery.models import PeriodicTask, IntervalSchedule
 
 class Master(forms.ModelForm):
 
@@ -47,22 +48,21 @@ class TareaFormBase(forms.ModelForm):
 
     class Meta:
         model = models.Tarea
-        fields = ['nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'unidad_de_repeticion','lugar', 'cliente', 'empleados', 'grupo', 'sub_complete']
-        widgets = {
-            # "fecha_de_ejecucion": DatePickerWidget(attrs={'class': 'date'}, format="%m/%d/%Y"),
-            "repetir_cada": widgets.IntervalWidget()
-        }
+        exclude = []
     # end class
 
     def __init__(self, *args, **kwargs):
         super(TareaFormBase, self).__init__(*args, **kwargs)
         self.fields['fecha_de_ejecucion'].input_formats = ('%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
-        self.fields['unidad_de_repeticion'].widgets = widgets.RepeatWidget(choices=self.fields['unidad_de_repeticion'].choices)
     # end def
 # end class
 
 class TareaForm(TareaFormBase):
-    pass
+    def save(self, *args, **kwargs):
+        obj = super(TareaFormBase, self).save(*args, **kwargs)
+        
+        return obj
+    # end def
 # end class
 
 class TareaFormEdit(TareaFormBase, MasterEdit):

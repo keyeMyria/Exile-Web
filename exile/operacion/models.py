@@ -6,6 +6,7 @@ from usuarios import models as usuarios
 from django.contrib.auth.models import User
 from cuser.fields import CurrentUserField
 from subcripcion.models import Cuenta
+from djcelery.models import CrontabSchedule, IntervalSchedule
 
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -69,7 +70,6 @@ class Tarea(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
     fecha_de_ejecucion = models.DateField()
-    repetir_cada = models.TextField("Repetir", default=0)
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
@@ -77,8 +77,8 @@ class Tarea(models.Model):
     last_editor = CurrentUserField(related_name="last_edited_tarea")
     grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
     sub_complete = models.BooleanField()  # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
-    unidad_de_repeticion = models.IntegerField(choices=(
-        (3, "Mes(es)", ), (4, "Año(s)", ), ), null=True, blank=True, default=3)
+    crontab = models.ForeignKey(CrontabSchedule)
+    interval = models.ForeignKey(IntervalSchedule)
     # Por cuando se repite
     eliminado = models.BooleanField(default=False)
     eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tarea", blank=True, null=True)
@@ -122,7 +122,6 @@ class Multimedia(models.Model):
     audio = models.BooleanField()
     foto = models.BooleanField()
 # end class
-
 
 class CompletadoSub(models.Model):
     subtarea = models.OneToOneField(SubTarea)

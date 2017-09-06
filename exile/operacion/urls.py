@@ -74,3 +74,13 @@ urlpatterns += [
     url(r'^multimedia/form/(?P<pk>\d+)/$', views.MultimediaSupraForm.as_view(), name="multimedia_edit"),
     url(r'^multimedia/delete/(?P<pk>\d+)/$', views.MultimediaDeleteSupra.as_view(), name="multimedia_delete"),
 ]
+
+"""
+    Celery
+"""
+
+
+urlpatterns += [
+    url(r'^test/add/$', views.test_add, name="test_add"),
+]
+
