@@ -10,7 +10,7 @@ import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/emplead
 import { EmpleadoService } from './empleado/empleado.service';
 import { SampleModule } from 'componentex';
 import { CargoService } from '../configuracion/cargo/cargo.service';
-
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
     imports: [

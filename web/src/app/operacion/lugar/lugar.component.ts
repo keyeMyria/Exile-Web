@@ -34,17 +34,32 @@ export class LugarListComponent implements AfterViewInit {
 
 }
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { RenderInput, FormComponent } from 'componentex';
+import { RenderInput, FormComponent, ExgmapComponent } from 'componentex';
 
 @Component({
-    template: `<ex-form #f icon="account_balance" title="Lugares de Trabajo"
+    template: `
+    <ex-form #f icon="account_balance" title="Lugares de Trabajo"
         [form]="form"
         [service]="service"
         [columns]="columns"
         [renderinputs]="renderinputs">
-        </ex-form>`
+        <div bottom-form class="row">
+            <div class="col-lg-12">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <label class="col-lg-3 label-on-left" for="id_cargo">Ubicación</label>
+                        <div class="col-lg-9">
+                            <div class="form-group label-floating is-empty">
+                                <ex-gmap #map (coordsChange)="onCoordsChange($event)"></ex-gmap>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ex-form>`
 })
 export class LugarEditComponent implements OnInit {
 
@@ -52,10 +67,13 @@ export class LugarEditComponent implements OnInit {
     columns: string[];
     renderinputs: RenderInput[];
     service = this._s;
+    latitude: number;
+    longitude: number;
 
     @ViewChild('f') private _form: FormComponent;
+    @ViewChild('map') private map: ExgmapComponent;
 
-    constructor(private _fb: FormBuilder, private _s: LugarService, private _rt: Router) {
+    constructor(private _fb: FormBuilder, private _s: LugarService, private _rt: Router, private _r: ActivatedRoute) {
         this.form = this._fb.group({
             nombre: ['', Validators.required],
             latitud: ['', Validators.required],
@@ -65,16 +83,29 @@ export class LugarEditComponent implements OnInit {
         this.columns = ['col1'];
         this.renderinputs = [
             { column: 'col1', title: 'Nombre', type: 'text', name: 'nombre' },
-            { column: 'col1', title: 'Latitud', type: 'text', name: 'latitud' },
-            { column: 'col1', title: 'Telefono', type: 'text', name: 'longitud' },
             { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
         ];
+
     }
 
     ngOnInit() {
         this._form.back = () => {
             this._rt.navigate(['operacion/lugar']);
         }
+        if (!!this._r.snapshot.data['item'] && Object.keys(this._r.snapshot.data['item']).length !== 0) {
+            this.map.currentPosition = false;
+            this.map.coords = { lat: this._r.snapshot.data['item'].latitud, lng: this._r.snapshot.data['item'].longitud }
+            this.map.zoom = 16;
+        }
     }
 
+    onCoordsChange(event) {
+        this.form.get('latitud').setValue(event.lat);
+        this.form.get('longitud').setValue(event.lng);
+    }
+
+    onItemChange(event) {
+
+        console.log(this.map.coords)
+    }
 }
