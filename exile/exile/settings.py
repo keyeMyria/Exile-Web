@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from pymodm import connect
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -98,6 +99,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'exile.urls'
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
+mongo_host = os.environ.get('MONGO_HOST', 'localhost')
+print "REDIS", redis_host
+print "MONGO", mongo_host
+
+connect('mongodb://localhost:27017/exile')
 
 CHANNEL_LAYERS = {
     'default': {

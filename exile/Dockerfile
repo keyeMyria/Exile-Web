@@ -2,6 +2,7 @@
 FROM ksketo/python-pillow
 ENV PYTHONUNBUFFERED 1
 ENV REDIS_HOST "redis"
+ENV MONGO_HOST "mongodb"
 RUN mkdir /exile
 # Set the working directory to /exile
 WORKDIR /exile
@@ -10,6 +11,7 @@ WORKDIR /exile
 ADD . /exile
 
 # Install any needed packages specified in dependencias.txt
+RUN pip install --upgrade pip
 RUN pip install -r dependencias.txt
 RUN python manage.py migrate
 

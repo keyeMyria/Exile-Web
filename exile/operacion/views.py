@@ -430,7 +430,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
@@ -449,6 +449,14 @@ class TareaList(MasterList):
         subtareas = SubTareaList(dict_only=True).dispatch(request=request())
         return json.dumps(subtareas['object_list'])
     # end def
+
+    def multimedia(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'tarea': obj.pk}
+        # end class
+        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
+        return json.dumps(multimedia['object_list'])
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -550,9 +558,16 @@ class CompletadoDelete(supra.SupraDeleteView):
 
 class MultimediaList(supra.SupraListView):
     model = models.Multimedia
-    list_display = ['tarea', 'archivo', 'audio', 'foto']
-    search_fields = ['tarea', ]
+    list_display = ['tarea', 'url', 'audio', 'foto']
+    list_filter = ['tarea']
     paginate_by = 10
+
+    def url(self, obj, row):
+        if obj.archivo:
+            return "/media/%s" % (obj.archivo)
+        # end if
+        return None
+    # end if
 # end class
 
 class MultimediaSupraForm(supra.SupraFormView):

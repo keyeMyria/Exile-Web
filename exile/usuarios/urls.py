@@ -7,7 +7,7 @@ auto_triggers()
 ""
 urlpatterns = [
     url(r'^login/$', views.LoginU.as_view(), name="loginU"),
-    url(r'^logout/$', views.logoutUser, name="loginU"),
+    url(r'^logout/$', views.logoutUser, name="logout"),
     url(r'^login/empleado/$', views.LoginE.as_view(), name="LoginE"),
     url(r'^is/login/$', views.islogin, name="isLogin"),
 ]
