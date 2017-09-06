@@ -35,3 +35,12 @@ def periodic2():
 	 
 	file.close()
 # end def
+
+
+@task(name="notification")
+def notification():
+	# make the notification here
+	file = open("./notification.txt")  
+	file.write(str(datetime.date())) 
+	file.close()
+# end def

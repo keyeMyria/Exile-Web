@@ -50,17 +50,17 @@ class TareaFormBase(forms.ModelForm):
         model = models.Tarea
         exclude = []
     # end class
-
-    def __init__(self, *args, **kwargs):
-        super(TareaFormBase, self).__init__(*args, **kwargs)
-        self.fields['fecha_de_ejecucion'].input_formats = ('%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
-    # end def
 # end class
 
 class TareaForm(TareaFormBase):
     def save(self, *args, **kwargs):
-        obj = super(TareaFormBase, self).save(*args, **kwargs)
-        
+        obj = super(TareaForm, self).save(*args, **kwargs)
+        PeriodicTask.objects.create(
+            interval=obj.schedule,
+            name='Tarea #%d' % (obj.pk, ),
+            task='notification',
+            args=[obj.pk] 
+        )
         return obj
     # end def
 # end class

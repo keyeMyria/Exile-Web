@@ -69,7 +69,6 @@ class Tarea(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
-    fecha_de_ejecucion = models.DateField()
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
@@ -77,8 +76,8 @@ class Tarea(models.Model):
     last_editor = CurrentUserField(related_name="last_edited_tarea")
     grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
     sub_complete = models.BooleanField()  # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
-    crontab = models.ForeignKey(CrontabSchedule)
-    interval = models.ForeignKey(IntervalSchedule)
+    crontab = models.OneToOneField(CrontabSchedule, blank=True, null=True)
+    interval = models.OneToOneField(IntervalSchedule, blank=True, null=True)
     # Por cuando se repite
     eliminado = models.BooleanField(default=False)
     eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tarea", blank=True, null=True)
