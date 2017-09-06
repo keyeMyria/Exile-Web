@@ -7,10 +7,10 @@ from channels.generic.websockets import WebsocketDemultiplexer, JsonWebsocketCon
 import binding
 
 
+
 @channel_session_user_from_http
 def ws_connect(message, pk):
     message.reply_channel.send({"accept": True})
-    print "se conecto", message.user.username, pk
     Group('noti-%s' % pk).add(message.reply_channel)
     Group('noti-%s' % pk).send({
         'text': json.dumps({
@@ -22,7 +22,6 @@ def ws_connect(message, pk):
 
 @channel_session_user
 def ws_disconnect(message, pk):
-    print "se conecto", message.user.username, pk
     Group('noti-%s' % pk).send({
         'text': json.dumps({
             'username': message.user.username,

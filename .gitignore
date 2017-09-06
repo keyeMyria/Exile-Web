@@ -109,3 +109,6 @@ ENV/
 **/node_modules/**
 !**/node_modules/componentex
 web/src/assets/.sass-cache
+
+#mongo data
+exile/data

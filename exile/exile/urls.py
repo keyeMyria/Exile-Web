@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^', include('frontend.urls')),
     url(r'^usuarios/', include('usuarios.urls')),
     url(r'^novedades/', include('novedades.urls')),
+    url(r'^chat/', include('chat.urls')),
     url(r'^subscripcion/', include('subcripcion.urls', namespace='suscripcion')),
     url(r'^operacion/', include('operacion.urls', namespace='operacion')),
     url(r'^accounts/login/$', login),

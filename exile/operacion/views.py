@@ -17,6 +17,17 @@ import models
 import urllib2
 import json
 from exile.settings import ORIGIN
+from djcelery.models import PeriodicTask, IntervalSchedule
+
+def test_add(request):
+    schedule, created = IntervalSchedule.objects.get_or_create(every=10, period='seconds')
+    PeriodicTask.objects.get_or_create(
+        interval=schedule,                  # we created this above.
+        name='Importing contacts',          # simply describes this periodic task.
+        task='periodic2', 
+    )
+    return HttpResponse("Ok")
+# end def
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
@@ -373,14 +384,12 @@ class LugarDeleteSupra(supra.SupraDeleteView):
     # end def
 # end class
 
-
 class LugarList(MasterList):
     model = models.Lugar
     list_display = ['nombre', 'id', 'direccion', 'latitud', 'longitud', 'eliminado']
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 # end class
-
 
 class TareaSupraForm(supra.SupraFormView):
     model = models.Tarea
@@ -421,7 +430,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'repetir_cada', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'unidad_de_repeticion', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'fecha_de_ejecucion', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
 
@@ -441,6 +450,13 @@ class TareaList(MasterList):
         return json.dumps(subtareas['object_list'])
     # end def
 
+    def multimedia(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'tarea': obj.pk}
+        # end class
+        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
+        return json.dumps(multimedia['object_list'])
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -495,7 +511,6 @@ class SubTareaList(supra.SupraListView):
             return completado.pk
         # end if
     # end def
-
 # end class
 
 class CompletadoSubForm(supra.SupraFormView):
@@ -506,7 +521,6 @@ class CompletadoSubForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoSubForm, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoSubDelete(supra.SupraDeleteView):
@@ -518,7 +532,6 @@ class CompletadoSubDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoSubDelete, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoForm(supra.SupraFormView):
@@ -530,7 +543,6 @@ class CompletadoForm(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoForm, self).dispatch(request, *args, **kwargs)
     # end def
-
 # end class
 
 class CompletadoDelete(supra.SupraDeleteView):
@@ -542,5 +554,40 @@ class CompletadoDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoDelete, self).dispatch(request, *args, **kwargs)
     # end def
+# end class
 
+class MultimediaList(supra.SupraListView):
+    model = models.Multimedia
+    list_display = ['tarea', 'url', 'audio', 'foto']
+    list_filter = ['tarea']
+    paginate_by = 10
+
+    def url(self, obj, row):
+        if obj.archivo:
+            return "/media/%s" % (obj.archivo)
+        # end if
+        return None
+    # end if
+# end class
+
+class MultimediaSupraForm(supra.SupraFormView):
+    model = models.Multimedia
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaSupraForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+class MultimediaDeleteSupra(supra.SupraDeleteView):
+    model = models.Multimedia
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaDelete, self).dispatch(request, *args, **kwargs)
+    # end def
 # end class

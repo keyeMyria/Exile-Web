@@ -1,8 +1,18 @@
 version: "2"
-
 services:
   redis:
-    image: redis:latest
+    image: "redis:latest"
+    ports:
+      - 6379:6379
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -12,3 +22,4 @@ services:
       - "8000:8000"
     links:
       - redis
+      - mongodb
