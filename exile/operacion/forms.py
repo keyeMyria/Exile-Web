@@ -61,7 +61,7 @@ class MultimediaForm(forms.ModelForm):
     def clean_archivo(self):
         archivo = self.cleaned_data.get('archivo', False)
         if archivo:
-            if hasattr(archivo, '_size') and archivo._size > 1 * 1024 * 1024:
+            if hasattr(archivo, '_size') and archivo._size > 25 * 1024 * 1024:
                 raise forms.ValidationError(
                     "El tamaño de la archivo no puede ser superior a 1 mega")
             # end if
