@@ -75,12 +75,20 @@ urlpatterns += [
     url(r'^multimedia/delete/(?P<pk>\d+)/$', views.MultimediaDeleteSupra.as_view(), name="multimedia_delete"),
 ]
 
-"""
-    Celery
-"""
 
+
+"""
+    CronTab & Interval
+"""
 
 urlpatterns += [
-    url(r'^test/add/$', views.test_add, name="test_add"),
+    url(r'^crontab/form/$', views.CrontabScheduleSupraForm.as_view(), name="crontab"),
+    url(r'^crontab/form/(?P<pk>\d+)/$', views.CrontabScheduleSupraForm.as_view(), name="crontab_edit"),
+    url(r'^crontab/delete/(?P<pk>\d+)/$', views.IntervalScheduleDeleteSupra.as_view(), name="crontab_delete"),
+
+    url(r'^interval/form/$', views.IntervalScheduleSupraForm.as_view(), name="interval"),
+    url(r'^interval/form/(?P<pk>\d+)/$', views.IntervalScheduleSupraForm.as_view(), name="interval_edit"),
+    url(r'^interval/delete/(?P<pk>\d+)/$', views.CrontabScheduleDeleteSupra.as_view(), name="interval_delete"),
 ]
+
 

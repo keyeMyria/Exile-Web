@@ -7,6 +7,36 @@ from django.contrib.auth.models import User
 from cuser.fields import CurrentUserField
 from subcripcion.models import Cuenta
 from djcelery.models import CrontabSchedule, IntervalSchedule
+from exile.celery import crontabdate
+import os
+from datetime import datetime
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+class CrontabDateSchedule(CrontabSchedule):
+    start_date = models.DateTimeField()
+    def __init__(self, *args, **kwargs):
+        super(CrontabDateSchedule, self).__init__(*args, **kwargs)
+        print "CrontabDateSchedule"
+        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")  
+        file.write("CrontabDateSchedule" + str(datetime.now())) 
+        file.close()
+    #end def
+
+    @property
+    def schedule(self):
+        print "schedule"
+        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")  
+        file.write("schedule" + str(datetime.now())) 
+        file.close()
+        return None
+        return schedules.crontabdate(minute=self.minute,
+                                 hour=self.hour,
+                                 day_of_week=self.day_of_week,
+                                 day_of_month=self.day_of_month,
+                                 month_of_year=self.month_of_year, start_date=self.start_date)
+# end def
 
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -69,6 +99,7 @@ class Tarea(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
+    #fecha_ejecucion = models.DateTimeField()
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
@@ -76,9 +107,8 @@ class Tarea(models.Model):
     last_editor = CurrentUserField(related_name="last_edited_tarea")
     grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
     sub_complete = models.BooleanField()  # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
-    crontab = models.OneToOneField(CrontabSchedule, blank=True, null=True)
+    crontab = models.OneToOneField(CrontabDateSchedule, blank=True, null=True)
     interval = models.OneToOneField(IntervalSchedule, blank=True, null=True)
-    # Por cuando se repite
     eliminado = models.BooleanField(default=False)
     eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tarea", blank=True, null=True)
 
@@ -116,10 +146,16 @@ class Completado(models.Model):
 
 
 class Multimedia(models.Model):
+    FOTO = 1
+    MULTIMEDIA = 2
+    choices = (
+        (FOTO, 'Foto'),
+        (MULTIMEDIA, 'Multimedia')
+    )
+    fecha = models.DateTimeField(auto_now_add=True)
     tarea = models.ForeignKey(Tarea)
     archivo = models.FileField()
-    audio = models.BooleanField()
-    foto = models.BooleanField()
+    tipo = models.IntegerField(choices=choices)
 # end class
 
 class CompletadoSub(models.Model):

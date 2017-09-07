@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
 from django import forms
 import models
@@ -52,11 +51,31 @@ class TareaFormBase(forms.ModelForm):
     # end class
 # end class
 
+class MultimediaForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Multimedia
+        exclude = []
+    # end class
+
+    def clean_archivo(self):
+        archivo = self.cleaned_data.get('archivo', False)
+        if archivo:
+            if hasattr(archivo, '_size') and archivo._size > 1 * 1024 * 1024:
+                raise forms.ValidationError(
+                    "El tamaño de la archivo no puede ser superior a 1 mega")
+            # end if
+            return archivo
+        # end if
+    # end def
+# end class
+
 class TareaForm(TareaFormBase):
     def save(self, *args, **kwargs):
         obj = super(TareaForm, self).save(*args, **kwargs)
         PeriodicTask.objects.create(
-            interval=obj.schedule,
+            interval=obj.interval,
+            crontab=obj.crontab,
             name='Tarea #%d' % (obj.pk, ),
             task='notification',
             args=[obj.pk] 
