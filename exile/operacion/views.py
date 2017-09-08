@@ -437,6 +437,11 @@ class MultimediaList(supra.SupraListView):
         # end if
         return None
     # end if
+
+    @method_decorator(check_login)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaList, self).dispatch(request, *args, **kwargs)
+    # end def
 # end class
 
 class MultimediaSupraForm(supra.SupraFormView):
