@@ -99,7 +99,7 @@ class Tarea(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
-    #fecha_ejecucion = models.DateTimeField()
+    fecha_ejecucion = models.DateTimeField()
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
@@ -147,15 +147,15 @@ class Completado(models.Model):
 
 class Multimedia(models.Model):
     FOTO = 1
-    MULTIMEDIA = 2
+    AUDIO = 2
     choices = (
         (FOTO, 'Foto'),
-        (MULTIMEDIA, 'Multimedia')
+        (AUDIO, 'Audio')
     )
     fecha = models.DateTimeField(auto_now_add=True)
     tarea = models.ForeignKey(Tarea)
-    archivo = models.FileField()
     tipo = models.IntegerField(choices=choices)
+    archivo = models.FileField()
 # end class
 
 class CompletadoSub(models.Model):

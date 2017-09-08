@@ -291,9 +291,13 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'empleados', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     paginate_by = 10
+
+    def empleados(self, obj, row):
+        return models.Empleado.objects.filter(tarea=obj)
+    # end def
 
     def completado(self, obj, row):
         completado = models.Completado.objects.filter(tarea=obj).first()

@@ -15,13 +15,15 @@ app = Celery('exile')
 # pickle the object when using Windows.
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+import os
 
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 @task(name="notification")
 def notification(tarea):
     # make the notification here
-    file = open("./notification.txt")  
-    file.write(str(datetime.date())) 
+    
+    file = open(os.path.join(BASE_DIR, "notix.txt"), "w+") 
+    file.write(str(datetime.datetime.now())) 
     file.close()
 # end def
 

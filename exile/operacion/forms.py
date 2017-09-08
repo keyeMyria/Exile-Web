@@ -53,6 +53,11 @@ class TareaFormBase(forms.ModelForm):
 
 class MultimediaForm(forms.ModelForm):
 
+    suport = {
+        models.Multimedia.FOTO: ['jpg', 'png'],
+        models.Multimedia.AUDIO: ['3gp']
+    }
+
     class Meta:
         model = models.Multimedia
         exclude = []
@@ -62,8 +67,15 @@ class MultimediaForm(forms.ModelForm):
         archivo = self.cleaned_data.get('archivo', False)
         if archivo:
             if hasattr(archivo, '_size') and archivo._size > 25 * 1024 * 1024:
-                raise forms.ValidationError(
-                    "El tamaño de la archivo no puede ser superior a 1 mega")
+                raise forms.ValidationError("El tamaño de la archivo no puede ser superior a 25 mega")
+            # end if
+            tipo = self.cleaned_data.get('tipo', False)
+            print 'tipo', tipo
+            if tipo:
+                ext = archivo.name.split('.')[1]
+                if not ext.lower() in self.suport[tipo]:
+                    raise forms.ValidationError(u'Unsupported file extension.')
+                # end if
             # end if
             return archivo
         # end if
