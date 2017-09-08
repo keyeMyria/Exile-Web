@@ -296,7 +296,11 @@ class TareaList(MasterList):
     paginate_by = 10
 
     def empleados(self, obj, row):
-        return models.Empleado.objects.filter(tarea=obj)
+        lista = []
+        empleados = usuarios.Empleado.objects.filter(tarea=obj).values('id')
+        for e in empleados:
+            lista.append(e['id'])
+        return json.dumps(lista)
     # end def
 
     def completado(self, obj, row):
@@ -307,14 +311,12 @@ class TareaList(MasterList):
     # end def
 
     def subtareas(self, obj, row):
-
         class request():
             method = 'GET'
             GET = {'tarea': obj.pk}
         # end class
         subtareas = SubTareaList(dict_only=True).dispatch(request=request())
         return json.dumps(subtareas['object_list'])
-
     # end def
 
     def multimedia(self, obj, row):
