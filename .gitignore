@@ -112,3 +112,6 @@ web/src/assets/.sass-cache
 
 #mongo data
 exile/data
+
+#media
+exile/media

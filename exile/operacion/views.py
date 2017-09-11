@@ -18,7 +18,7 @@ import urllib2
 import json
 from exile.settings import ORIGIN
 from djcelery.models import CrontabSchedule, IntervalSchedule
-
+from django.contrib.sites.models import Site
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
@@ -296,7 +296,11 @@ class TareaList(MasterList):
     paginate_by = 10
 
     def empleados(self, obj, row):
-        return models.Empleado.objects.filter(tarea=obj)
+        lista = []
+        empleados = usuarios.Empleado.objects.filter(tarea=obj).values('id')
+        for e in empleados:
+            lista.append(e['id'])
+        return json.dumps(lista)
     # end def
 
     def completado(self, obj, row):
@@ -412,7 +416,7 @@ class CompletadoForm(supra.SupraFormView):
 
 class CompletadoDelete(supra.SupraDeleteView):
     model = models.Completado
-    response_json = False
+    response_json = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -429,16 +433,21 @@ class MultimediaList(supra.SupraListView):
 
     def url(self, obj, row):
         if obj.archivo:
-            return "/media/%s" % (obj.archivo)
+            return "http://104.236.33.228:8000/media/%s" % (obj.archivo)
         # end if
         return None
     # end if
+
+    @method_decorator(check_login)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MultimediaList, self).dispatch(request, *args, **kwargs)
+    # end def
 # end class
 
 class MultimediaSupraForm(supra.SupraFormView):
     model = models.Multimedia
     form_class = forms.MultimediaForm
-    response_json = False
+    response_json = True
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -449,7 +458,7 @@ class MultimediaSupraForm(supra.SupraFormView):
 
 class MultimediaDeleteSupra(supra.SupraDeleteView):
     model = models.Multimedia
-    response_json = False
+    response_json = True
 
     @method_decorator(check_login)
     @csrf_exempt
