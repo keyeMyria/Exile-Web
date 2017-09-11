@@ -19,16 +19,16 @@ class CrontabDateSchedule(CrontabSchedule):
     def __init__(self, *args, **kwargs):
         super(CrontabDateSchedule, self).__init__(*args, **kwargs)
         print "CrontabDateSchedule"
-        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")  
-        file.write("CrontabDateSchedule" + str(datetime.now())) 
+        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")
+        file.write("CrontabDateSchedule" + str(datetime.now()))
         file.close()
     #end def
 
     @property
     def schedule(self):
         print "schedule"
-        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")  
-        file.write("schedule" + str(datetime.now())) 
+        file = open(os.path.join(BASE_DIR, "text.txt"), "w+")
+        file.write("schedule" + str(datetime.now()))
         file.close()
         return None
         return schedules.crontabdate(minute=self.minute,
@@ -96,6 +96,7 @@ class Lugar(models.Model):
 
 
 class Tarea(models.Model):
+    fecha = models.DateTimeField(auto_now_add=True)
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)

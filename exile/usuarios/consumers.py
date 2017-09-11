@@ -1,7 +1,6 @@
 import json
 from channels import Group
 from channels.auth import channel_session_user, channel_session_user_from_http
-from subcripcion.models import Cuenta
 from django.db.models import Q
 from channels.generic.websockets import WebsocketDemultiplexer, JsonWebsocketConsumer, WebsocketConsumer
 import binding

@@ -427,7 +427,7 @@ class CompletadoDelete(supra.SupraDeleteView):
 
 class MultimediaList(supra.SupraListView):
     model = models.Multimedia
-    list_display = ['id', 'tarea', 'url', 'tipo']
+    list_display = ['id', 'tarea', 'url', 'tipo', 'fecha']
     list_filter = ['tarea']
     paginate_by = 10
 

@@ -1,7 +1,9 @@
 from functools import wraps
 
 from .exceptions import ClientError
-from .models import Room
+from .models import Room, Miembro
+from subcripcion.models import Cuenta
+from django.db.models import Q
 
 
 def catch_client_error(func):
@@ -19,19 +21,44 @@ def catch_client_error(func):
     return inner
 
 
-def get_room_or_error(room_id, user):
+def get_room_or_error(room_id, receptores, grupo, user):
     """
     Tries to fetch a room for the user, checking permissions along the way.
     """
     # Check if the user is logged in
     if not user.is_authenticated():
         raise ClientError("USER_HAS_TO_LOGIN")
+    else:
+        usuario = Miembro.objects(usuario=user.pk)
+        if not usuario:
+            cuenta = models.Cuenta.objects.filter(
+                Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
+            if cuenta:
+                usuario = Miembro(usuario=user.pk, cuenta=cuenta.pk)
+                usuario.save()
+            else:
+                usuario = Miembro(usuario=user.pk)
+                usuario.save()
+
     # Find the room they requested (by ID)
-    try:
-        room = Room.objects.get(pk=room_id)
-    except Room.DoesNotExist:
+    if room_id:
+        room = Room.objects(id=room_id)
+        if not room:
+            raise ClientError("ROOM_INVALID")
+
+    elif receptores:
+        miembros = Miembro.objects(id__in=receptores)
+        list = []
+        list.append(usuario.id)
+        for m in miembros:
+            list.append(m.id)
+            
+        room = Room(nombre="", grupo=grupo, miembros=list)
+        room.save()
+    else:
         raise ClientError("ROOM_INVALID")
-    # Check permissions
+    """
     if room.staff_only and not user.is_staff:
         raise ClientError("ROOM_ACCESS_DENIED")
+    """
     return room

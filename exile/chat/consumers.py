@@ -3,7 +3,7 @@ from channels import Channel
 from channels.auth import channel_session_user_from_http, channel_session_user
 
 from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
-from .models import Room
+from .models import Room, Miembro
 from .utils import get_room_or_error, catch_client_error
 from .exceptions import ClientError
 
@@ -40,7 +40,7 @@ def ws_disconnect(message):
     # Unsubscribe from any connected rooms
     for room_id in message.channel_session.get("rooms", set()):
         try:
-            room = Room.objects.get(pk=room_id)
+            room = Room.objects(id=room_id)
             # Removes us from the room's send group. If this doesn't get run,
             # we'll get removed once our first reply message expires.
             room.websocket_group.discard(message.reply_channel)
@@ -61,7 +61,7 @@ def chat_join(message):
     # Find the room they requested (by ID) and add ourselves to the send group
     # Note that, because of channel_session_user, we have a message.user
     # object that works just like request.user would. Security!
-    room = get_room_or_error(message["room"], message.user)
+    room = get_room_or_error(message["room"], mensaje["receptores"], mensaje["grupo"], message.user)
 
     # Send a "enter message" to the room if available
     if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
@@ -86,7 +86,7 @@ def chat_join(message):
 @catch_client_error
 def chat_leave(message):
     # Reverse of join - remove them from everything.
-    room = get_room_or_error(message["room"], message.user)
+    room = get_room_or_error(message["room"], False, False, message.user)
 
     # Send a "leave message" to the room if available
     if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
@@ -105,11 +105,11 @@ def chat_leave(message):
 @channel_session_user
 @catch_client_error
 def chat_send(message):
-    message["message"] 
+    message["message"]
     # Check that the user in the room
     if int(message['room']) not in message.channel_session['rooms']:
         raise ClientError("ROOM_ACCESS_DENIED")
     # Find the room they're sending to, check perms
-    room = get_room_or_error(message["room"], message.user)
+    room = get_room_or_error(message["room"], False, False, message.user)
     # Send the message along
     room.send_message(message["message"], message.user)

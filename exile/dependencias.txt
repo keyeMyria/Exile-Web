@@ -48,7 +48,4 @@ zope.interface==4.4.1
 celery==3.1.25
 django-celery
 python-memcached
-git+https://github.com/django-nonrel/django@nonrel-1.5
-git+https://github.com/django-nonrel/djangotoolbox
-git+https://github.com/django-nonrel/mongodb-engine
 git+https://github.com/MongoEngine/django-mongoengine
