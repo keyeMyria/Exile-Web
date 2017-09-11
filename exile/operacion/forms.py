@@ -85,13 +85,15 @@ class MultimediaForm(forms.ModelForm):
 class TareaForm(TareaFormBase):
     def save(self, *args, **kwargs):
         obj = super(TareaForm, self).save(*args, **kwargs)
-        PeriodicTask.objects.create(
-            interval=obj.interval,
-            crontab=obj.crontab,
-            name='Tarea #%d' % (obj.pk, ),
-            task='notification',
-            args=[obj.pk] 
+        tsk, created = PeriodicTask.objects.get_or_create(
+            interval = obj.interval,
+            crontab = obj.crontab,
+            name = 'Tarea #%d' % (obj.pk, ),
+            task = 'notification',
+            args = [obj.pk]
         )
+        tsk.expires = obj.fecha_finalizacion or obj.fecha_ejecucion
+        tsk.save()
         return obj
     # end def
 # end class
