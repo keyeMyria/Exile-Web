@@ -13,6 +13,9 @@ class Miembro(Document):
         default=datetime.datetime.now, editable=False,
     )
     usuario = fields.IntField(unique=True)
+    nombre = fields.StringField()
+    apellidos = fields.StringField()
+    username = fields.StringField()
     cuenta = fields.IntField(blank=True, null=True)
 
     def __str__(self):

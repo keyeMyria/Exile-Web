@@ -10,9 +10,6 @@ def index(request):
     login and admin parts.
     """
     # Get a list of rooms, ordered alphabetically
-    rooms = Room.objects.order_by("title")
 
     # Render that in the index template
-    return render(request, "chat.html", {
-        "rooms": rooms,
-    })
+    return render(request, "chat.html", {})

@@ -1,23 +1,46 @@
 import json
-from channels import Channel
+from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
-
+from django.db.models import Q
 from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
 from .models import Room, Miembro
 from .utils import get_room_or_error, catch_client_error
 from .exceptions import ClientError
-
-
+from subcripcion.models import Cuenta
+from .models import Miembro
 ### WebSocket handling ###
 
 
 # This decorator copies the user from the HTTP session (only available in
 # websocket.connect or http.request messages) to the channel session (available
 # in all consumers with the same reply_channel, so all three here)
+
 @channel_session_user_from_http
 def ws_connect(message):
     message.reply_channel.send({'accept': True})
     # Initialise their session
+    user = message.user
+    if user.is_authenticated():
+        miembro = Miembro.objects(usuario=user.pk)
+        cuenta = Cuenta.objects.filter(
+            Q(cliente=user.pk) | Q(asistente=user.pk) | Q(empleado=user.pk)).first()
+        if not miembro:
+            nuevo = Miembro(usuario=user.pk, nombre=user.first_name, apellidos=user.last_name, username=user.username)
+            if cuenta:
+                nuevo.cuenta = cuenta.id
+            # end if
+            nuevo.save()
+        else:
+            miembro.update(nombre=user.first_name, apellidos=user.last_name, username=user.username)
+        # end if
+        listaM = Miembro.objects(cuenta=cuenta.id).to_json()
+        data = json.loads(listaM)
+        Group('miembro-%s' % user.pk).add(message.reply_channel)
+        Group('miembro-%s' % user.pk).send({
+            'text': json.dumps({
+                'amigos': data
+            })
+        })
     message.channel_session['rooms'] = []
 
 
@@ -38,6 +61,9 @@ def ws_receive(message):
 @channel_session_user
 def ws_disconnect(message):
     # Unsubscribe from any connected rooms
+    if message.user.is_authenticated():
+        Group('miembro-%s' % message.user.pk).discard(message.reply_channel)
+
     for room_id in message.channel_session.get("rooms", set()):
         try:
             room = Room.objects(id=room_id)
@@ -105,11 +131,10 @@ def chat_leave(message):
 @channel_session_user
 @catch_client_error
 def chat_send(message):
-    message["message"]
     # Check that the user in the room
     if int(message['room']) not in message.channel_session['rooms']:
         raise ClientError("ROOM_ACCESS_DENIED")
     # Find the room they're sending to, check perms
-    room = get_room_or_error(message["room"], False, False, message.user)
+    room = get_room_or_error(message["room"], mensaje["receptores"], mensaje["grupo"], message.user)
     # Send the message along
     room.send_message(message["message"], message.user)

@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from supra import views as supra
 from django.contrib.auth import login, logout, authenticate
 from django.utils.decorators import method_decorator
-from exile.decorator import check_login
+from exile.decorator import check_login, get_cuenta
 from django.http import HttpResponse
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
@@ -53,12 +53,10 @@ def logoutUser(request):
     return HttpResponse(status=200)
 # end def
 
-
 @supra.access_control
-def islogin(request):
+@get_cuenta
+def islogin(cuenta, request):
     if request.user.is_authenticated():
-        cuenta = models.Cuenta.objects.filter(
-            Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
         if cuenta:
             return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "cuenta": cuenta.id ,  "ws": "noti/%d/" % (cuenta.id)}), 200)
         # end if
@@ -66,6 +64,7 @@ def islogin(request):
     # end if
     return HttpResponse([], 400)
 # end if
+
 
 
 class MasterList(supra.SupraListView):
@@ -77,7 +76,8 @@ class MasterList(supra.SupraListView):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
 
-    def get_queryset(self):
+    @method_decorator(get_cuenta)
+    def get_queryset(self, cuenta):
         queryset = super(MasterList, self).get_queryset()
         if self.request.GET.get('length', False):
             self.paginate_by = self.request.GET.get('length', False)
@@ -86,13 +86,11 @@ class MasterList(supra.SupraListView):
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)
         if eliminado == '1':
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__asistente=self.request.user.pk, eliminado=True) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=True))
+            if cuenta:
+                queryset = queryset.filter(cuenta=cuenta.id, eliminado=True)
         else:
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__asistente=self.request.user.pk, eliminado=False) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=False))
+            if cuenta:
+                queryset = queryset.filter(cuenta=cuenta.id, eliminado=False)
         # end if
         if propiedad and orden:
             if orden == "asc":
