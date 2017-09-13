@@ -20,25 +20,32 @@ def catch_client_error(func):
             e.send_to(message.reply_channel)
     return inner
 
-
-def get_room_or_error(room_id, receptores, grupo, user):
-    """
-    Tries to fetch a room for the user, checking permissions along the way.
-    """
+def get_user_or_error(user):
     # Check if the user is logged in
     if not user.is_authenticated():
         raise ClientError("USER_HAS_TO_LOGIN")
+    #Busco en mongo al usuario
+    miembro = Miembro.objects(usuario=user.pk).first()
+    #Si el usuario no existe lo creo
+    if not miembro:
+        miembro = Miembro(usuario=user.pk, nombre=user.first_name, apellidos=user.last_name, username=user.username)
+        cuenta = Cuenta.objects.filter(
+            Q(cliente=user.pk) | Q(asistente=user.pk) | Q(empleado=user.pk)).first()
+        if cuenta:
+            miembro.cuenta = cuenta.id
+        # end if
+        miembro.save()
+    #Si existe altualizo los datos con la informacion diponible en postgrest
     else:
-        usuario = Miembro.objects(usuario=user.pk)
-        if not usuario:
-            cuenta = models.Cuenta.objects.filter(
-                Q(cliente=request.user.pk) | Q(asistente=request.user.pk) | Q(empleado=request.user.pk)).first()
-            if cuenta:
-                usuario = Miembro(usuario=user.pk, cuenta=cuenta.pk)
-                usuario.save()
-            else:
-                usuario = Miembro(usuario=user.pk)
-                usuario.save()
+        miembro.update(nombre=user.first_name, apellidos=user.last_name, username=user.username)
+
+    return miembro
+
+def get_room_or_error(room_id, receptores, grupo, user, message):
+    """
+    Tries to fetch a room for the user, checking permissions along the way.
+    """
+    miembro = get_user_or_error(user)
 
     # Find the room they requested (by ID)
     if room_id:
@@ -47,14 +54,15 @@ def get_room_or_error(room_id, receptores, grupo, user):
             raise ClientError("ROOM_INVALID")
 
     elif receptores:
-        miembros = Miembro.objects(id__in=receptores)
+        miembros = Miembro.objects(usuario__in=receptores)
         list = []
-        list.append(usuario.id)
+        list.append(miembro)
         for m in miembros:
-            list.append(m.id)
-            
+            list.append(m)
+
         room = Room(nombre="", grupo=grupo, miembros=list)
         room.save()
+        room.websocket_group.add(message.reply_channel)
     else:
         raise ClientError("ROOM_INVALID")
     """

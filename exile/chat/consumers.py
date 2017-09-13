@@ -4,7 +4,7 @@ from channels.auth import channel_session_user_from_http, channel_session_user
 from django.db.models import Q
 from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
 from .models import Room, Miembro
-from .utils import get_room_or_error, catch_client_error
+from .utils import get_room_or_error, catch_client_error, get_user_or_error
 from .exceptions import ClientError
 from subcripcion.models import Cuenta
 from .models import Miembro
@@ -19,30 +19,10 @@ from .models import Miembro
 def ws_connect(message):
     message.reply_channel.send({'accept': True})
     # Initialise their session
-    user = message.user
-    if user.is_authenticated():
-        miembro = Miembro.objects(usuario=user.pk)
-        cuenta = Cuenta.objects.filter(
-            Q(cliente=user.pk) | Q(asistente=user.pk) | Q(empleado=user.pk)).first()
-        if not miembro:
-            nuevo = Miembro(usuario=user.pk, nombre=user.first_name, apellidos=user.last_name, username=user.username)
-            if cuenta:
-                nuevo.cuenta = cuenta.id
-            # end if
-            nuevo.save()
-        else:
-            miembro.update(nombre=user.first_name, apellidos=user.last_name, username=user.username)
-        # end if
-        listaM = Miembro.objects(cuenta=cuenta.id).to_json()
-        data = json.loads(listaM)
-        Group('miembro-%s' % user.pk).add(message.reply_channel)
-        Group('miembro-%s' % user.pk).send({
-            'text': json.dumps({
-                'amigos': data
-            })
-        })
     message.channel_session['rooms'] = []
-
+    miembro = get_user_or_error(message.user)
+    # Verificao si el usuario existe en la base de datos mongo
+    Group('miembro-%s' % miembro.usuario).add(message.reply_channel)
 
 # Unpacks the JSON in the received WebSocket frame and puts it onto a channel
 # of its own with a few attributes extra so we can route it
@@ -75,7 +55,42 @@ def ws_disconnect(message):
 
 
 ### Chat channel handling ###
+@channel_session_user
+@catch_client_error
+def send_friends(message):
+    # Busco al usuario en la base de datos mongo
+    miembro = get_user_or_error(message.user)
 
+    #Busco a todas las personas relacionadas a la cuenta del usuario que se acaba de conectar
+    listaM = Miembro.objects(cuenta=miembro.cuenta).to_json()
+    data = json.loads(listaM)
+    #Creo un agrego un grupo para la persona que se acaba de conectar, para poder enviarle la lista de usuarios
+    # y las salas y los mensajes
+    Group('miembro-%s' % miembro.usuario).send({
+        'text': json.dumps({
+            'friends': data
+        })
+    })
+
+
+@channel_session_user
+@catch_client_error
+def send_rooms(message):
+    user = message.user
+    # Verificao si el usuario existe en la base de datos mongo
+    miembro = get_user_or_error(message.user)
+    print miembro
+    rooms = Room.objects(miembros__in=[miembro])
+    for r in rooms:
+        r.websocket_group.add(message.reply_channel)
+        message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
+
+    data = json.loads(rooms.to_json())
+    Group('miembro-%s' % miembro.usuario).send({
+        'text': json.dumps({
+            'rooms': data
+        })
+    })
 
 # Channel_session_user loads the user out from the channel session and presents
 # it as message.user. There's also a http_session_user if you want to do this on
@@ -135,6 +150,7 @@ def chat_send(message):
     if int(message['room']) not in message.channel_session['rooms']:
         raise ClientError("ROOM_ACCESS_DENIED")
     # Find the room they're sending to, check perms
-    room = get_room_or_error(message["room"], mensaje["receptores"], mensaje["grupo"], message.user)
+    room = get_room_or_error(message["room"], mensaje["miembros"], mensaje["grupo"], message.user, message)
+    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
     # Send the message along
     room.send_message(message["message"], message.user)

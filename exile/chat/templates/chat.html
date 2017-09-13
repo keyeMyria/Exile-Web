@@ -12,10 +12,11 @@
             <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a>?</p>
         {% endfor %}
     </ul-->
-    <ul class="amigos">
+    <ul class="amigos rooms">
 
     </ul>
     <div id="chats">
+
     </div>
 
 {% endblock %}
@@ -40,11 +41,14 @@
                     return;
                 }
 
-                if(data.amigos){
-                    var amigos = data.amigos;
-                    amigos.forEach(function(element) {
-                        $(".amigos").append('<li usuario-id="'+element.usuario+'">'+ element.nombre+ " "+ element.apellidos +'</li>');
+                if(data.friends){
+                    var friends = data.friends;
+                    console.log(friends);
+                    $(".amigos").html("");
+                    friends.forEach(function(element) {
+                        $(".amigos").append('<li class="room-link" usuario-id="'+element.usuario+'">'+ element.nombre+ " "+ element.apellidos +'</li>');
                     });
+                    openchat();
                 }
                 // Handle joining
                 if (data.join) {
@@ -73,6 +77,7 @@
                     $("#room-" + data.leave).remove();
                     // Handle getting a message
                 } else if (data.message || data.msg_type != 0) {
+                    console.log("mensaje: ",data);
                     var msgdiv = $("#room-" + data.room + " .messages");
                     var ok_msg = "";
                     // msg types are defined in chat/settings.py
@@ -130,28 +135,69 @@
             };
 
             // Room join/leave
-            $("li.room-link").click(function () {
-                roomId = $(this).attr("data-room-id");
-                if (inRoom(roomId)) {
-                    // Leave room
-                    $(this).removeClass("joined");
-                    webSocketBridge.send({
-                        "command": "leave",
-                        "room": roomId
-                    });
-                } else {
-                    // Join room
-                    $(this).addClass("joined");
-                    webSocketBridge.send({
-                        "command": "join",
-                        "room": roomId
-                    });
-                }
-            });
+            openchat = function () {
+                $("li.room-link").click(function () {
+                    console.log("click");
+                    var usuario = $(this).attr('usuario-id');
+                    var verificar = $("[miembro='"+usuario+"']");
+                    if(verificar.length===0){
+                        var roomdiv = $(
+                                "<div class='room' id='room-0' grupo='false' miembro="+usuario+">" +
+                                "<h2>" + $(this).html()+ "</h2>" +
+                                "<div class='messages'></div>" +
+                                "<form><input><button>Send</button></form>" +
+                                "</div>"
+                        );
+                        // Hook up send button to send a message
+                        roomdiv.find("form").on("submit", function () {
+                            webSocketBridge.send({
+                                "command": "send",
+                                "room": data.join,
+                                "miembros": [parseInt(usuario)],
+                                "grupo": false,
+                                "message": roomdiv.find("input").val()
+                            });
+                            roomdiv.find("input").val("");
+                            return false;
+                        });
+                        roomdiv.find("input").focus();
+                        $("#chats").append(roomdiv);
+                    }else{
+                        verificar.find("input").focus();
+                    }
+
+                    /*
+                    roomId = $(this).attr("data-room-id");
+                    if (inRoom(roomId)) {
+                        // Leave room
+                        $(this).removeClass("joined");
+                        webSocketBridge.send({
+                            "command": "leave",
+                            "room": roomId
+                        });
+                    } else {
+                        // Join room
+                        $(this).addClass("joined");
+                        webSocketBridge.send({
+                            "command": "join",
+                            "room": roomId
+                        });
+                    }*/
+                });
+
+            }
 
             // Helpful debugging
             webSocketBridge.socket.onopen = function () {
                 console.log("Connected to chat socket");
+                // Pedir amigos
+                webSocketBridge.send({
+                    "command": "friends"
+                })
+                webSocketBridge.send({
+                    "command": "rooms"
+                })
+                console.log("perdir amigos");
             };
             webSocketBridge.socket.onclose = function () {
                 console.log("Disconnected from chat socket");

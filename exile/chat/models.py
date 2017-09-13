@@ -19,7 +19,7 @@ class Miembro(Document):
     cuenta = fields.IntField(blank=True, null=True)
 
     def __str__(self):
-        return u"Usuario id: %d" % (self.usuario)
+        return u"%s %s id: %d" % (self.nombre, self.apellidos, self.usuario)
 # end class
 
 @python_2_unicode_compatible
@@ -48,7 +48,9 @@ class Room(Document):
         Called to send a message to the room on behalf of a user.
         """
         final_msg = {'room': str(self.id), 'message': message, 'username': user.username, 'msg_type': msg_type}
-
+        miembro = Miembro.objects(usuario=user.pk).first()
+        mensaje = Mensaje(mensaje=message, emisor=miembro, room=self)
+        mensaje.save()
         # Send out the message to everyone in the room
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
@@ -59,7 +61,9 @@ class Room(Document):
 class Mensaje(Document):
     mensaje = fields.StringField()
     emisor = fields.ReferenceField(Miembro)
-    rom = fields.ReferenceField(Room)
+    room = fields.ReferenceField(Room)
+    leido = fields.BooleanField(default=False)
+    recibido = fields.BooleanField(default=True)
 
     def __str__(self):
         return u"%s" % (self.mensaje)
@@ -67,8 +71,14 @@ class Mensaje(Document):
     def __unicode__(self):
         return u"%s" % (self.mensaje)
 
-
-
+class Notificacion(Document):
+    miembro = fields.ReferenceField(Miembro)
+    mensaje = fields.StringField()
+    created_at = fields.DateTimeField(
+        default=datetime.datetime.now, editable=False,
+    )
+    leido = fields.BooleanField(default=False)
+# end class
 """
 import json
 from django.db import models
