@@ -59,6 +59,9 @@ class Room(Document):
 
 @python_2_unicode_compatible
 class Mensaje(Document):
+    created_at = fields.DateTimeField(
+        default=datetime.datetime.now, editable=False,
+    )
     mensaje = fields.StringField()
     emisor = fields.ReferenceField(Miembro)
     room = fields.ReferenceField(Room)
@@ -71,54 +74,37 @@ class Mensaje(Document):
     def __unicode__(self):
         return u"%s" % (self.mensaje)
 
-class Notificacion(Document):
+
+@python_2_unicode_compatible
+class Notification(Document):
     miembro = fields.ReferenceField(Miembro)
     mensaje = fields.StringField()
     created_at = fields.DateTimeField(
         default=datetime.datetime.now, editable=False,
     )
     leido = fields.BooleanField(default=False)
-# end class
-"""
-import json
-from django.db import models
-from django.utils.six import python_2_unicode_compatible
-from channels import Group
 
-from .settings import MSG_TYPE_MESSAGE
+    def __str__(self):
+        return u"%s" % (self.mensaje)
+
+    def __unicode__(self):
+        return u"%s" % (self.mensaje)
+# end class
 
 
 @python_2_unicode_compatible
-class Room(models.Model):
-
-    # A room for people to chat in.
-
-
-    # Room title
-    title = models.CharField(max_length=255)
-
-    # If only "staff" users are allowed (is_staff on django's User)
-    BooleanField = models.BooleanField(default=False)
+class NotificationRoom(Document):
+    miembro = fields.ReferenceField(Miembro)
+    mensaje = fields.StringField()
+    room = fields.ReferenceField(Room)
+    created_at = fields.DateTimeField(
+        default=datetime.datetime.now, editable=False,
+    )
+    leido = fields.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return u"%s" % (self.mensaje)
 
-    @property
-    def websocket_group(self):
-
-        # Returns the Channels Group that sockets should subscribe to to get sent
-        # messages as they are generated.
-
-        return Group("room-%s" % self.id)
-
-    def send_message(self, message, user, msg_type=MSG_TYPE_MESSAGE):
-
-        # Called to send a message to the room on behalf of a user.
-
-        final_msg = {'room': str(self.id), 'message': message, 'username': user.username, 'msg_type': msg_type}
-
-        # Send out the message to everyone in the room
-        self.websocket_group.send(
-            {"text": json.dumps(final_msg)}
-        )
-"""
+    def __unicode__(self):
+        return u"%s" % (self.mensaje)
+# end class

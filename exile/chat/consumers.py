@@ -79,7 +79,6 @@ def send_rooms(message):
     user = message.user
     # Verificao si el usuario existe en la base de datos mongo
     miembro = get_user_or_error(message.user)
-    print miembro
     rooms = Room.objects(miembros__in=[miembro])
     for r in rooms:
         r.websocket_group.add(message.reply_channel)
