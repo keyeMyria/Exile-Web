@@ -45,6 +45,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^tarea/form/$', views.TareaSupraForm.as_view(), name="tarea"),
     url(r'^tarea/list/$', views.TareaList.as_view(), name="tarea_list"),
+    url(r'^notificacion/list/$', views.NotificacionList.as_view(), name="notificacion_list"),
     url(r'^tarea/form/(?P<pk>\d+)/$', views.TareaSupraForm.as_view(), name="tarea_edit"),
     url(r'^tarea/delete/(?P<pk>\d+)/$', views.TareaDeleteSupra.as_view(), name="tarea_delete"),
     url(r'^completado/form/$', views.CompletadoForm.as_view(), name="completado_add"),

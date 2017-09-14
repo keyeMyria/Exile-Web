@@ -6,7 +6,7 @@ import widgets
 from exile.servicios import get_cuenta
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
-from djcelery.models import PeriodicTask, IntervalSchedule
+from djcelery.models import PeriodicTask, CrontabSchedule
 
 class Master(forms.ModelForm):
 
@@ -55,7 +55,7 @@ class MultimediaForm(forms.ModelForm):
 
     suport = {
         models.Multimedia.FOTO: ['jpg', 'png'],
-        models.Multimedia.AUDIO: ['3gp']
+        models.Multimedia.AUDIO: ['3gp', 'aac']
     }
 
     class Meta:
@@ -83,23 +83,49 @@ class MultimediaForm(forms.ModelForm):
 # end class
 
 class TareaForm(TareaFormBase):
-    def save(self, *args, **kwargs):
-        obj = super(TareaForm, self).save(*args, **kwargs)
-        tsk, created = PeriodicTask.objects.get_or_create(
-            interval = obj.interval,
-            crontab = obj.crontab,
-            name = 'Tarea #%d' % (obj.pk, ),
-            task = 'notification',
-            args = [obj.pk]
+    def save(self, commit=True):
+        obj = super(TareaForm, self).save(commit=True)
+        months = (obj.fecha_ejecucion.year - obj.fecha_edicion.year) * 12 + obj.fecha_ejecucion.month - obj.fecha_edicion.month
+        crontab = CrontabSchedule.objects.create(
+            minute = '0',
+            hour = '7',
+            day_of_week = '*',
+            day_of_month = '%d' % (obj.fecha_ejecucion.day, ),
+            month_of_year = '*/%d' % (months, )
         )
-        tsk.expires = obj.fecha_finalizacion or obj.fecha_ejecucion
-        tsk.save()
+        obj.cron_ejecucion = PeriodicTask.objects.create(
+            crontab = crontab,
+            name = 'Tarea #%d' % (obj.pk, ),
+            task = 'ejecutar',
+            args = [obj.pk],
+            expires = obj.fecha_ejecucion
+        )
+        obj.save()
         return obj
     # end def
 # end class
 
 class TareaFormEdit(TareaFormBase, MasterEdit):
-    pass
+    def save(self, commit=True):
+        obj = super(TareaFormEdit, self).save(commit=True)
+        months = (obj.fecha_ejecucion.year - obj.fecha_edicion.year) * 12 + obj.fecha_ejecucion.month - obj.fecha_edicion.month
+        
+        CrontabSchedule.objects.filter(pk=obj.cron_ejecucion.crontab.pk).update(
+            minute = '0',
+            hour = '7',
+            day_of_week = '*',
+            day_of_month = '%d' % (obj.fecha_ejecucion.day, ),
+            month_of_year = '*/%d' % (months, )
+        )
+        PeriodicTask.objects.filter(pk=obj.cron_ejecucion.pk).update(
+            name = 'Tarea #%d' % (obj.pk, ),
+            task = 'ejecutar',
+            args = [obj.pk],
+            expires = obj.fecha_ejecucion
+        )
+
+        return obj
+    # end def
 # end class
 
 class SubTareaFormBase(forms.ModelForm):
