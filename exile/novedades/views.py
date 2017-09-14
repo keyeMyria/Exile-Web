@@ -31,7 +31,7 @@ class MasterList(supra.SupraListView):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
 
-    @get_cuenta
+    @method_decorator(get_cuenta)
     def get_queryset(self, cuenta):
         queryset = super(MasterList, self).get_queryset()
         if self.request.GET.get('num_page', False):
