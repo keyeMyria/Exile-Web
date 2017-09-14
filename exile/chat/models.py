@@ -1,4 +1,5 @@
 from django_mongoengine import Document, EmbeddedDocument, fields
+from mongoengine import signals
 from django.utils.six import python_2_unicode_compatible
 from channels import Group
 from .settings import MSG_TYPE_MESSAGE
@@ -74,11 +75,28 @@ class Mensaje(Document):
     def __unicode__(self):
         return u"%s" % (self.mensaje)
 
+    @classmethod
+    def post_save(cls, sender, document, **kwargs):
+        if 'created' in kwargs:
+            if kwargs['created']:
+                for m in document.room.miembros:
+                    if not m is document.miembro:
+                        notificacion = NotificationRoom.objects(miembro=m, mensaje=document.mensaje, room=document.room),
+                        notificacion.save()
+                        Group('miembro-%s' % m.usuario).send({
+                            'text': json.dumps({
+                                'type': "message",
+                                'message': "Nuevo mensaje"
+                            })
+                        })
+
+signals.post_save.connect(Mensaje.post_save, sender=Mensaje)
 
 @python_2_unicode_compatible
 class Notification(Document):
     miembro = fields.ReferenceField(Miembro)
     mensaje = fields.StringField()
+    url = fields.URLField()
     created_at = fields.DateTimeField(
         default=datetime.datetime.now, editable=False,
     )

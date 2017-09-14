@@ -142,7 +142,7 @@
                     var verificar = $("[miembro='"+usuario+"']");
                     if(verificar.length===0){
                         var roomdiv = $(
-                                "<div class='room' id='room-0' grupo='false' miembro="+usuario+">" +
+                                "<div class='room' id='room-0' room='false' grupo='false' miembro="+usuario+">" +
                                 "<h2>" + $(this).html()+ "</h2>" +
                                 "<div class='messages'></div>" +
                                 "<form><input><button>Send</button></form>" +
@@ -150,9 +150,10 @@
                         );
                         // Hook up send button to send a message
                         roomdiv.find("form").on("submit", function () {
+                            console.log($(this).attr('room'));
                             webSocketBridge.send({
                                 "command": "send",
-                                "room": data.join,
+                                "room": false,
                                 "miembros": [parseInt(usuario)],
                                 "grupo": false,
                                 "message": roomdiv.find("input").val()
