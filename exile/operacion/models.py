@@ -8,7 +8,6 @@ from cuser.fields import CurrentUserField
 from subcripcion.models import Cuenta
 from djcelery.models import CrontabSchedule, IntervalSchedule
 
-
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
     creator = CurrentUserField(add_only=True, related_name="created_tipo")
@@ -67,6 +66,7 @@ class Lugar(models.Model):
 
 
 class Tarea(models.Model):
+    fecha = models.DateTimeField(auto_now_add=True)
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)

@@ -2,6 +2,9 @@ from django.http import HttpResponse
 import json as simplejson
 from supra import views as supra
 from exile.settings import ORIGIN
+from django.db.models import Q
+from subcripcion.models import Cuenta
+from cuser.middleware import CuserMiddleware
 
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -20,4 +23,14 @@ def check_login(funcion):
         return HttpResponse(simplejson.dumps({"error": "Debes iniciar sesion"}), 403)
     # end def
     return check
+# end def
+
+def get_cuenta(funcion):
+    def _cuenta(*args, **kwargs):
+        user = CuserMiddleware.get_user()
+        cuenta = Cuenta.objects.filter(
+            Q(cliente=user.pk) | Q(asistente=user.pk) | Q(empleado=user.pk)).first()
+        return funcion(cuenta, *args, **kwargs)
+        # end if
+    return _cuenta
 # end def

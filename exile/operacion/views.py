@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from cuser.middleware import CuserMiddleware
 from django.http import HttpResponse
-from exile.decorator import check_login
+from exile.decorator import check_login, get_cuenta
 from usuarios import models as usuarios
 from supra import views as supra
 from django.db.models import Q
@@ -38,7 +38,8 @@ class MasterList(supra.SupraListView):
         return super(MasterList, self).dispatch(request, *args, **kwargs)
     # end def
 
-    def get_queryset(self):
+    @method_decorator(get_cuenta)
+    def get_queryset(self, cuenta):
         queryset = super(MasterList, self).get_queryset()
         if self.request.GET.get('num_page', False):
             self.paginate_by = self.request.GET.get('num_page', False)
@@ -47,13 +48,11 @@ class MasterList(supra.SupraListView):
         orden = self.request.GET.get('sort_direction', False)
         eliminado = self.request.GET.get('eliminado', False)
         if eliminado == '1':
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=True) | Q(
-                cuenta__asistente=self.request.user.pk, eliminado=True) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=True))
+            if cuenta:
+                queryset = queryset.filter(cuenta=cuenta.id, eliminado=True)
         else:
-            queryset = queryset.filter(Q(cuenta__cliente=self.request.user.pk, eliminado=False) | Q(
-                cuenta__asistente=self.request.user.pk, eliminado=False) | Q(
-                    cuenta__asistente=self.request.user.pk, eliminado=False))
+            if cuenta:
+                queryset = queryset.filter(cuenta=cuenta.id, eliminado=False)
         # end if
         if propiedad and orden:
             if orden == "asc":
@@ -427,7 +426,7 @@ class CompletadoDelete(supra.SupraDeleteView):
 
 class MultimediaList(supra.SupraListView):
     model = models.Multimedia
-    list_display = ['id', 'tarea', 'url', 'tipo']
+    list_display = ['id', 'tarea', 'url', 'tipo', 'fecha']
     list_filter = ['tarea']
     paginate_by = 10
 
@@ -437,11 +436,6 @@ class MultimediaList(supra.SupraListView):
         # end if
         return None
     # end if
-
-    @method_decorator(check_login)
-    def dispatch(self, request, *args, **kwargs):
-        return super(MultimediaList, self).dispatch(request, *args, **kwargs)
-    # end def
 # end class
 
 class MultimediaSupraForm(supra.SupraFormView):
