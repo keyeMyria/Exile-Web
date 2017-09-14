@@ -122,7 +122,6 @@ class SubNotificacion(models.Model):
     descripcion = models.TextField("Descripción", max_length=400)
 # end class
 
-
 class Completado(models.Model):
     tarea = models.OneToOneField(Notificacion)
     fecha = models.DateTimeField(auto_now_add=True)
