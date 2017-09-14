@@ -123,9 +123,8 @@ class SubNotificacion(models.Model):
 # end class
 
 class Completado(models.Model):
-    tarea = models.OneToOneField(Notificacion)
+    notificacion = models.OneToOneField(Notificacion)
     fecha = models.DateTimeField(auto_now_add=True)
-    terminado = models.BooleanField(default=True)
     creator = CurrentUserField(add_only=True, related_name="created_completado")
     last_editor = CurrentUserField(related_name="last_edited_completado")
 
@@ -149,7 +148,7 @@ class Multimedia(models.Model):
 # end class
 
 class CompletadoSub(models.Model):
-    subtarea = models.OneToOneField(SubNotificacion)
+    subnotificacion = models.OneToOneField(SubNotificacion)
     creator = CurrentUserField(add_only=True, related_name="created_completadosub")
     last_editor = CurrentUserField(related_name="last_edited_completadosub")
     fecha = models.DateTimeField(auto_now_add=True)

@@ -19,6 +19,7 @@ import json
 from exile.settings import ORIGIN
 from djcelery.models import CrontabSchedule, IntervalSchedule
 from django.contrib.sites.models import Site
+from usuarios.views import UserDetail, StackEmpleadoList
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
@@ -290,7 +291,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
-    list_display = ['id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json')]
+    list_display = ['id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), ('completado', 'json')]
     list_filter = ['fecha']
 
     def get_queryset(self,):
@@ -312,22 +313,22 @@ class NotificacionList(supra.SupraListView):
         return json.dumps(subtareas['object_list'])
     # end class
 
-    def completado(self, obj, row):
-        completado = models.Completado.objects.filter(notificacion=obj).first()
-        if completado:
-            return completado.pk
-        # end if
-    # end def
-
     def tarea(self, obj, row):
         class request():
             method = 'GET'
-            GET = {'pk': obj.tarea.pk}
         # end class
+        tarea = TareaDetail(dict_only=True).dispatch(request=request(), pk=obj.tarea.pk)
+        return json.dumps(tarea)
+    # end def
 
-        tareas = StackTareaList(dict_only=True).dispatch(request=request())
-        if len(tareas['object_list']):
-            return json.dumps(tareas['object_list'][0])
+    def completado(self, obj, row):
+        class request():
+            method = 'GET'
+        # end class
+        completado = models.Completado.objects.filter(notificacion=obj).first()
+        if completado:
+            completado = CompletadoDetail(dict_only=True).dispatch(request=request(), pk=completado.pk)
+            return json.dumps(completado)
         # end if
     # end def
 # end class
@@ -345,26 +346,66 @@ class SubNotificacionList(supra.SupraListView):
     # end def
 # end class
 
-class StackTareaList(supra.SupraListView):
+class TareaDetail(supra.SupraDetailView):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por',]
-    search_fields = ['nombre', 'direccion', ]
-    list_filter = ['pk', ]
+    list_display  = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por',]
+# end class
+
+class CompletadoDetail(supra.SupraDetailView):
+    model = models.Completado
+    list_display  = ['id', 'notificacion', 'fecha', 'creator', 'last_editor']
 # end class
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', ('subtareas', 'json'), ('multimedia', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10
 
     def empleados(self, obj, row):
-        lista = []
-        empleados = usuarios.Empleado.objects.filter(tarea=obj).values('id')
-        for e in empleados:
-            lista.append(e['id'])
-        return json.dumps(lista)
+        class request():
+            method = 'GET'
+            GET = {'tarea': obj.pk}
+        # end class
+        empleados = StackEmpleadoList(dict_only=True).dispatch(request=request())
+        return json.dumps(empleados['object_list'])
+    # end def
+
+    def grupo(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'grupo': obj.grupo.pk}
+        # end class
+        empleados = StackEmpleadoList(dict_only=True).dispatch(request=request())
+        return json.dumps(empleados['object_list'])
+    # end def
+
+    def creator(self, obj, row):
+        class request():
+            method = 'GET'
+        # end class
+        creator = UserDetail(dict_only=True).dispatch(request=request(), pk=obj.creator.pk)
+        return json.dumps(creator)
+    # end def
+
+    def eliminado_por(self, obj, row):
+        class request():
+            method = 'GET'
+        # end class
+        if obj.eliminado_por:
+            eliminado_por = UserDetail(dict_only=True).dispatch(request=request(), pk=obj.eliminado_por.pk)
+            return json.dumps(eliminado_por)
+        # end if
+        return "null"
+    # end def
+
+    def last_editor(self, obj, row):
+        class request():
+            method = 'GET'
+        # end class
+        last_editor = UserDetail(dict_only=True).dispatch(request=request(), pk=obj.last_editor.pk)
+        return json.dumps(last_editor)
     # end def
 
     def subtareas(self, obj, row):

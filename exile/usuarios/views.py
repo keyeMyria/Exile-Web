@@ -22,9 +22,23 @@ supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
 supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
-supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
+supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE, OPTIONS"
 supra.SupraConf.body = True
 
+
+class UserDetail(supra.SupraDetailView):
+    model = User
+    list_display  = ['id', 'first_name', 'last_name', 'username', 'avarar']
+
+    def avatar(self, obj, row):
+        if hasattr(obj, 'empleado'):
+            return obj.empleado.imagen
+        if hasattr(obj, 'asistente'):
+            return obj.asistente.imagen
+        # end if
+        return 'null'
+    # end def
+# end class
 
 class LoginU(supra.SupraSession):
 
@@ -265,6 +279,14 @@ class EmpleadoSupraFormDelete(supra.SupraDeleteView):
 # end class
 
 
+class StackEmpleadoList(supra.SupraListView):
+    model = models.Empleado
+    list_display = ['first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'email', 'direccion',
+                    'telefono', 'fijo', 'creator', 'last_editor', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'cargo__nombre',
+                    'imagen', 'id', 'cuenta']
+    list_filter = ['pk', 'grupo']
+# end class
+
 class EmpleadoList(MasterList):
     model = models.Empleado
     list_display = ['first_name', 'last_name', 'username', 'identificacion', 'fecha_nacimiento', 'email', 'direccion',
@@ -272,6 +294,7 @@ class EmpleadoList(MasterList):
                     'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
                      'identificacion', 'email', 'username']
+    list_filter = ['pk', 'grupo']
     paginate_by = 10
 # end class
 
