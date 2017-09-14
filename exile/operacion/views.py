@@ -290,23 +290,71 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
-    list_display = ['id', 'tarea', 'fecha']
+    list_display = ['id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json')]
+    list_filter = ['fecha']
+
+    def get_queryset(self,):
+        queryset = super(NotificacionList, self).get_queryset()
+        fecha_inicio = self.request.GET.get('fecha_inicio', False)
+        fecha_final = self.request.GET.get('fecha_final', False)
+        if fecha_inicio and fecha_final:
+            queryset = queryset.filter(fecha__gte=fecha_inicio, fecha__lte=fecha_final)
+        # end if
+        return queryset
+    # end def
+
+    def subnotificaciones(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'notificacion': obj.pk}
+        # end class
+        subtareas = SubNotificacionList(dict_only=True).dispatch(request=request())
+        return json.dumps(subtareas['object_list'])
+    # end class
+
+    def completado(self, obj, row):
+        completado = models.Completado.objects.filter(notificacion=obj).first()
+        if completado:
+            return completado.pk
+        # end if
+    # end def
 
     def tarea(self, obj, row):
         class request():
             method = 'GET'
             GET = {'pk': obj.tarea.pk}
         # end class
-        tareas = TareaList(dict_only=True).dispatch(request=request())
+
+        tareas = StackTareaList(dict_only=True).dispatch(request=request())
         if len(tareas['object_list']):
             return json.dumps(tareas['object_list'][0])
         # end if
     # end def
 # end class
 
+class SubNotificacionList(supra.SupraListView):
+    model = models.SubNotificacion
+    list_display = ['id' ,'fecha', 'notificacion', 'subtarea', 'nombre', 'descripcion', 'completado']
+    list_filter = ['pk', 'notificacion']
+
+    def completado(self, obj, row):
+        completado = models.CompletadoSub.objects.filter(subtarea=obj).first()
+        if completado:
+            return completado.pk
+        # end if
+    # end def
+# end class
+
+class StackTareaList(supra.SupraListView):
+    model = models.Tarea
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por',]
+    search_fields = ['nombre', 'direccion', ]
+    list_filter = ['pk', ]
+# end class
+
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
+    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10
@@ -317,13 +365,6 @@ class TareaList(MasterList):
         for e in empleados:
             lista.append(e['id'])
         return json.dumps(lista)
-    # end def
-
-    def completado(self, obj, row):
-        completado = models.Completado.objects.filter(tarea=obj).first()
-        if completado:
-            return completado.pk
-        # end if
     # end def
 
     def subtareas(self, obj, row):
@@ -342,6 +383,7 @@ class TareaList(MasterList):
         # end class
         multimedia = MultimediaList(dict_only=True).dispatch(request=request())
         return json.dumps(multimedia['object_list'])
+    # end def
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -385,17 +427,9 @@ class SubTareaDeleteSupra(supra.SupraDeleteView):
 
 class SubTareaList(supra.SupraListView):
     model = models.SubTarea
-    list_display = ['id', 'tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por', 'completado']
+    list_display = ['id', 'tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por']
     search_fields = ['nombre', 'direccion']
     list_filter = ['tarea']
-
-
-    def completado(self, obj, row):
-        completado = models.CompletadoSub.objects.filter(subtarea=obj).first()
-        if completado:
-            return completado.pk
-        # end if
-    # end def
 # end class
 
 class CompletadoSubForm(supra.SupraFormView):
