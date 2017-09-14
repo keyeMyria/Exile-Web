@@ -6,7 +6,7 @@ from usuarios import models as usuarios
 from django.contrib.auth.models import User
 from cuser.fields import CurrentUserField
 from subcripcion.models import Cuenta
-from djcelery.models import CrontabSchedule, IntervalSchedule
+from djcelery.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 
 class Tipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -49,8 +49,7 @@ class Cliente(models.Model):
 
 class Lugar(models.Model):
     nombre = models.CharField(max_length=100)
-    direccion = models.TextField(
-        "Dirección", max_length=400, blank=True, null=True)
+    direccion = models.TextField("Dirección", max_length=400, blank=True, null=True)
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
     creator = CurrentUserField(add_only=True, related_name="created_lugar")
@@ -64,29 +63,41 @@ class Lugar(models.Model):
     # end class
 # end class
 
-
 class Tarea(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
-    fecha_ejecucion = models.DateTimeField()
-    fecha_finalizacion = models.DateTimeField(null=True, blank=True)
+
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
     empleados = models.ManyToManyField(usuarios.Empleado, blank=True)
-    creator = CurrentUserField(add_only=True, related_name="created_tarea")
-    last_editor = CurrentUserField(related_name="last_edited_tarea")
     grupo = models.ForeignKey(usuarios.Grupo, blank=True, null=True)
-    sub_complete = models.BooleanField()  # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
+    sub_complete = models.BooleanField()
+
+    # Indica que esta tarea no se puede completar si sus subtareas no estan completadas
+
+    fecha_ejecucion = models.DateTimeField()
+    fecha_finalizacion = models.DateTimeField(null=True, blank=True)
+    cron_ejecucion = models.OneToOneField(PeriodicTask, blank=True, null=True)
+    
     crontab = models.OneToOneField(CrontabSchedule, blank=True, null=True)
     interval = models.OneToOneField(IntervalSchedule, blank=True, null=True)
+    
+    creator = CurrentUserField(add_only=True, related_name="created_tarea")
+    fecha_edicion = models.DateTimeField(auto_now=True)
+    last_editor = CurrentUserField(related_name="last_edited_tarea")
     eliminado = models.BooleanField(default=False)
     eliminado_por = models.ForeignKey(User, related_name="eliminado_por_tarea", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.nombre)
     # end def
+# end class
+
+class Notificacion(models.Model):
+    tarea = models.ForeignKey(Tarea)
+    fecha = models.DateField(auto_now_add=True)
 # end class
 
 class SubTarea(models.Model):
@@ -103,9 +114,17 @@ class SubTarea(models.Model):
     # end def
 # end class
 
+class SubNotificacion(models.Model):
+    fecha = models.DateField(auto_now_add=True)
+    notificacion = models.ForeignKey(Notificacion)
+    subtarea = models.ForeignKey(SubTarea)
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField("Descripción", max_length=400)
+# end class
+
 
 class Completado(models.Model):
-    tarea = models.OneToOneField(Tarea)
+    tarea = models.OneToOneField(Notificacion)
     fecha = models.DateTimeField(auto_now_add=True)
     terminado = models.BooleanField(default=True)
     creator = CurrentUserField(add_only=True, related_name="created_completado")
@@ -125,13 +144,13 @@ class Multimedia(models.Model):
         (AUDIO, 'Audio')
     )
     fecha = models.DateTimeField(auto_now_add=True)
-    tarea = models.ForeignKey(Tarea)
+    tarea = models.ForeignKey(Notificacion)
     tipo = models.IntegerField(choices=choices)
     archivo = models.FileField()
 # end class
 
 class CompletadoSub(models.Model):
-    subtarea = models.OneToOneField(SubTarea)
+    subtarea = models.OneToOneField(SubNotificacion)
     creator = CurrentUserField(add_only=True, related_name="created_completadosub")
     last_editor = CurrentUserField(related_name="last_edited_completadosub")
     fecha = models.DateTimeField(auto_now_add=True)

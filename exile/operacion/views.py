@@ -221,14 +221,14 @@ class TareaSupraForm(supra.SupraFormView):
 
     def get_form_class(self):
         if 'pk' in self.http_kwargs:
-            self.form_class = forms.TareaFormEdit
+            return forms.TareaFormEdit
         # end if
         return forms.TareaForm
     # end class
 # end class
 
 class CrontabScheduleSupraForm(supra.SupraFormView):
-    model = models.CrontabDateSchedule
+    model = models.CrontabSchedule
     response_json = False
 
     @method_decorator(check_login)
@@ -260,7 +260,7 @@ class IntervalScheduleDeleteSupra(supra.SupraDeleteView):
 # end class
 
 class CrontabScheduleDeleteSupra(supra.SupraDeleteView):
-    model = models.Tarea
+    model = models.CrontabSchedule
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -288,10 +288,27 @@ class TareaDeleteSupra(supra.SupraDeleteView):
     # end def
 # end class
 
+class NotificacionList(supra.SupraListView):
+    model = models.Notificacion
+    list_display = ['id', 'tarea', 'fecha']
+
+    def tarea(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'pk': obj.tarea.pk}
+        # end class
+        tareas = TareaList(dict_only=True).dispatch(request=request())
+        if len(tareas['object_list']):
+            return json.dumps(tareas['object_list'][0])
+        # end if
+    # end def
+# end class
+
 class TareaList(MasterList):
     model = models.Tarea
     list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por', 'completado', ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
+    list_filter = ['pk', ]
     paginate_by = 10
 
     def empleados(self, obj, row):
