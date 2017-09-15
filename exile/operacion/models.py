@@ -101,6 +101,13 @@ class Tarea(models.Model):
 class Notificacion(models.Model):
     tarea = models.ForeignKey(Tarea)
     fecha = models.DateField(auto_now_add=True)
+        
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
+
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField("Descripción", max_length=400)
 # end class
 
 class SubTarea(models.Model):

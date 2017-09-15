@@ -292,7 +292,7 @@ class NotificacionList(supra.SupraListView):
     model = models.Notificacion
     list_display = [
      'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), 
-     ('completado', 'json'), 'latitud', 'longitud'
+     'completado', 'latitud', 'longitud', ('lista_completados', 'json')
     ]
     list_filter = ['fecha']
 
@@ -309,7 +309,7 @@ class NotificacionList(supra.SupraListView):
     def subnotificaciones(self, obj, row):
         class request():
             method = 'GET'
-            GET = {'notificacion': obj.pk}
+            GET = {'subnotificacion': obj.pk}
         # end class
         subtareas = SubNotificacionList(dict_only=True).dispatch(request=request())
         return json.dumps(subtareas['object_list'])
@@ -323,28 +323,38 @@ class NotificacionList(supra.SupraListView):
         return json.dumps(tarea)
     # end def
 
-    def completado(self, obj, row):
+    def lista_completados(self, obj, row):
         class request():
             method = 'GET'
+            GET = {'notificacion': obj.pk}
         # end class
-        completado = models.Completado.objects.filter(notificacion=obj).first()
-        if completado:
-            completado = CompletadoDetail(dict_only=True).dispatch(request=request(), pk=completado.pk)
-            return json.dumps(completado)
-        # end if
+        completados = CompletadoList(dict_only=True).dispatch(request=request())
+        return json.dumps(completados)
+    # end def
+
+    def completado(self, obj, row):
+        return models.Completado.objects.filter(notificacion=obj, descompletado=False).count() > 0
     # end def
 # end class
 
 class SubNotificacionList(supra.SupraListView):
     model = models.SubNotificacion
-    list_display = ['id' ,'fecha', 'notificacion', 'subtarea', 'nombre', 'descripcion', 'completado']
+    list_display = ['id' ,'fecha', 'notificacion', 'subtarea', 'nombre', 'descripcion',
+     'completado', ('lista_completados', 'json')
+     ]
     list_filter = ['pk', 'notificacion']
 
+    def lista_completados(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'subnotificacion': obj.pk}
+        # end class
+        completados = CompletadoSubList(dict_only=True).dispatch(request=request())
+        return json.dumps({})
+    # end def
+
     def completado(self, obj, row):
-        completado = models.CompletadoSub.objects.filter(subtarea=obj).first()
-        if completado:
-            return completado.pk
-        # end if
+        return models.CompletadoSub.objects.filter(subnotificacion=obj, descompletado=False).count() > 0
     # end def
 # end class
 
@@ -513,6 +523,11 @@ class SubTareaList(supra.SupraListView):
     list_filter = ['tarea']
 # end class
 
+class CompletadoList(supra.SupraListView):
+    model = models.Completado
+    list_filter = ['pk', 'notificacion']
+# end class
+
 class CompletadoForm(supra.SupraFormView):
     model = models.Completado
     response_json = True
@@ -577,6 +592,11 @@ class CompletadoSubDelete(supra.SupraDeleteView):
         self.object.save()
         return HttpResponse(status=200)
     # end def
+# end class
+
+class CompletadoSubList(supra.SupraListView):
+    model = models.CompletadoSub
+    list_filter = ['pk', 'subnotificacion']
 # end class
 
 class MultimediaList(supra.SupraListView):
