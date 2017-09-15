@@ -20,6 +20,7 @@ from exile.settings import ORIGIN
 from djcelery.models import CrontabSchedule, IntervalSchedule
 from django.contrib.sites.models import Site
 from usuarios.views import UserDetail, StackEmpleadoList
+from datetime import datetime
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
 supra.SupraConf.ACCECC_CONTROL["origin"] = ORIGIN
@@ -27,8 +28,6 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
-
-
 
 class MasterList(supra.SupraListView):
     search_key = 'q'
@@ -356,9 +355,46 @@ class CompletadoDetail(supra.SupraDetailView):
     list_display  = ['id', 'notificacion', 'fecha', 'creator', 'last_editor']
 # end class
 
+class TareasPeriodicasList(supra.SupraListView):
+    model = models.Tarea
+
+    def get_queryset(self):
+        queryset = super(TareasPeriodicasList, self).get_queryset()
+        class QueryList():
+            def __init__(self, lista):
+                self.lista = lista
+            # end def
+
+            def __iter__(self):
+                for node in self.lista:
+                    yield node
+                # end for
+            # end def
+
+            def __getitem__(self, i):
+                return self.lista[i]
+
+            def count(self):
+                return len(self.lista)
+            # end def
+        # end class
+
+        fecha_inicio = self.request.GET.get('fecha_inicio', False)
+        fecha_final = self.request.GET.get('fecha_final', False)
+        if fecha_inicio and fecha_final:
+            lista = forms.TareaFormBase.get_tareas_periodicas(datetime.strptime(fecha_inicio, "%Y-%m-%d"), datetime.strptime(fecha_final, "%Y-%m-%d"))
+        else:
+            lista = []
+        # end if
+        queryset = QueryList(lista=lista)
+        print queryset
+        return queryset
+    # end def
+# end class
+
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json')]
+    list_display = ['id', 'fecha_ejecucion', 'interval', 'crontab', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json')]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10

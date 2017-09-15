@@ -5,3 +5,4 @@ from django.contrib import admin
 import models
 
 admin.site.register(models.Notificacion)
+admin.site.register(models.Tarea)
