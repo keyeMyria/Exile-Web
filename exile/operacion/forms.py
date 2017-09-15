@@ -7,6 +7,7 @@ from exile.servicios import get_cuenta
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
 from djcelery.models import PeriodicTask, CrontabSchedule
+from datetime import timedelta
 
 class Master(forms.ModelForm):
 
@@ -49,6 +50,64 @@ class TareaFormBase(forms.ModelForm):
         model = models.Tarea
         exclude = []
     # end class
+
+    @staticmethod
+    def get_tareas_periodicas(fecha_inicio, fecha_final):
+        fecha = fecha_inicio
+        tareas = []
+        while fecha < fecha_final:
+            crons = models.Tarea.objects.filter(
+                Q(crontab__day_of_month='*') | Q(crontab__day_of_month=fecha.day),
+                Q(crontab__month_of_year='*') | Q(crontab__month_of_year=fecha.month),
+                Q(fecha_ejecucion__lte=fecha)
+            )
+
+            strfecha = fecha.strftime("%Y-%m-%d")
+
+            sql = """SELECT
+                    *, '%(fecha)s'::date - tarea.fecha_ejecucion::date as _day_
+                    FROM operacion_tarea as tarea
+                    JOIN djcelery_intervalschedule as inte
+                    ON 
+                        tarea.interval_id = inte.id
+                    AND
+                        tarea.fecha_ejecucion <= '%(fecha)s'
+                    AND (
+                        CASE 
+                            WHEN inte.period = 'days' THEN
+                                '%(fecha)s'::date - tarea.fecha_ejecucion::date
+                            WHEN inte.period = 'weeks' THEN
+                                ('%(fecha)s'::date - tarea.fecha_ejecucion::date)/7
+                            WHEN inte.period = 'months' THEN
+                                date_part('months', age(' %(fecha)s', tarea.fecha_ejecucion)) +
+                                date_part('years', age(' %(fecha)s', tarea.fecha_ejecucion))*12
+                            WHEN inte.period = 'year' THEN
+                                date_part('years', age(' %(fecha)s', tarea.fecha_ejecucion))
+                        END
+                    )::int %(percent)s inte.every = 0""" % {
+                    'fecha': strfecha,
+                    'percent': '%%'
+                    } 
+
+            intervals = models.Tarea.objects.raw(
+                sql
+            )
+            for cron in crons:
+                row = cron.__dict__
+                row['pk'] = cron.pk
+                row['__fecha__'] = strfecha
+                tareas.append(row)
+            # end for
+            for interval in intervals:
+                row = interval.__dict__
+                row['pk'] = interval.pk
+                row['__fecha__'] = strfecha
+                tareas.append(row)
+            # end for
+            fecha = fecha + timedelta(days=1)
+        # end for
+        return tareas
+    # end def
 # end class
 
 class MultimediaForm(forms.ModelForm):

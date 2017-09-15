@@ -79,6 +79,7 @@ CACHES = {
     }
 }
 import djcelery
+
 djcelery.setup_loader()
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
