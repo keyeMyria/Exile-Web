@@ -290,7 +290,10 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
-    list_display = ['id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), ('completado', 'json')]
+    list_display = [
+     'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), 
+     ('completado', 'json'), 'latitud', 'longitud'
+    ]
     list_filter = ['fecha']
 
     def get_queryset(self,):
@@ -350,11 +353,6 @@ class TareaDetail(supra.SupraDetailView):
     list_display  = ['id', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'creator', 'last_editor', 'grupo', 'sub_complete', 'eliminado', 'eliminado_por',]
 # end class
 
-class CompletadoDetail(supra.SupraDetailView):
-    model = models.Completado
-    list_display  = ['id', 'notificacion', 'fecha', 'creator', 'last_editor']
-# end class
-
 class TareasPeriodicasList(supra.SupraListView):
     model = models.Tarea
 
@@ -387,14 +385,18 @@ class TareasPeriodicasList(supra.SupraListView):
             lista = []
         # end if
         queryset = QueryList(lista=lista)
-        print queryset
         return queryset
     # end def
 # end class
 
 class TareaList(MasterList):
     model = models.Tarea
-    list_display = ['id', 'fecha_ejecucion', 'interval', 'crontab', 'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json')]
+    list_display = [
+        'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab', 
+        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 
+        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', 
+        ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json'), 'latitud', 'longitud'
+    ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10
@@ -482,7 +484,6 @@ class SubTareaSupraForm(supra.SupraFormView):
     # end class
 # end class
 
-
 class SubTareaDeleteSupra(supra.SupraDeleteView):
     model = models.SubTarea
 
@@ -504,9 +505,48 @@ class SubTareaDeleteSupra(supra.SupraDeleteView):
 
 class SubTareaList(supra.SupraListView):
     model = models.SubTarea
-    list_display = ['id', 'tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator', 'last_editor', 'eliminado', 'eliminado_por']
+    list_display = [
+     'id', 'tarea', 'tarea__nombre', 'nombre', 'descripcion', 'creator',
+     'last_editor', 'eliminado', 'eliminado_por', 'latitud', 'longitud'
+     ]
     search_fields = ['nombre', 'direccion']
     list_filter = ['tarea']
+# end class
+
+class CompletadoForm(supra.SupraFormView):
+    model = models.Completado
+    response_json = True
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CompletadoForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+class CompletadoDetail(supra.SupraDetailView):
+    model = models.Completado
+    list_display  = ['id', 'notificacion', 'fecha', 'creator', 'last_editor', 'latitud', 'longitud']
+# end class
+
+class CompletadoDelete(supra.SupraDeleteView):
+    model = models.Completado
+    response_json = True
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(CompletadoDelete, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.descompletado = True
+        user = CuserMiddleware.get_user()
+        self.object.descompletado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
+    # end def
 # end class
 
 class CompletadoSubForm(supra.SupraFormView):
@@ -528,27 +568,14 @@ class CompletadoSubDelete(supra.SupraDeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(CompletadoSubDelete, self).dispatch(request, *args, **kwargs)
     # end def
-# end class
 
-class CompletadoForm(supra.SupraFormView):
-    model = models.Completado
-    response_json = True
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(CompletadoForm, self).dispatch(request, *args, **kwargs)
-    # end def
-# end class
-
-class CompletadoDelete(supra.SupraDeleteView):
-    model = models.Completado
-    response_json = True
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(CompletadoDelete, self).dispatch(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.descompletado = True
+        user = CuserMiddleware.get_user()
+        self.object.descompletado_por = user
+        self.object.save()
+        return HttpResponse(status=200)
     # end def
 # end class
 

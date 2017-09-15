@@ -68,6 +68,9 @@ class Tarea(models.Model):
     cuenta = models.ForeignKey(Cuenta)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
 
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
@@ -104,6 +107,11 @@ class SubTarea(models.Model):
     tarea = models.ForeignKey(Tarea)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
+
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
+
     creator = CurrentUserField(add_only=True, related_name="created_subtarea")
     last_editor = CurrentUserField(related_name="last_edited_subtarea")
     eliminado = models.BooleanField(default=False)
@@ -118,12 +126,25 @@ class SubNotificacion(models.Model):
     fecha = models.DateField(auto_now_add=True)
     notificacion = models.ForeignKey(Notificacion)
     subtarea = models.ForeignKey(SubTarea)
+
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
+
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
 # end class
 
 class Completado(models.Model):
-    notificacion = models.OneToOneField(Notificacion)
+    notificacion = models.OneToOneField(Notificacion)    
+
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
+
+    descompletado = models.BooleanField(default=False)
+    descompletado_por = models.ForeignKey(User, related_name="descompletado_por_completado", blank=True, null=True)
+
     fecha = models.DateTimeField(auto_now_add=True)
     creator = CurrentUserField(add_only=True, related_name="created_completado")
     last_editor = CurrentUserField(related_name="last_edited_completado")
@@ -149,6 +170,14 @@ class Multimedia(models.Model):
 
 class CompletadoSub(models.Model):
     subnotificacion = models.OneToOneField(SubNotificacion)
+
+    #GPS
+    latitud = models.CharField(max_length=100)
+    longitud = models.CharField(max_length=100)
+
+    descompletado = models.BooleanField(default=False)
+    descompletado_por = models.ForeignKey(User, related_name="descompletado_por_completado_sub", blank=True, null=True)
+
     creator = CurrentUserField(add_only=True, related_name="created_completadosub")
     last_editor = CurrentUserField(related_name="last_edited_completadosub")
     fecha = models.DateTimeField(auto_now_add=True)

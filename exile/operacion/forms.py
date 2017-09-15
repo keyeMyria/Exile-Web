@@ -64,7 +64,9 @@ class TareaFormBase(forms.ModelForm):
 
             strfecha = fecha.strftime("%Y-%m-%d")
 
-            sql = """SELECT * FROM operacion_tarea as tarea
+            sql = """SELECT
+                    *, '%(fecha)s'::date - tarea.fecha_ejecucion::date as _day_
+                    FROM operacion_tarea as tarea
                     JOIN djcelery_intervalschedule as inte
                     ON 
                         tarea.interval_id = inte.id
@@ -72,18 +74,15 @@ class TareaFormBase(forms.ModelForm):
                         tarea.fecha_ejecucion <= '%(fecha)s'
                     AND (
                         CASE 
-                            WHEN inte.period = 'second' THEN
-                                date_part('second', age(tarea.fecha_ejecucion, ' %(fecha)s'))
-                            WHEN inte.period = 'minute' THEN
-                                date_part('minute', age(tarea.fecha_ejecucion, ' %(fecha)s'))
                             WHEN inte.period = 'days' THEN
-                                date_part('days', age(tarea.fecha_ejecucion, ' %(fecha)s'))
-                            WHEN inte.period = 'week' THEN
-                                date_part('week', age(tarea.fecha_ejecucion, ' %(fecha)s'))
-                            WHEN inte.period = 'month' THEN
-                                date_part('months', age(tarea.fecha_ejecucion, ' %(fecha)s'))
+                                '%(fecha)s'::date - tarea.fecha_ejecucion::date
+                            WHEN inte.period = 'weeks' THEN
+                                ('%(fecha)s'::date - tarea.fecha_ejecucion::date)/7
+                            WHEN inte.period = 'months' THEN
+                                date_part('months', age(' %(fecha)s', tarea.fecha_ejecucion)) +
+                                date_part('years', age(' %(fecha)s', tarea.fecha_ejecucion))*12
                             WHEN inte.period = 'year' THEN
-                                date_part('years', age(tarea.fecha_ejecucion, ' %(fecha)s'))
+                                date_part('years', age(' %(fecha)s', tarea.fecha_ejecucion))
                         END
                     )::int %(percent)s inte.every = 0""" % {
                     'fecha': strfecha,
@@ -93,7 +92,6 @@ class TareaFormBase(forms.ModelForm):
             intervals = models.Tarea.objects.raw(
                 sql
             )
-
             for cron in crons:
                 row = cron.__dict__
                 row['pk'] = cron.pk
@@ -104,10 +102,8 @@ class TareaFormBase(forms.ModelForm):
                 row = interval.__dict__
                 row['pk'] = interval.pk
                 row['__fecha__'] = strfecha
-                print row
                 tareas.append(row)
             # end for
-            print fecha
             fecha = fecha + timedelta(days=1)
         # end for
         return tareas
