@@ -1,5 +1,5 @@
 from channels import route
-from .consumers import ws_connect, ws_receive, ws_disconnect, send_friends, send_rooms, chat_send
+from .consumers import ws_connect, ws_receive, ws_disconnect, send_friends, send_rooms, chat_send, notification_send
 
 
 # There's no path matching on these routes; we just rely on the matching
@@ -25,4 +25,5 @@ custom_routing = [
     route("chat.receive", send_friends, command="^friends$"),
     route("chat.receive", send_rooms, command="^rooms$"),
     route("chat.receive", chat_send, command="^send$"),
+    route("chat.receive", notification_send, command="^notification$"),
 ]

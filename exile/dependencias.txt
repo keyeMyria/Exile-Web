@@ -49,3 +49,4 @@ celery==3.1.25
 django-celery
 python-memcached
 git+https://github.com/MongoEngine/django-mongoengine
+blinker

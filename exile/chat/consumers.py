@@ -3,7 +3,7 @@ from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 from django.db.models import Q
 from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
-from .models import Room, Miembro
+from .models import Room, Miembro, NotificationRoom, Notification
 from .utils import get_room_or_error, catch_client_error, get_user_or_error
 from .exceptions import ClientError
 from subcripcion.models import Cuenta
@@ -60,7 +60,6 @@ def ws_disconnect(message):
 def send_friends(message):
     # Busco al usuario en la base de datos mongo
     miembro = get_user_or_error(message.user)
-
     #Busco a todas las personas relacionadas a la cuenta del usuario que se acaba de conectar
     listaM = Miembro.objects(cuenta=miembro.cuenta).to_json()
     data = json.loads(listaM)
@@ -76,7 +75,6 @@ def send_friends(message):
 @channel_session_user
 @catch_client_error
 def send_rooms(message):
-    user = message.user
     # Verificao si el usuario existe en la base de datos mongo
     miembro = get_user_or_error(message.user)
     rooms = Room.objects(miembros__in=[miembro])
@@ -91,65 +89,27 @@ def send_rooms(message):
         })
     })
 
-# Channel_session_user loads the user out from the channel session and presents
-# it as message.user. There's also a http_session_user if you want to do this on
-# a low-level HTTP handler, or just channel_session if all you want is the
-# message.channel_session object without the auth fetching overhead.
-@channel_session_user
-@catch_client_error
-def chat_join(message):
-    # Find the room they requested (by ID) and add ourselves to the send group
-    # Note that, because of channel_session_user, we have a message.user
-    # object that works just like request.user would. Security!
-    room = get_room_or_error(message["room"], mensaje["receptores"], mensaje["grupo"], message.user)
-
-    # Send a "enter message" to the room if available
-    if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, MSG_TYPE_ENTER)
-
-    # OK, add them in. The websocket_group is what we'll send messages
-    # to so that everyone in the chat room gets them.
-    room.websocket_group.add(message.reply_channel)
-    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
-    # Send a message back that will prompt them to open the room
-    # Done server-side so that we could, for example, make people
-    # join rooms automatically.
-    message.reply_channel.send({
-        "text": json.dumps({
-            "join": str(room.id),
-            "title": room.title,
-        }),
-    })
-
-
-@channel_session_user
-@catch_client_error
-def chat_leave(message):
-    # Reverse of join - remove them from everything.
-    room = get_room_or_error(message["room"], False, False, message.user)
-
-    # Send a "leave message" to the room if available
-    if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, MSG_TYPE_LEAVE)
-
-    room.websocket_group.discard(message.reply_channel)
-    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
-    # Send a message back that will prompt them to close the room
-    message.reply_channel.send({
-        "text": json.dumps({
-            "leave": str(room.id),
-        }),
-    })
-
 
 @channel_session_user
 @catch_client_error
 def chat_send(message):
-    # Check that the user in the room
-    if int(message['room']) not in message.channel_session['rooms']:
-        raise ClientError("ROOM_ACCESS_DENIED")
     # Find the room they're sending to, check perms
-    room = get_room_or_error(message["room"], mensaje["miembros"], mensaje["grupo"], message.user, message)
-    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
+    room = get_room_or_error(message["room"], message["miembros"], message["grupo"], message.user, message)
+    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
     # Send the message along
     room.send_message(message["message"], message.user)
+
+
+@channel_session_user
+@catch_client_error
+def notification_send(message):
+    miembro = get_user_or_error(message.user)
+    notification_room = NotificationRoom.objects(miembro=miembro)
+    notification = Notification.objects(miembro=miembro)
+    Group('miembro-%s' % miembro.usuario).send({
+        'text': json.dumps({
+            "type": "notification",
+            "notifications": json.loads(notification.to_json()),
+            "notification": json.loads(notification_room.to_json())
+        })
+    })
