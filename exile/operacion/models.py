@@ -170,7 +170,7 @@ class Multimedia(models.Model):
         (AUDIO, 'Audio')
     )
     fecha = models.DateTimeField(auto_now_add=True)
-    tarea = models.ForeignKey(Notificacion)
+    notificacion = models.ForeignKey(Notificacion)
     tipo = models.IntegerField(choices=choices)
     archivo = models.FileField()
 # end class

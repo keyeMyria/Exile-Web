@@ -291,7 +291,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
     list_display = [
-     'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), 
+     'id', ('tarea', 'json'), 'fecha', ('multimedia', 'json'), ('subnotificaciones', 'json'), 
      'completado', 'latitud', 'longitud', ('lista_completados', 'json')
     ]
     list_filter = ['fecha']
@@ -346,6 +346,15 @@ class NotificacionList(supra.SupraListView):
         # end class
         completados = CompletadoList(dict_only=True).dispatch(request=request())
         return json.dumps(completados)
+    # end def
+
+    def multimedia(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'notificacion': obj.pk}
+        # end class
+        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
+        return json.dumps(multimedia['object_list'])
     # end def
 
     def completado(self, obj, row):
@@ -434,7 +443,7 @@ class TareaList(MasterList):
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab', 
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 
         ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado', 
-        ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json'), 'latitud', 'longitud'
+        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud'
     ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
@@ -509,14 +518,6 @@ class TareaList(MasterList):
         return json.dumps(subtareas['object_list'])
     # end def
 
-    def multimedia(self, obj, row):
-        class request():
-            method = 'GET'
-            GET = {'tarea': obj.pk}
-        # end class
-        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
-        return json.dumps(multimedia['object_list'])
-    # end def
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -645,8 +646,8 @@ class CompletadoSubList(supra.SupraListView):
 
 class MultimediaList(supra.SupraListView):
     model = models.Multimedia
-    list_display = ['id', 'tarea', 'url', 'tipo', 'fecha']
-    list_filter = ['tarea']
+    list_display = ['id', 'notificacion', 'url', 'tipo', 'fecha']
+    list_filter = ['notificacion']
     paginate_by = 10
 
     def url(self, obj, row):
