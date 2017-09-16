@@ -2,7 +2,7 @@ version: '2'
 services:
     http-server:
         build: .
-        command: http-server ./dist -p 8888
+        command: http-server ./dist -p 8888 -H 0.0.0.0
         ports:
             - "8888:8888"
         volumes:
