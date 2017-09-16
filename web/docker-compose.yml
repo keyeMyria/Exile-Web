@@ -1,11 +1,9 @@
 version: '2'
-services:   
+services:
     http-server:
         build: .
-        command: bash -c "ng build --prod &&  http-server ./dist"
+        command: http-server ./dist -p 8888
         ports:
-            - "8888:8080"
+            - "8888:8888"
         volumes:
             - .:/exileweb
-        
-        
