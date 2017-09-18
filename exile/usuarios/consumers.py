@@ -10,6 +10,7 @@ import binding
 @channel_session_user_from_http
 def ws_connect(message, pk):
     message.reply_channel.send({"accept": True})
+    print message.user.username
     Group('noti-%s' % pk).add(message.reply_channel)
     Group('noti-%s' % pk).send({
         'text': json.dumps({

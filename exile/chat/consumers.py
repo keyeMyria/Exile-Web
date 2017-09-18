@@ -29,7 +29,6 @@ def ws_connect(message):
     # Initialise their session
     message.channel_session['rooms'] = []
     miembro = get_user_or_error(message.user)
-    print miembro
     # Verificao si el usuario existe en la base de datos mongo
     Group('miembro-%s' % miembro.usuario).add(message.reply_channel)
 
@@ -92,9 +91,10 @@ def send_rooms(message):
         message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
         lita.append({"id": r.id, "grupo": r.grupo, "nombre": r.nombre, "miembros": r.list_miembros, "me": miembro.id })
     # data = json.loads(rooms.to_json())
+    print lista
     Group('miembro-%s' % miembro.usuario).send({
         'text': json.dumps({
-            'rooms': lita
+            'rooms': lista
         })
     })
 

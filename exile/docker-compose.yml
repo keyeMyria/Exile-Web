@@ -15,22 +15,11 @@ services:
       - 27017:27017
   web:
     build: .
-    command: daphne -b 0.0.0.0 -p 8000 exile.asgi:channel_layer
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/exile
     ports:
       - "8000:8000"
     links:
-      - redis
       - mongodb
-    depends_on:
-      - worker
-  worker:
-    build: .
-    volumes:
-      - .:/exile
-    command: python manage.py runworker --only-channels=http.* --only-channels=websocket
-    depends_on:
-      - redis
-    links:
       - redis

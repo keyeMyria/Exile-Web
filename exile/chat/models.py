@@ -41,9 +41,10 @@ class Room(Document):
         miembros = self.miembros
         lista = []
         for m in miembros:
-            lista.append({"id": m.id, "nombre": m.nombre, "apellidos": m.apellidos})
+            lista.append({"id": srt(m.id), "nombre": m.nombre, "apellidos": m.apellidos})
+        print "listaaaa", lista
         return lista
-        
+
     @property
     def websocket_group(self):
         """
