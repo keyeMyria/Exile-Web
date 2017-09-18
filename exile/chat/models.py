@@ -37,6 +37,14 @@ class Room(Document):
         return self.nombre or ''
 
     @property
+    def list_miembros(self):
+        miembros = self.miembros
+        lista = []
+        for m in miembros:
+            lista.append({"id": m.id, "nombre": m.nombre, "apellidos": m.apellidos})
+        return lista
+        
+    @property
     def websocket_group(self):
         """
         Returns the Channels Group that sockets should subscribe to to get sent
@@ -86,7 +94,7 @@ class Mensaje(Document):
                         Group('miembro-%s' % m.usuario).send({
                             'text': json.dumps({
                                 'type': "message",
-                                'message': "Nuevo mensaje"
+                                'message': "Nuevo mensaje de %s %s" % (document.emisor.nombre, document.emisor.apellidos)
                             })
                         })
 

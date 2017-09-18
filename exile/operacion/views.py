@@ -291,7 +291,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
     list_display = [
-     'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'), 
+     'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'),
      'completado', 'latitud', 'longitud', ('lista_completados', 'json')
     ]
     list_filter = ['fecha']
@@ -402,9 +402,9 @@ class TareasPeriodicasList(supra.SupraListView):
 class TareaList(MasterList):
     model = models.Tarea
     list_display = [
-        'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab', 
-        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 
-        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado', 
+        'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
+        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
+        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado',
         ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json'), 'latitud', 'longitud'
     ]
     search_fields = ['nombre', 'direccion', ]
@@ -603,7 +603,6 @@ class MultimediaList(supra.SupraListView):
     model = models.Multimedia
     list_display = ['id', 'tarea', 'url', 'tipo', 'fecha']
     list_filter = ['tarea']
-    paginate_by = 10
 
     def url(self, obj, row):
         if obj.archivo:

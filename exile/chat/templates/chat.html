@@ -49,8 +49,37 @@
                         $(".amigos").append('<li class="room-link" usuario-id="'+element.usuario+'">'+ element.nombre+ " "+ element.apellidos +'</li>');
                     });
                     openchat();
+                }else if(data.rooms){
+                    var rooms = data.rooms,
+                        roomdiv;
+                    rooms.forEach(function(element){
+                      console.log(element);
+                      roomdiv = $(
+                                "<div class='room' id='room-"+element.id+"' room='false' grupo='"+element.grupo+"' miembro=''>" +
+                                "<h2>" + $(this).html()+ "</h2>" +
+                                "<div class='messages'></div>" +
+                                "<form><input><button>Send</button></form>" +
+                                "</div>"
+                        );
+                        // Hook up send button to send a message
+                        roomdiv.find("form").on("submit", function () {
+                            console.log($(this).attr('room'));
+                            webSocketBridge.send({
+                                "command": "send",
+                                "room": element.id,
+                                "miembros": false,
+                                "grupo": element.false,
+                                "message": roomdiv.find("input").val()
+                            });
+                            roomdiv.find("input").val("");
+                            return false;
+                        });
+                        roomdiv.find("input").focus();
+                        $("#chats").append(roomdiv);
+                    });
                 }
                 // Handle joining
+                /*
                 if (data.join) {
                     console.log("Joining room " + data.join);
                     var roomdiv = $(
@@ -76,7 +105,7 @@
                     console.log("Leaving room " + data.leave);
                     $("#room-" + data.leave).remove();
                     // Handle getting a message
-                } else if (data.message || data.msg_type != 0) {
+                } */else if (data.message || data.msg_type != 0) {
                     console.log("mensaje: ",data);
                     var msgdiv = $("#room-" + data.room + " .messages");
                     var ok_msg = "";

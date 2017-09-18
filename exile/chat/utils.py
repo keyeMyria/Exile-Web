@@ -56,10 +56,9 @@ def get_room_or_error(room_id, receptores, grupo, user, message):
     elif receptores:
         miembros = Miembro.objects(usuario__in=receptores)
         list = []
-        list.append(miembro)
         for m in miembros:
             list.append(m)
-
+        set(list).union(miembro)
         room = Room(nombre="", grupo=grupo, miembros=list)
         room.save()
         room.websocket_group.add(message.reply_channel)

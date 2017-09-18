@@ -8,6 +8,14 @@ from .utils import get_room_or_error, catch_client_error, get_user_or_error
 from .exceptions import ClientError
 from subcripcion.models import Cuenta
 from .models import Miembro
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 ### WebSocket handling ###
 
 
@@ -21,6 +29,7 @@ def ws_connect(message):
     # Initialise their session
     message.channel_session['rooms'] = []
     miembro = get_user_or_error(message.user)
+    print miembro
     # Verificao si el usuario existe en la base de datos mongo
     Group('miembro-%s' % miembro.usuario).add(message.reply_channel)
 
@@ -43,7 +52,6 @@ def ws_disconnect(message):
     # Unsubscribe from any connected rooms
     if message.user.is_authenticated():
         Group('miembro-%s' % message.user.pk).discard(message.reply_channel)
-
     for room_id in message.channel_session.get("rooms", set()):
         try:
             room = Room.objects(id=room_id)
@@ -78,14 +86,15 @@ def send_rooms(message):
     # Verificao si el usuario existe en la base de datos mongo
     miembro = get_user_or_error(message.user)
     rooms = Room.objects(miembros__in=[miembro])
+    lista = []
     for r in rooms:
         r.websocket_group.add(message.reply_channel)
         message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
-
-    data = json.loads(rooms.to_json())
+        lita.append({"id": r.id, "grupo": r.grupo, "nombre": r.nombre, "miembros": r.list_miembros, "me": miembro.id })
+    # data = json.loads(rooms.to_json())
     Group('miembro-%s' % miembro.usuario).send({
         'text': json.dumps({
-            'rooms': data
+            'rooms': lita
         })
     })
 
