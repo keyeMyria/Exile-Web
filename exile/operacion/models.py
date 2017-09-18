@@ -101,7 +101,7 @@ class Tarea(models.Model):
 class Notificacion(models.Model):
     tarea = models.ForeignKey(Tarea)
     fecha = models.DateField(auto_now_add=True)
-        
+
     #GPS
     latitud = models.CharField(max_length=100)
     longitud = models.CharField(max_length=100)
@@ -143,7 +143,7 @@ class SubNotificacion(models.Model):
 # end class
 
 class Completado(models.Model):
-    notificacion = models.OneToOneField(Notificacion)    
+    notificacion = models.ForeignKey(Notificacion)    
 
     #GPS
     latitud = models.CharField(max_length=100)
@@ -170,13 +170,13 @@ class Multimedia(models.Model):
         (AUDIO, 'Audio')
     )
     fecha = models.DateTimeField(auto_now_add=True)
-    tarea = models.ForeignKey(Notificacion)
+    notificacion = models.ForeignKey(Notificacion)
     tipo = models.IntegerField(choices=choices)
     archivo = models.FileField()
 # end class
 
 class CompletadoSub(models.Model):
-    subnotificacion = models.OneToOneField(SubNotificacion)
+    subnotificacion = models.ForeignKey(SubNotificacion)
 
     #GPS
     latitud = models.CharField(max_length=100)
