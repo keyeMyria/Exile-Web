@@ -218,6 +218,7 @@ DATE_INPUT_FORMATS = [
 ]
 
 DATETIME_INPUT_FORMATS = [
+    '%m/%d/%Y %I:%M %p',
     '%Y-%m-%d %H:%M: %p',     # '2006-10-25 02:30 PM'
     '%Y-%m-%d %H:%M:%S',     # '2006-10-25 14:30:59'
     '%d/%m/%Y %I:%M %p',       # '10/25/06 14:30 AM'

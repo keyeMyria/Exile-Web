@@ -20,7 +20,8 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
-
+supra.SupraListView.datetime_format = '%m/%d/%Y %I:%M %p'
+supra.SupraListView.date_format = '%m/%d/%Y'
 
 class MasterList(supra.SupraListView):
     search_key = 'q'
