@@ -19,7 +19,7 @@ import json
 from exile.settings import ORIGIN
 from djcelery.models import CrontabSchedule, IntervalSchedule
 from django.contrib.sites.models import Site
-from usuarios.views import UserDetail, StackEmpleadoList
+from usuarios.views import UserDetail, EmpleadoList, GrupoList
 from datetime import datetime
 
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -291,7 +291,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
     list_display = [
-     'id', ('tarea', 'json'), 'fecha', ('subnotificaciones', 'json'),
+     'id', ('tarea', 'json'), 'fecha', ('multimedia', 'json'), ('subnotificaciones', 'json'),
      'completado', 'latitud', 'longitud', ('lista_completados', 'json')
     ]
     list_filter = ['fecha']
@@ -300,8 +300,19 @@ class NotificacionList(supra.SupraListView):
         queryset = super(NotificacionList, self).get_queryset()
         fecha_inicio = self.request.GET.get('fecha_inicio', False)
         fecha_final = self.request.GET.get('fecha_final', False)
+        esta_completado = self.request.GET.get('esta_completado', False)
         if fecha_inicio and fecha_final:
             queryset = queryset.filter(fecha__gte=fecha_inicio, fecha__lte=fecha_final)
+        # end if
+        if esta_completado:
+            queryset = queryset.extra(where=["""(
+                    SELECT NOT descompletado
+                    FROM
+                        operacion_completado
+                    WHERE notificacion_id = operacion_notificacion.id
+                    ORDER BY fecha DESC
+                    LIMIT 1) = %s """], params=(esta_completado, ))
+            print queryset.query
         # end if
         return queryset
     # end def
@@ -309,7 +320,7 @@ class NotificacionList(supra.SupraListView):
     def subnotificaciones(self, obj, row):
         class request():
             method = 'GET'
-            GET = {'subnotificacion': obj.pk}
+            GET = {'notificacion': obj.pk}
         # end class
         subtareas = SubNotificacionList(dict_only=True).dispatch(request=request())
         return json.dumps(subtareas['object_list'])
@@ -318,9 +329,14 @@ class NotificacionList(supra.SupraListView):
     def tarea(self, obj, row):
         class request():
             method = 'GET'
+            GET = {'pk': obj.tarea.pk}
+            user = self.request.user
         # end class
-        tarea = TareaDetail(dict_only=True).dispatch(request=request(), pk=obj.tarea.pk)
-        return json.dumps(tarea)
+        tareas = TareaList(dict_only=True).dispatch(request=request())
+        if len(tareas['object_list']):
+            return json.dumps(tareas['object_list'][0])
+        # end if
+        return 'null'
     # end def
 
     def lista_completados(self, obj, row):
@@ -332,6 +348,15 @@ class NotificacionList(supra.SupraListView):
         return json.dumps(completados)
     # end def
 
+    def multimedia(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'notificacion': obj.pk}
+        # end class
+        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
+        return json.dumps(multimedia['object_list'])
+    # end def
+
     def completado(self, obj, row):
         return models.Completado.objects.filter(notificacion=obj, descompletado=False).count() > 0
     # end def
@@ -339,10 +364,23 @@ class NotificacionList(supra.SupraListView):
 
 class SubNotificacionList(supra.SupraListView):
     model = models.SubNotificacion
-    list_display = ['id' ,'fecha', 'notificacion', 'subtarea', 'nombre', 'descripcion',
+    list_display = ['id' ,'fecha', 'notificacion', ('subtarea', 'json'), 'nombre', 'descripcion',
      'completado', ('lista_completados', 'json')
      ]
     list_filter = ['pk', 'notificacion']
+
+    def subtarea(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'pk': obj.subtarea.pk}
+            user = self.request.user
+        # end class
+        tareas = SubTareaList(dict_only=True).dispatch(request=request())
+        if len(tareas['object_list']):
+            return json.dumps(tareas['object_list'][0])
+        # end if
+        return 'null'
+    # end def
 
     def lista_completados(self, obj, row):
         class request():
@@ -404,8 +442,8 @@ class TareaList(MasterList):
     list_display = [
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
-        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), 'sub_complete', 'eliminado',
-        ('eliminado_por', 'json'), ('subtareas', 'json'), ('multimedia', 'json'), 'latitud', 'longitud'
+        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
+        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud'
     ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
@@ -415,8 +453,9 @@ class TareaList(MasterList):
         class request():
             method = 'GET'
             GET = {'tarea': obj.pk}
+            user = self.request.user
         # end class
-        empleados = StackEmpleadoList(dict_only=True).dispatch(request=request())
+        empleados = EmpleadoList(dict_only=True).dispatch(request=request())
         return json.dumps(empleados['object_list'])
     # end def
 
@@ -424,8 +463,22 @@ class TareaList(MasterList):
         class request():
             method = 'GET'
             GET = {'grupo': obj.grupo.pk}
+            user = self.request.user
         # end class
-        empleados = StackEmpleadoList(dict_only=True).dispatch(request=request())
+        empleados = GrupoList(dict_only=True).dispatch(request=request())
+        if len(empleados):
+            return json.dumps(empleados['object_list'][0])
+        # end if
+        return "null"
+    # end def
+
+    def empleados_grupo(self, obj, row):
+        class request():
+            method = 'GET'
+            GET = {'grupo': obj.grupo.pk}
+            user = self.request.user
+        # end class
+        empleados = EmpleadoList(dict_only=True).dispatch(request=request())
         return json.dumps(empleados['object_list'])
     # end def
 
@@ -465,14 +518,6 @@ class TareaList(MasterList):
         return json.dumps(subtareas['object_list'])
     # end def
 
-    def multimedia(self, obj, row):
-        class request():
-            method = 'GET'
-            GET = {'tarea': obj.pk}
-        # end class
-        multimedia = MultimediaList(dict_only=True).dispatch(request=request())
-        return json.dumps(multimedia['object_list'])
-    # end def
 # end class
 
 class SubTareaSupraForm(supra.SupraFormView):
@@ -601,8 +646,8 @@ class CompletadoSubList(supra.SupraListView):
 
 class MultimediaList(supra.SupraListView):
     model = models.Multimedia
-    list_display = ['id', 'tarea', 'url', 'tipo', 'fecha']
-    list_filter = ['tarea']
+    list_display = ['id', 'notificacion', 'url', 'tipo', 'fecha']
+    list_filter = ['notificacion']
 
     def url(self, obj, row):
         if obj.archivo:
