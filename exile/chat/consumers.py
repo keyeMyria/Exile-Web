@@ -28,8 +28,8 @@ def ws_connect(message):
     message.reply_channel.send({'accept': True})
     # Initialise their session
     message.channel_session['rooms'] = []
-    miembro = get_user_or_error(message.user)
     # Verificao si el usuario existe en la base de datos mongo
+    miembro = get_user_or_error(message.user)
     Group('miembro-%s' % miembro.usuario).add(message.reply_channel)
 
 # Unpacks the JSON in the received WebSocket frame and puts it onto a channel
@@ -88,10 +88,9 @@ def send_rooms(message):
     lista = []
     for r in rooms:
         r.websocket_group.add(message.reply_channel)
-        message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([r.id]))
-        lita.append({"id": r.id, "grupo": r.grupo, "nombre": r.nombre, "miembros": r.list_miembros, "me": miembro.id })
+        message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([str(r.id)]))
+        lista.append({"id": str(r.id), "grupo": r.grupo, "nombre": r.nombre, "miembros": r.list_miembros, "me": str(miembro.id) })
     # data = json.loads(rooms.to_json())
-    print lista
     Group('miembro-%s' % miembro.usuario).send({
         'text': json.dumps({
             'rooms': lista

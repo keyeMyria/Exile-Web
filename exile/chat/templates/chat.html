@@ -54,9 +54,10 @@
                         roomdiv;
                     rooms.forEach(function(element){
                       console.log(element);
+                      var user = chatUser(element.miembros, element.me, element.grupo, element.nombre);
                       roomdiv = $(
-                                "<div class='room' id='room-"+element.id+"' room='false' grupo='"+element.grupo+"' miembro=''>" +
-                                "<h2>" + $(this).html()+ "</h2>" +
+                                "<div class='room' id='room-"+element.id+"' room='false' grupo='"+element.grupo+"' miembro='"+user.miembro+"'>" +
+                                "<h2>" + user.nombre + "</h2>" +
                                 "<div class='messages'></div>" +
                                 "<form><input><button>Send</button></form>" +
                                 "</div>"
@@ -75,7 +76,9 @@
                             return false;
                         });
                         roomdiv.find("input").focus();
-                        $("#chats").append(roomdiv);
+                        if($("#room-"+element.id).length==0){
+                            $("#chats").append(roomdiv);
+                        }
                     });
                 }
                 // Handle joining
@@ -215,6 +218,33 @@
                     }*/
                 });
 
+            }
+
+            chatUser =  function(lista, id, grupo, nombre){
+                function datos(nombre, miembro){
+                    var data = {}
+                    data.nombre = nombre;
+                    data.miembro = miembro;
+                    return data;
+                }
+                var nombre;
+                if (grupo) {
+                    return datos(nombre, {});
+                }
+                else if (lista.length==1) {
+                    nombre =  ""+ lista[0].nombre +" "+ lista[0].apellidos;
+                    return datos(nombre, lista[0].id);
+                }
+                var data = lista.filter(function(element){
+                    return element.id !== id;
+                })
+                if(data.length>0){
+                    nombre = ""+ data[0].nombre +" "+ data[0].apellidos;
+                    return datos(nombre, data[0].id);
+                }
+                nombre =  ""+ lista[0].nombre +" "+ lista[0].apellidos;
+
+                return datos(nombre, lista[0].id);
             }
 
             // Helpful debugging

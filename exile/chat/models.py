@@ -4,7 +4,6 @@ from django.utils.six import python_2_unicode_compatible
 from channels import Group
 from .settings import MSG_TYPE_MESSAGE
 from django_mongoengine import Document, EmbeddedDocument, fields
-from bson import ObjectId
 import json
 import datetime
 
@@ -41,8 +40,7 @@ class Room(Document):
         miembros = self.miembros
         lista = []
         for m in miembros:
-            lista.append({"id": srt(m.id), "nombre": m.nombre, "apellidos": m.apellidos})
-        print "listaaaa", lista
+            lista.append({"id": str(m.id), "nombre": m.nombre, "apellidos": m.apellidos})
         return lista
 
     @property
