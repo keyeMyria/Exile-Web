@@ -8,13 +8,7 @@ from .utils import get_room_or_error, catch_client_error, get_user_or_error
 from .exceptions import ClientError
 from subcripcion.models import Cuenta
 from .models import Miembro
-from bson import ObjectId
 
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
 
 ### WebSocket handling ###
 
@@ -25,7 +19,8 @@ class JSONEncoder(json.JSONEncoder):
 
 @channel_session_user_from_http
 def ws_connect(message):
-    message.reply_channel.send({'accept': True})
+    context = {'accept': message.user.is_authenticated()}
+    message.reply_channel.send(context)
     # Initialise their session
     message.channel_session['rooms'] = []
     # Verificao si el usuario existe en la base de datos mongo
@@ -52,13 +47,12 @@ def ws_disconnect(message):
     if message.user.is_authenticated():
         Group('miembro-%s' % message.user.pk).discard(message.reply_channel)
     for room_id in message.channel_session.get("rooms", set()):
-        try:
-            room = Room.objects(id=room_id)
+        room = Room.objects(id=room_id).first()
             # Removes us from the room's send group. If this doesn't get run,
             # we'll get removed once our first reply message expires.
+        if room:
             room.websocket_group.discard(message.reply_channel)
-        except Room.DoesNotExist:
-            pass
+
 
 
 ### Chat channel handling ###
@@ -68,13 +62,19 @@ def send_friends(message):
     # Busco al usuario en la base de datos mongo
     miembro = get_user_or_error(message.user)
     #Busco a todas las personas relacionadas a la cuenta del usuario que se acaba de conectar
-    listaM = Miembro.objects(cuenta=miembro.cuenta).to_json()
-    data = json.loads(listaM)
+
+    miembros = Miembro.objects(cuenta=miembro.cuenta)
+    lista = []
+    for m in miembros:
+        data = {"id": str(m.id), "username": m.username, "nombre": m.nombre, "apellidos": m.apellidos, "usuario_id": m.usuario, "cuenta_id": m.cuenta }
+        lista.append(data)
+
     #Creo un agrego un grupo para la persona que se acaba de conectar, para poder enviarle la lista de usuarios
     # y las salas y los mensajes
     Group('miembro-%s' % miembro.usuario).send({
         'text': json.dumps({
-            'friends': data
+            'friends': lista,
+            'type': 'friends'
         })
     })
 
@@ -93,7 +93,8 @@ def send_rooms(message):
     # data = json.loads(rooms.to_json())
     Group('miembro-%s' % miembro.usuario).send({
         'text': json.dumps({
-            'rooms': lista
+            'rooms': lista,
+            'type': 'rooms'
         })
     })
 
@@ -103,9 +104,10 @@ def send_rooms(message):
 def chat_send(message):
     # Find the room they're sending to, check perms
     room = get_room_or_error(message["room"], message["miembros"], message["grupo"], message.user, message)
-    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
+    message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([str(room.id)]))
     # Send the message along
-    room.send_message(message["message"], message.user)
+    miembro = get_user_or_error(message.user)
+    room.send_message(message["message"], miembro)
 
 
 @channel_session_user
@@ -118,6 +120,15 @@ def notification_send(message):
         'text': json.dumps({
             "type": "notification",
             "notifications": json.loads(notification.to_json()),
-            "notification": json.loads(notification_room.to_json())
+            "notifications_room": json.loads(notification_room.to_json())
         })
     })
+
+
+"""
+ Falta por hacer los siguientes consumidores:
+ * notificacion recibida
+ * notificacion romm recibida
+ * mensaje recibido
+ * mensaje visto
+"""

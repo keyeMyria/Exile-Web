@@ -49,7 +49,7 @@ def get_room_or_error(room_id, receptores, grupo, user, message):
 
     # Find the room they requested (by ID)
     if room_id:
-        room = Room.objects(id=room_id)
+        room = Room.objects(id=room_id).first()
         if not room:
             raise ClientError("ROOM_INVALID")
 
@@ -59,7 +59,6 @@ def get_room_or_error(room_id, receptores, grupo, user, message):
         for m in miembros:
             list.append(m)
         lista = list(set(list).union([miembro]))
-        print lista
         room = Room(nombre="", grupo=grupo, miembros=lista)
         room.save()
         room.websocket_group.add(message.reply_channel)

@@ -46,7 +46,7 @@
                     console.log(friends);
                     $(".amigos").html("");
                     friends.forEach(function(element) {
-                        $(".amigos").append('<li class="room-link" usuario-id="'+element.usuario+'">'+ element.nombre+ " "+ element.apellidos +'</li>');
+                        $(".amigos").append('<li class="room-link" usuario-id="'+element.id+'">'+ element.nombre+ " "+ element.apellidos +'</li>');
                     });
                     openchat();
                 }else if(data.rooms){
@@ -56,7 +56,7 @@
                       console.log(element);
                       var user = chatUser(element.miembros, element.me, element.grupo, element.nombre);
                       roomdiv = $(
-                                "<div class='room' id='room-"+element.id+"' room='false' grupo='"+element.grupo+"' miembro='"+user.miembro+"'>" +
+                                "<div class='room' id='room-"+element.id+"' room='"+element.id+"' grupo='"+element.grupo+"' miembro='"+user.miembro+"'>" +
                                 "<h2>" + user.nombre + "</h2>" +
                                 "<div class='messages'></div>" +
                                 "<form><input><button>Send</button></form>" +
@@ -64,15 +64,17 @@
                         );
                         // Hook up send button to send a message
                         roomdiv.find("form").on("submit", function () {
-                            console.log($(this).attr('room'));
-                            webSocketBridge.send({
+                            var data = {
                                 "command": "send",
                                 "room": element.id,
                                 "miembros": false,
-                                "grupo": element.false,
+                                "grupo": element.grupo,
                                 "message": roomdiv.find("input").val()
-                            });
+                            }
+                            console.log(data);
+                            webSocketBridge.send(data);
                             roomdiv.find("input").val("");
+
                             return false;
                         });
                         roomdiv.find("input").focus();
@@ -108,9 +110,10 @@
                     console.log("Leaving room " + data.leave);
                     $("#room-" + data.leave).remove();
                     // Handle getting a message
-                } */else if (data.message || data.msg_type != 0) {
+
+                } */else if (data.type == "message" || data.msg_type != 0) {
                     console.log("mensaje: ",data);
-                    var msgdiv = $("#room-" + data.room + " .messages");
+                    var msgdiv = $("#room-" + data.mensaje.room + " .messages");
                     var ok_msg = "";
                     // msg types are defined in chat/settings.py
                     // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
@@ -118,8 +121,8 @@
                         case 0:
                             // Message
                             ok_msg = "<div class='message'>" +
-                                    "<span class='username'>" + data.username + "</span>" +
-                                    "<span class='body'>" + data.message + "</span>" +
+                                    "<span class='username'>" + data.mensaje.nombre +" "+data.mensaje.apellidos+ "</span>" +
+                                    "<span class='body'>" + data.mensaje.message + "</span>" +
                                     "</div>";
                             break;
                         case 1:
@@ -251,6 +254,7 @@
             webSocketBridge.socket.onopen = function () {
                 console.log("Connected to chat socket");
                 // Pedir amigos
+                console.log("perdir amigos");
                 webSocketBridge.send({
                     "command": "friends"
                 })
@@ -258,7 +262,6 @@
                 webSocketBridge.send({
                     "command": "rooms"
                 })
-                console.log("perdir amigos");
             };
             webSocketBridge.socket.onclose = function () {
                 console.log("Disconnected from chat socket");

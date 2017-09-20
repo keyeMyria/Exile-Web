@@ -49,20 +49,24 @@ class Room(Document):
         Returns the Channels Group that sockets should subscribe to to get sent
         messages as they are generated.
         """
-        return Group("room-%s" % self.id)
+        return Group("room-%s" % str(self.id))
 
     def send_message(self, message, user, msg_type=MSG_TYPE_MESSAGE):
         """
         Called to send a message to the room on behalf of a user.
         """
-        final_msg = {'room': str(self.id), 'message': message, 'username': user.username, 'msg_type': msg_type}
-        miembro = Miembro.objects(usuario=user.pk).first()
-        mensaje = Mensaje(mensaje=message, emisor=miembro, room=self)
+        final_msg = {'room': str(self.id), 'message': message, 'user_id': str(user.id), 'nombre': user.nombre, 'apellidos': user.apellidos, 'msg_type': msg_type}
+        mensaje = Mensaje(mensaje=message, emisor=user, room=self)
         mensaje.save()
-        # Send out the message to everyone in the room
-        self.websocket_group.send(
-            {"text": json.dumps(final_msg)}
-        )
+        self.websocket_group.send({
+        'text': json.dumps({
+            'mensaje': final_msg,
+            'type': 'message',
+            'msg_type': msg_type
+            })
+        })
+
+
 
 
 @python_2_unicode_compatible
@@ -87,12 +91,14 @@ class Mensaje(Document):
         if 'created' in kwargs:
             if kwargs['created']:
                 for m in document.room.miembros:
-                    if not m is document.miembro:
-                        notificacion = NotificationRoom.objects(miembro=m, mensaje=document.mensaje, room=document.room),
+                    if not m is document.emisor:
+                        print "entro post_save"
+                        notificacion = NotificationRoom(miembro=m, mensaje=document.mensaje, room=document.room)
                         notificacion.save()
                         Group('miembro-%s' % m.usuario).send({
                             'text': json.dumps({
-                                'type': "message",
+                                'type': "notification__room",
+                                'notificacion_id': str(notificacion.id),
                                 'message': "Nuevo mensaje de %s %s" % (document.emisor.nombre, document.emisor.apellidos)
                             })
                         })
