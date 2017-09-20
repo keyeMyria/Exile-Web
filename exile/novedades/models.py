@@ -64,7 +64,7 @@ class FotoReporte(models.Model):
         verbose_name_plural = "Fotos de reportes"
     # end class
 
-    def foto(self):
+    def imagen(self):
         if self.foto:
             url = self.foto
         else:
@@ -73,7 +73,7 @@ class FotoReporte(models.Model):
         return '<img src="/media/%s" width=50px heigth=50px/>' % (url)
     # end def
 
-    foto.allow_tags = True
+    imagen.allow_tags = True
 
     def __unicode__(self):
         return u"%s" % (self.foto, )

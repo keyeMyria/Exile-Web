@@ -102,15 +102,10 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.TipoReporte
-    list_display = ['nombre', 'id', 'servicios']
+    list_display = ['nombre', 'id',]
     search_fields = ['nombre', ]
     paginate_by = 10
 
-    def servicios(self, obj, row):
-        edit = "/novedades/tipo/form/%d/" % (obj.id)
-        delete = "/novedades/tipo/delete/%d/" % (obj.id)
-        return {'add': '/novedades/tipo/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -176,9 +171,16 @@ class FotoReporteForm(supra.SupraFormView):
 
 class FotoReporteListView(supra.SupraListView):
     list_filter = ['id', 'reporte']
-    list_display = ['url', ]
+    list_display = ['id', 'url', 'reporte']
     model = models.FotoReporte
 
+    def url(self, obj, row):
+        if obj.archivo:
+            return "http://104.236.33.228:8000/media/%s" % (obj.foto)
+        # end if
+        return None
+    # end if
+    
     @method_decorator(check_login)
     def dispatch(self, request, *args, **kwargs):
         return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
