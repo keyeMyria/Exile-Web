@@ -31,5 +31,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^foto/form/$', views.FotoReporteForm.as_view()),
     url(r'^foto/list/$', views.FotoReporteListView.as_view()),
-
+    url(r'^foto/delete/(?P<pk>\d+)/$',
+        views.FotoDeleteSupra.as_view(), name="foto_delete"),
+    url(r'^foto/delete/list/$', views.FotoListDelete, name="foto_delete_list"),
 ]

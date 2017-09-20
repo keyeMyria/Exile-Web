@@ -157,37 +157,6 @@ class ReporteForm(supra.SupraFormView):
 # end class
 
 
-class FotoReporteForm(supra.SupraFormView):
-    model = models.FotoReporte
-    response_json = False
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(FotoReporteForm, self).dispatch(request, *args, **kwargs)
-    # end def
-# end class
-
-
-class FotoReporteListView(supra.SupraListView):
-    list_filter = ['id', 'reporte']
-    list_display = ['id', 'url', 'reporte']
-    model = models.FotoReporte
-
-    def url(self, obj, row):
-        if obj.archivo:
-            return "http://104.236.33.228:8000/media/%s" % (obj.foto)
-        # end if
-        return None
-    # end if
-    
-    @method_decorator(check_login)
-    def dispatch(self, request, *args, **kwargs):
-        return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
-    # end def
-# end class
-
-
 class ReporteDeleteSupra(supra.SupraDeleteView):
     model = models.Reporte
 
@@ -206,3 +175,65 @@ class ReporteDeleteSupra(supra.SupraDeleteView):
         return HttpResponse(status=200)
     # end def
 # end class
+
+class FotoReporteForm(supra.SupraFormView):
+    model = models.FotoReporte
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoReporteForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class FotoReporteListView(supra.SupraListView):
+    list_filter = ['id', 'reporte']
+    list_display = ['id', 'url', 'reporte']
+    model = models.FotoReporte
+
+    def url(self, obj, row):
+        if obj.foto:
+            return "http://104.236.33.228:8000/media/%s" % (obj.foto)
+        # end if
+        return None
+    # end if
+
+    @method_decorator(check_login)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class FotoDeleteSupra(supra.SupraDeleteView):
+    model = models.FotoReporte
+    response_json = True
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.get_object().archivo.delete()
+        return super(FotoDeleteSupra, self).delete(request, *args, **kwargs)
+    # end def
+# end class
+
+@csrf_exempt
+@check_login
+def FotoListDelete(request):
+    if request.POST:
+        lista_ids = request.POST.getlist('foto_ids')
+        if lista_ids:
+            multimedia = models.FotoReporte.objects.filter(id__in=lista_ids)
+            multimedia.delete()
+            return HttpResponse(status=200)
+        # end if
+        return HttpResponse(json.dumps({"foto_ids": "Este campo es requerido"}),status=400, content_type="application/json")
+    # end if
+    return HttpResponse(status=200)
+# end def
