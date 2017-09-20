@@ -83,10 +83,10 @@ class Tarea(models.Model):
     fecha_ejecucion = models.DateTimeField()
     fecha_finalizacion = models.DateTimeField(null=True, blank=True)
     cron_ejecucion = models.OneToOneField(PeriodicTask, blank=True, null=True)
-    
+
     crontab = models.OneToOneField(CrontabSchedule, blank=True, null=True)
     interval = models.OneToOneField(IntervalSchedule, blank=True, null=True)
-    
+
     creator = CurrentUserField(add_only=True, related_name="created_tarea")
     fecha_edicion = models.DateTimeField(auto_now=True)
     last_editor = CurrentUserField(related_name="last_edited_tarea")
@@ -143,7 +143,7 @@ class SubNotificacion(models.Model):
 # end class
 
 class Completado(models.Model):
-    notificacion = models.ForeignKey(Notificacion)    
+    notificacion = models.ForeignKey(Notificacion)
 
     #GPS
     latitud = models.CharField(max_length=100)
@@ -173,6 +173,11 @@ class Multimedia(models.Model):
     notificacion = models.ForeignKey(Notificacion)
     tipo = models.IntegerField(choices=choices)
     archivo = models.FileField()
+
+    def delete(self, *args, **kwargs):
+        self.archivo.delete()
+        super(Multimedia, self).delete(*args, **kwargs)
+    # end def
 # end class
 
 class CompletadoSub(models.Model):

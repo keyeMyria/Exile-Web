@@ -127,43 +127,16 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 
 class ReporteListView(MasterList):
     list_filter = ['tipo', 'cliente', 'lugar', 'id', 'estado']
-    list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
-                    'descripcion', 'creatorR', 'fecha', 'estado', 'servicios']
+    list_display = ['id', 'nombre', 'tipo', 'tipo__nombre', 'cliente', 'cliente__nombre','lugar', 'lugar__nombre',
+                    'latitud', 'longitud', 'descripcion', 'creatorR', 'fecha', 'estado']
     search_fields = ['nombre', 'descripcion',
                      'tipo_nombre']
     model = models.Reporte
     paginate_by = 10
 
-    def tipoR(self, obj, row):
-        if obj.tipo:
-            return {"nombre": obj.tipo.nombre, "id": obj.tipo.id }
-        # end if
-        return {}
-    # end def
-
-    def clienteR(self, obj, row):
-        if obj.cliente:
-            return {"nombre": obj.cliente.nombre, "id": obj.cliente.id}
-        # end if
-        return {}
-    # end def
-
-    def lugarR(self, obj, row):
-        if obj.lugar:
-            return {"nombre": obj.lugar.nombre, "id": obj.lugar.id}
-        # end if
-        return {}
-    # end def
-
     def creatorR(self, obj, row):
         nombre = "%s %s" % (obj.creator.first_name, obj.creator.last_name)
         return {"username": obj.creator.username, "nombre": nombre}
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/novedades/reporte/form/%d/" % (obj.id)
-        delete = "/novedades/reporte/delete/%d/" % (obj.id)
-        return {'add': '/novedades/reporte/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
 

@@ -23,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
         FormsModule,
         ReactiveFormsModule,
         AgmCoreModule.forRoot({ apiKey: 'AIzaSyCOmN9BsyRSR0PCmX_r5H-JmvWdUQ3TlDw', libraries: ['places'] }),
-        SampleModule.forRoot({}),
+        SampleModule.forRoot(),
         AppRouteModule,
         AuthModule
     ],

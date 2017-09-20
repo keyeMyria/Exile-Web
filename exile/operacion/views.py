@@ -687,3 +687,17 @@ class MultimediaDeleteSupra(supra.SupraDeleteView):
         return super(MultimediaDeleteSupra, self).delete(request, *args, **kwargs)
     # end def
 # end class
+
+
+def MultimediaListDelete(request):
+    if request.POST:
+        lista_ids = request.POST.getlist('multi_ids')
+        if lista_ids:
+            multimedia = models.Multimedia.objects.filter(id__in=lista_ids)
+            multimedia.delete()
+            return HttpResponse(status=200)
+        # end if
+        return HttpResponse(json.dumps({"multi_ids": "Este campo es requerido"}),status=400, content_type="application/json")
+    # end if
+    return HttpResponse(status=200)
+# end def
