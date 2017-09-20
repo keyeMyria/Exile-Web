@@ -4,6 +4,7 @@ import { Menu } from 'componentex';
 import { UsuariosMenuMeta } from './usuarios/route';
 import { OperacionMenuMeta } from './operacion/route';
 import { ConfiguracionMenuMeta } from './configuracion/route';
+import { NovedadesMenuMeta } from './novedades/route';
 
 declare var $: any;
 
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
         Menu.instance.addMenu({ title: 'Inico', url: '/dashboard', icon: 'dashboard' });
         Menu.instance.addMenu({ title: 'Usuarios', icon: 'supervisor_account', children: UsuariosMenuMeta })
         Menu.instance.addMenu({ title: 'Operación', icon: 'build', children: OperacionMenuMeta })
+        Menu.instance.addMenu({ title: 'Novedades', icon: 'priority_high', children: NovedadesMenuMeta })
         Menu.instance.addMenu({ title: 'Configuración', icon: 'settings', children: ConfiguracionMenuMeta })
 
     }

@@ -688,7 +688,8 @@ class MultimediaDeleteSupra(supra.SupraDeleteView):
     # end def
 # end class
 
-
+@check_login
+@csrf_exempt
 def MultimediaListDelete(request):
     if request.POST:
         lista_ids = request.POST.getlist('multi_ids')
