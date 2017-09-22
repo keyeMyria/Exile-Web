@@ -6,7 +6,6 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { SampleModule } from 'componentex';
 import { OperacionRoutes } from './route';
 import { MaterialModule } from '@angular/material';
-import { OwlModule } from 'ngx-owl-carousel';
 
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
@@ -23,7 +22,6 @@ import { TareaListComponent } from './tareas-list/tareas-list.component';
 
 @NgModule({
     imports: [
-        OwlModule,
         FormsModule,
         CommonModule,
         SampleModule,
