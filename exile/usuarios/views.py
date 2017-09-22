@@ -10,12 +10,15 @@ from exile.decorator import check_login, get_cuenta
 from django.http import HttpResponse
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from subcripcion.models import Cliente
+from subcripcion import decorators as asp_subcrip
+from exile.settings import ORIGIN
 import forms
 import models
 import json as simplejson
-from django.contrib.auth.models import User, Group
-from subcripcion import decorators as asp_subcrip
-from exile.settings import ORIGIN
 
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -72,7 +75,43 @@ def logoutUser(request):
 def islogin(cuenta, request):
     if request.user.is_authenticated():
         if cuenta:
-            return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "cuenta": cuenta.id ,  "ws": "noti/%d/" % (cuenta.id)}), 200)
+            if cuenta.cliente.id == request.user.pk:
+                if cuenta.cliente.imagen:
+                    avatar = "/media/%s" % (cuenta.cliente.imagen)
+                else:
+                    avatar = None
+
+                url = "/usuarios/avatar/cliente/%d/" % (cuenta.cliente.id)
+                data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": "Administrador"}
+                return HttpResponse(simplejson.dumps(data), 200)
+
+            else:
+                asistente = models.Asistente.objects.filter(id=request.user.id).first()
+                if asistente:
+                    if asistente.imagen:
+                        avatar = "/media/%s" % (asistente.imagen)
+                    else:
+                        avatar = None
+
+                    url = "/usuarios/avatar/asistente/%d/" % (asistente.id)
+                    data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": "Asistente"}
+                    return HttpResponse(simplejson.dumps(data), 200)
+
+                empleado = models.Empleado.objects.filter(id=request.user.id).first()
+                if empleado:
+                    if empleado.imagen:
+                        avatar = "/media/%s" % (empleado.imagen)
+                    else:
+                        avatar = None
+
+                    if empleado.cargo:
+                        cargo = empleado.cargo.nombre
+                    else:
+                        cargo = None
+
+                    url = "/usuarios/avatar/empleado/%d/" % (empleado.id)
+                    data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": cargo}
+                    return HttpResponse(simplejson.dumps(data), 200)
         # end if
         return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name}), 200)
     # end if
@@ -359,5 +398,59 @@ class GrupoList(MasterList):
             # end class
             return lista
         return lista
+    # end def
+# end class
+
+@csrf_exempt
+@check_login
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            return HttpResponse(status=200)
+
+        errors = form.errors.items()
+        return HttpResponse(simplejson.dumps(errors),content_type='application/json', status=400)
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'usuarios/change_password.html', {
+        'form': form
+    })
+
+
+class AvatarClienteForm(supra.SupraFormView):
+    model = Cliente
+    form_class = forms.ClienteAvatar
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(AvatarClienteForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class AvatarAsistenteForm(supra.SupraFormView):
+    model = models.Asistente
+    form_class = forms.AsistenteAvatar
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(AvatarAsistenteForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class AvatarEmpleadoForm(supra.SupraFormView):
+    model = models.Empleado
+    form_class = forms.EmpleadoAvatar
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(AvatarEmpleadoForm, self).dispatch(request, *args, **kwargs)
     # end def
 # end class

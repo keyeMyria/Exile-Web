@@ -14,6 +14,7 @@ class Cliente(User):
         "Dirección", max_length=200, blank=True, null=True)
     telefono = models.CharField(
         "Teléfono", max_length=15, blank=True, null=True)
+    imagen = models.ImageField(upload_to="avatar", null=True, blank=True)
 
     class Meta:
         verbose_name = "Cliente"
