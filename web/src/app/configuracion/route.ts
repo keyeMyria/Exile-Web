@@ -6,6 +6,9 @@ import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component'
 import { ListGrupoComponent, EditGrupoComponent } from './grupo/grupo.component';
 import { CargoService } from './cargo/cargo.service';
 import { GrupoService } from './grupo/grupo.service';
+import { TipoReporteEditComponent, TipoReporteListComponent } from './tiporeporte/tiporeporte.component';
+import { TipoReporteService } from './tiporeporte/tiporeporte.service';
+
 
 export const ConfiguracionRoutes: Routes = [
     {
@@ -17,6 +20,16 @@ export const ConfiguracionRoutes: Routes = [
                         path: ':id/edit', component: TipoclienteEditComponent,
                         data: { miga: 'Editar' },
                         resolve: { item: TipoclienteService }
+                    }
+                ]
+            },
+            {
+                path: 'tipo/reporte', component: RouteComponent, data: { miga: 'Tipo de reporte' }, children: [
+                    { path: '', component: TipoReporteListComponent },
+                    {
+                        path: ':id/edit', component: TipoReporteEditComponent,
+                        data: { miga: 'Editar' },
+                        resolve: { item: TipoReporteService }
                     }
                 ]
             },
@@ -39,7 +52,8 @@ export const ConfiguracionRoutes: Routes = [
 ];
 
 export const ConfiguracionMenuMeta: MenuMeta[] = [
-    { title: 'Tipos de Cliente', url: '/configuracion/tipo/cliente' },
+    { title: 'Tipos de cliente', url: '/configuracion/tipo/cliente' },
+    { title: 'Tipos de reporte', url: '/configuracion/tipo/reporte' },
     { title: 'Cargos', url: '/configuracion/cargo', icon: 'turned_in' },
     { title: 'Grupo', url: '/configuracion/grupo', icon: 'group' },
 

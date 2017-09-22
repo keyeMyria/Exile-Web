@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
-import { ReportesListComponent } from './reportes/reportes.component';
+import { ReportesListComponent, EditReporteComponent } from './reportes/reportes.component';
 import { SampleModule } from 'componentex';
 import { ReportesService } from './reportes/reportes.service';
 import { NovedadesRoutes } from './route';
+import { TipoReporteService } from '../configuracion/tiporeporte/tiporeporte.service';
+import { ClienteService } from '../operacion/cliente/cliente.service';
+import { LugarService } from '../operacion/lugar/lugar.service';
 
 @NgModule({
     imports: [
@@ -17,9 +20,12 @@ import { NovedadesRoutes } from './route';
         DateValueAccessorModule,
         RouterModule.forChild(NovedadesRoutes)
     ],
-    declarations: [ReportesListComponent],
+    declarations: [ReportesListComponent, EditReporteComponent],
     providers: [
-        ReportesService
+        ReportesService,
+        TipoReporteService,
+        ClienteService,
+        LugarService
     ]
 })
 export class NovedadesModule { }

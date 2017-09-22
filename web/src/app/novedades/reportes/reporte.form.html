@@ -1,0 +1,55 @@
+<ex-form #f icon="report" title="Agregar reporte" [form]="form" [service]="service" [columns]="columns" [renderinputs]="renderinputs">
+    <div bottom-form class="row">
+        <div class="col-lg-12">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_tipo">Tipo</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="tipo" [form]="form" [service]="_t" [item]="_form.item" [itemVal]="itemTipo"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_tipo">Cliente</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="cliente" [form]="form" [service]="_c" [item]="_form.item" [itemVal]="itemCliente"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_tipo">Lugar</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="lugar" [form]="form" [service]="_l" [item]="_form.item" [itemVal]="itemLugar"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_Ubicacion">Ubicación</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <ex-gmap #map (coordsChange)="onCoordsChange($event)"></ex-gmap>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ex-form>

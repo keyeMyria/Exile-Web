@@ -14,6 +14,8 @@ import { CargoService } from './cargo/cargo.service';
 import { ListGrupoComponent, EditGrupoComponent } from './grupo/grupo.component';
 import { GrupoService } from './grupo/grupo.service';
 import { EmpleadoService } from '../usuarios/empleado/empleado.service';
+import { TipoReporteEditComponent, TipoReporteListComponent } from './tiporeporte/tiporeporte.component';
+import { TipoReporteService } from './tiporeporte/tiporeporte.service';
 
 @NgModule({
     imports: [
@@ -31,13 +33,16 @@ import { EmpleadoService } from '../usuarios/empleado/empleado.service';
         CargoListComponent,
         EditCargoComponent,
         ListGrupoComponent,
-        EditGrupoComponent
+        EditGrupoComponent,
+        TipoReporteEditComponent,
+        TipoReporteListComponent
     ],
     providers: [
         TipoclienteService,
         CargoService,
         GrupoService,
-        EmpleadoService
+        EmpleadoService,
+        TipoReporteService
     ]
 })
 export class ConfiguracionModule { }
