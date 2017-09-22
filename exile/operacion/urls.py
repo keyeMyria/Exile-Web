@@ -75,6 +75,7 @@ urlpatterns += [
     url(r'^multimedia/list/$', views.MultimediaList.as_view(), name="multimedia_list"),
     url(r'^multimedia/form/(?P<pk>\d+)/$', views.MultimediaSupraForm.as_view(), name="multimedia_edit"),
     url(r'^multimedia/delete/(?P<pk>\d+)/$', views.MultimediaDeleteSupra.as_view(), name="multimedia_delete"),
+    url(r'^multimedia/delete/list/$', views.MultimediaListDelete, name="multimedia_delete__list"),
 ]
 
 
@@ -92,5 +93,3 @@ urlpatterns += [
     url(r'^interval/form/(?P<pk>\d+)/$', views.IntervalScheduleSupraForm.as_view(), name="interval_edit"),
     url(r'^interval/delete/(?P<pk>\d+)/$', views.CrontabScheduleDeleteSupra.as_view(), name="interval_delete"),
 ]
-
-

@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from exile.servicios import get_cuenta
 from subcripcion.models import Cuenta
 from cuser.middleware import CuserMiddleware
+from subcripcion.models import Cliente
 
 
 class LoginForm(forms.Form):
@@ -179,5 +180,32 @@ class GrupoFormEdit(MasterEdit):
     class Meta:
         model = usuarios.Grupo
         fields = ['nombre', 'empleados', 'eliminado']
+    # end class
+# end class
+
+
+class ClienteAvatar(forms.ModelForm):
+
+    class Meta:
+        model = Cliente
+        fields = ['imagen', ]
+    # end class
+# end class
+
+
+class AsistenteAvatar(forms.ModelForm):
+
+    class Meta:
+        model = usuarios.Asistente
+        fields = ['imagen', ]
+    # end class
+# end class
+
+
+class EmpleadoAvatar(forms.ModelForm):
+
+    class Meta:
+        model = usuarios.Empleado
+        fields = ['imagen', ]
     # end class
 # end class

@@ -28,6 +28,8 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
+supra.SupraListView.datetime_format = '%m/%d/%Y %I:%M %p'
+supra.SupraListView.date_format = '%m/%d/%Y'
 
 class MasterList(supra.SupraListView):
     search_key = 'q'
@@ -291,7 +293,7 @@ class TareaDeleteSupra(supra.SupraDeleteView):
 class NotificacionList(supra.SupraListView):
     model = models.Notificacion
     list_display = [
-     'id', ('tarea', 'json'), 'fecha', ('multimedia', 'json'), ('subnotificaciones', 'json'), 
+     'id', ('tarea', 'json'), 'fecha', ('multimedia', 'json'), ('subnotificaciones', 'json'),
      'completado', 'latitud', 'longitud', ('lista_completados', 'json')
     ]
     list_filter = ['fecha']
@@ -306,11 +308,11 @@ class NotificacionList(supra.SupraListView):
         # end if
         if esta_completado:
             queryset = queryset.extra(where=["""(
-                    SELECT NOT descompletado 
-                    FROM 
+                    SELECT NOT descompletado
+                    FROM
                         operacion_completado
-                    WHERE notificacion_id = operacion_notificacion.id 
-                    ORDER BY fecha DESC 
+                    WHERE notificacion_id = operacion_notificacion.id
+                    ORDER BY fecha DESC
                     LIMIT 1) = %s """], params=(esta_completado, ))
             print queryset.query
         # end if
@@ -440,9 +442,9 @@ class TareasPeriodicasList(supra.SupraListView):
 class TareaList(MasterList):
     model = models.Tarea
     list_display = [
-        'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab', 
-        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'), 
-        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado', 
+        'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
+        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
+        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
         ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud'
     ]
     search_fields = ['nombre', 'direccion', ]
@@ -648,7 +650,6 @@ class MultimediaList(supra.SupraListView):
     model = models.Multimedia
     list_display = ['id', 'notificacion', 'url', 'tipo', 'fecha']
     list_filter = ['notificacion']
-    paginate_by = 10
 
     def url(self, obj, row):
         if obj.archivo:
@@ -686,3 +687,17 @@ class MultimediaDeleteSupra(supra.SupraDeleteView):
         return super(MultimediaDeleteSupra, self).delete(request, *args, **kwargs)
     # end def
 # end class
+@csrf_exempt
+@check_login
+def MultimediaListDelete(request):
+    if request.POST:
+        lista_ids = request.POST.getlist('multi_ids')
+        if lista_ids:
+            multimedia = models.Multimedia.objects.filter(id__in=lista_ids)
+            multimedia.delete()
+            return HttpResponse(status=200)
+        # end if
+        return HttpResponse(json.dumps({"multi_ids": "Este campo es requerido"}),status=400, content_type="application/json")
+    # end if
+    return HttpResponse(status=200)
+# end def

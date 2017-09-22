@@ -20,7 +20,8 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE ,OPTIONS"
 supra.SupraConf.body = True
-
+supra.SupraListView.datetime_format = '%m/%d/%Y %I:%M %p'
+supra.SupraListView.date_format = '%m/%d/%Y'
 
 class MasterList(supra.SupraListView):
     search_key = 'q'
@@ -101,15 +102,10 @@ class TipoDeleteSupra(supra.SupraDeleteView):
 
 class TipoList(MasterList):
     model = models.TipoReporte
-    list_display = ['nombre', 'id', 'servicios']
+    list_display = ['nombre', 'id',]
     search_fields = ['nombre', ]
     paginate_by = 10
 
-    def servicios(self, obj, row):
-        edit = "/novedades/tipo/form/%d/" % (obj.id)
-        delete = "/novedades/tipo/delete/%d/" % (obj.id)
-        return {'add': '/novedades/tipo/form/', 'edit': edit, 'delete': delete}
-    # end def
 # end class
 
 
@@ -126,43 +122,16 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 
 class ReporteListView(MasterList):
     list_filter = ['tipo', 'cliente', 'lugar', 'id', 'estado']
-    list_display = ['id', 'nombre', 'tipoR', 'clienteR', 'lugarR', 'latitud', 'longitud',
-                    'descripcion', 'creatorR', 'fecha', 'estado', 'servicios']
+    list_display = ['id', 'nombre', 'tipo', 'tipo__nombre', 'cliente', 'cliente__nombre','lugar', 'lugar__nombre',
+                    'latitud', 'longitud', 'descripcion', 'creatorR', 'fecha', 'estado']
     search_fields = ['nombre', 'descripcion',
                      'tipo_nombre']
     model = models.Reporte
     paginate_by = 10
 
-    def tipoR(self, obj, row):
-        if obj.tipo:
-            return {"nombre": obj.tipo.nombre, "id": obj.tipo.id }
-        # end if
-        return {}
-    # end def
-
-    def clienteR(self, obj, row):
-        if obj.cliente:
-            return {"nombre": obj.cliente.nombre, "id": obj.cliente.id}
-        # end if
-        return {}
-    # end def
-
-    def lugarR(self, obj, row):
-        if obj.lugar:
-            return {"nombre": obj.lugar.nombre, "id": obj.lugar.id}
-        # end if
-        return {}
-    # end def
-
     def creatorR(self, obj, row):
         nombre = "%s %s" % (obj.creator.first_name, obj.creator.last_name)
         return {"username": obj.creator.username, "nombre": nombre}
-    # end def
-
-    def servicios(self, obj, row):
-        edit = "/novedades/reporte/form/%d/" % (obj.id)
-        delete = "/novedades/reporte/delete/%d/" % (obj.id)
-        return {'add': '/novedades/reporte/form/', 'edit': edit, 'delete': delete}
     # end def
 # end class
 
@@ -188,30 +157,6 @@ class ReporteForm(supra.SupraFormView):
 # end class
 
 
-class FotoReporteForm(supra.SupraFormView):
-    model = models.FotoReporte
-    response_json = False
-
-    @method_decorator(check_login)
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(FotoReporteForm, self).dispatch(request, *args, **kwargs)
-    # end def
-# end class
-
-
-class FotoReporteListView(supra.SupraListView):
-    list_filter = ['id', 'reporte']
-    list_display = ['url', ]
-    model = models.FotoReporte
-
-    @method_decorator(check_login)
-    def dispatch(self, request, *args, **kwargs):
-        return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
-    # end def
-# end class
-
-
 class ReporteDeleteSupra(supra.SupraDeleteView):
     model = models.Reporte
 
@@ -230,3 +175,65 @@ class ReporteDeleteSupra(supra.SupraDeleteView):
         return HttpResponse(status=200)
     # end def
 # end class
+
+class FotoReporteForm(supra.SupraFormView):
+    model = models.FotoReporte
+    response_json = False
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoReporteForm, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class FotoReporteListView(supra.SupraListView):
+    list_filter = ['id', 'reporte']
+    list_display = ['id', 'url', 'reporte']
+    model = models.FotoReporte
+
+    def url(self, obj, row):
+        if obj.foto:
+            return "http://104.236.33.228:8000/media/%s" % (obj.foto)
+        # end if
+        return None
+    # end if
+
+    @method_decorator(check_login)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoReporteListView, self).dispatch(request, *args, **kwargs)
+    # end def
+# end class
+
+
+class FotoDeleteSupra(supra.SupraDeleteView):
+    model = models.FotoReporte
+    response_json = True
+
+    @method_decorator(check_login)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(FotoDeleteSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def delete(self, request, *args, **kwargs):
+        self.get_object().archivo.delete()
+        return super(FotoDeleteSupra, self).delete(request, *args, **kwargs)
+    # end def
+# end class
+
+@csrf_exempt
+@check_login
+def FotoListDelete(request):
+    if request.POST:
+        lista_ids = request.POST.getlist('foto_ids')
+        if lista_ids:
+            multimedia = models.FotoReporte.objects.filter(id__in=lista_ids)
+            multimedia.delete()
+            return HttpResponse(status=200)
+        # end if
+        return HttpResponse(json.dumps({"foto_ids": "Este campo es requerido"}),status=400, content_type="application/json")
+    # end if
+    return HttpResponse(status=200)
+# end def

@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^logout/$', views.logoutUser, name="logout"),
     url(r'^login/empleado/$', views.LoginE.as_view(), name="LoginE"),
     url(r'^is/login/$', views.islogin, name="isLogin"),
+    url(r'^change/password/$', views.change_password, name='change_password'),
 ]
 
 """
@@ -61,4 +62,15 @@ urlpatterns += [
     url(r'^grupo/list/$', views.GrupoList.as_view(), name="grupos_list"),
     url(r'^grupo/delete/(?P<pk>\d+)/$',
         views.GrupoSupraFormDelete.as_view(), name="grupos_delete"),
+]
+
+
+"""
+    Avatar
+"""
+
+urlpatterns += [
+    url(r'^avatar/cliente/(?P<pk>\d+)/$', views.AvatarClienteForm.as_view(), name="avatar_cliente"),
+    url(r'^avatar/asistente/(?P<pk>\d+)/$', views.AvatarAsistenteForm.as_view(), name="avatar_asistente"),
+    url(r'^avatar/cliente/(?P<pk>\d+)/$', views.AvatarEmpleadoForm.as_view(), name="avatar_asistente"),
 ]

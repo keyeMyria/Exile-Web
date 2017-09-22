@@ -18,9 +18,20 @@ urlpatterns = [
 """
 urlpatterns += [
     url(r'^reporte/list/$', views.ReporteListView.as_view()),
-    url(r'^foto/form/$', views.FotoReporteForm.as_view()),
     url(r'^reporte/form/$', views.ReporteForm.as_view()),
     url(r'^reporte/form/(?P<pk>\d+)/$', views.ReporteForm.as_view()),
     url(r'^reporte/delete/(?P<pk>\d+)/$',
         views.ReporteDeleteSupra.as_view(), name="reporte_delete"),
+]
+
+
+"""
+    Fotos Reporte
+"""
+urlpatterns += [
+    url(r'^foto/form/$', views.FotoReporteForm.as_view()),
+    url(r'^foto/list/$', views.FotoReporteListView.as_view()),
+    url(r'^foto/delete/(?P<pk>\d+)/$',
+        views.FotoDeleteSupra.as_view(), name="foto_delete"),
+    url(r'^foto/delete/list/$', views.FotoListDelete, name="foto_delete_list"),
 ]
