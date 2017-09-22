@@ -1,0 +1,157 @@
+$black: #202020;
+$dark-grey: #808080;
+$white: #fff;
+$light-grey: #d9d9d9;
+$purple: #B97CFC;
+$pink: #F93B69;
+$green: #B0E8E2;
+$orange: #EB8B6E;
+
+:host {
+    display: block;
+    height: 100%;
+}
+
+.header {
+    background: url("https://unsplash.it/1080/720?image=1044");
+    background-size: cover;
+    color: #fff;
+    position: relative;
+}
+
+.color-overlay {
+    padding: 3em 2em;
+    padding-right: .93em;
+    box-sizing: border-box;
+    background: rgba(123, 94, 155, 0.5);
+}
+
+.actionbutton {
+    position: absolute;
+    bottom: -25px;
+    right: 20px;
+}
+
+.day-number {
+    font-size: 60px;
+    display: inline-block;
+}
+
+.date-right {
+    display: inline-block;
+}
+
+.day-name {
+    font-size: 35px;
+    text-transform: capitalize;
+}
+
+.month {
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-top: 2px;
+}
+.no-list{
+    padding: 30px 0 0 24px;
+    font-size: 18px;
+    color: $dark-grey;
+
+    .icon{
+        margin: 0 auto;
+        font-size: 24px;
+    }
+}
+.timelinelist {
+    height: calc(100% - 156px);
+    overflow: auto;
+    ul {
+        padding: 30px 0 0 0;
+        // max-height: ;
+        margin: 0;
+        list-style: none;
+        position: relative;
+
+        &::before {
+            content: ' ';
+            height: 100%;
+            width: 1px;
+            background-color: $light-grey;
+            position: absolute;
+            top: 0;
+            left: 31px;
+            z-index: -1;
+        }
+    }
+
+    li {
+        padding-left: 24px;
+
+        &:hover, .active{
+            background-color: rgba(#555, .1)
+        }
+
+        div {
+            display: inline-block;
+            margin: 1em 0;
+            vertical-align: top;
+        }
+    }
+
+    .bullet {
+        width: 1em;
+        height: 1em;
+        box-sizing: border-box;
+        border-radius: 50%;
+        background: $white;
+        z-index: 1;
+        margin-top: 1.2em !important;
+
+        &.pink {
+            border: 2px solid $pink;
+        }
+
+        &.green {
+            border: 2px solid $green;
+        }
+
+        &.orange {
+            border: 2px solid $orange;
+        }
+    }
+
+    .time {
+        width: 23%;
+        font-size: 11px;
+        padding-top: 0.25em;
+    }
+
+    .desc {
+        width: 203px;
+        padding-right: 3px;
+    }
+
+    h3, h4{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 400;
+        margin: 0;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    h4 {
+        font-size: 11px;
+        color: red;
+    }
+
+    .people img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+}

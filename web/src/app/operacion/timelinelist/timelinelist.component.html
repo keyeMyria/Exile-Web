@@ -1,0 +1,35 @@
+<div class="header">
+    <div class="color-overlay">
+        <div class="day-number">{{fecha | date:'dd'}}</div>
+        <div class="date-right">
+            <div class="day-name">{{fecha | date:'EEEE'}}</div>
+            <div class="month">{{fecha | date:'MMMM'}} {{fecha | date:'y'}}</div>
+        </div>
+    </div>
+    <button class="actionbutton" md-fab>
+        <md-icon class="md-24" aria-label="Agregar Tarea">add</md-icon>
+    </button>
+</div>
+
+<div class="timelinelist" *ngIf="!!list && list.length > 0 ">
+    <ul>
+        <li *ngFor="let item of list" (click)="onItemClick(item.id)" [ngClass]="{'active': this.select.id === item.id}">
+            <div class="bullet green"></div>
+            <!-- <div class="time"></div> -->
+            <div class="desc">
+                <h3>{{ item.tarea.nombre }}</h3>
+                <h4>{{item.tarea.fecha_ejecucion | date:'shortTime'}} - {{item.fecha | date }} </h4>
+                <!-- <div class="people">
+                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/ashleyford/128.jpg" alt="" />
+                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg" alt="" />
+                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/mattsince87/128.jpg" alt="" />
+                </div> -->
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<div class="no-list" *ngIf="!list || list.length === 0">
+    <p>No hay tareas pendientes</p>
+</div>
