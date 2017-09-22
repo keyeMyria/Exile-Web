@@ -10,6 +10,7 @@ import { NovedadesRoutes } from './route';
 import { TipoReporteService } from '../configuracion/tiporeporte/tiporeporte.service';
 import { ClienteService } from '../operacion/cliente/cliente.service';
 import { LugarService } from '../operacion/lugar/lugar.service';
+import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { LugarService } from '../operacion/lugar/lugar.service';
         SampleModule,
         FormsModule,
         ReactiveFormsModule,
+        AgmCoreModule,
         DateValueAccessorModule,
         RouterModule.forChild(NovedadesRoutes)
     ],
@@ -25,7 +27,8 @@ import { LugarService } from '../operacion/lugar/lugar.service';
         ReportesService,
         TipoReporteService,
         ClienteService,
-        LugarService
+        LugarService,
+        GoogleMapsAPIWrapper
     ]
 })
 export class NovedadesModule { }
