@@ -423,6 +423,7 @@ def change_password(request):
 class AvatarClienteForm(supra.SupraFormView):
     model = Cliente
     form_class = forms.ClienteAvatar
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -435,6 +436,7 @@ class AvatarClienteForm(supra.SupraFormView):
 class AvatarAsistenteForm(supra.SupraFormView):
     model = models.Asistente
     form_class = forms.AsistenteAvatar
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
@@ -447,6 +449,7 @@ class AvatarAsistenteForm(supra.SupraFormView):
 class AvatarEmpleadoForm(supra.SupraFormView):
     model = models.Empleado
     form_class = forms.EmpleadoAvatar
+    response_json = False
 
     @method_decorator(check_login)
     @csrf_exempt
