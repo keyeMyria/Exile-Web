@@ -1,0 +1,13 @@
+<md-sidenav-container class="base-tarea-container" (window:resize)="onResize($event)">
+    <md-sidenav #sidenav class="base-tarea-sidenav">
+        <ng-content select="[sidenav]"></ng-content>
+    </md-sidenav>
+
+    <div class="base-tarea-sidenav-content">
+        <div class="main-content">
+            <div class="flex">
+                <ng-content select="[content]"></ng-content>
+            </div>
+        </div>
+    </div>
+</md-sidenav-container>

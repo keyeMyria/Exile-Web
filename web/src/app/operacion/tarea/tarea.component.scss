@@ -1,0 +1,74 @@
+.tareas-container,
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.tareas-sidenav-content {
+    overflow: auto;
+    .main-content {
+        padding: 0 20px;
+        min-width: 320px;
+        max-width: 800px;
+        margin: 0 auto 20px;
+        // height: 100%;
+        // align-items: center;
+        // justify-content: center;
+        // display: flex;
+    }
+}
+
+.tareas-sidenav {
+    width: 260px;
+    overflow: inherit;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+//----
+.example-card {
+    margin-bottom: 20px;
+
+    md-card-header{
+        display: flex;
+        flex-direction: row;
+        .flex{
+            flex: 1;
+        }
+    }
+}
+
+.example-header-image {
+    background-image: url("../../../assets/img/default-avatar.png");
+    background-size: cover;
+}
+//----
+.example-headers-align .mat-expansion-panel-header-description,
+.example-headers-align .mat-expansion-panel-header-title {
+    flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expansion-panel {
+    box-shadow: none !important;
+}
+
+.no-tarea{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        font-size: 30px;
+        font-family: 'Roboto' sans-serif;
+        color: #808080;
+    }
+}
+
+.cimage{
+    background: #fff no-repeat scroll center center / 80px 80px;
+}

@@ -1,3 +1,22 @@
 @import './assets/css/material-dashboard.css';
+@import './assets/js/plugins/jquery.bxslider/jquery.bxslider.css';
 @import './assets/css/demo.css';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+
+::-webkit-scrollbar{
+	width: 8px;
+	background-color: #F5F5F5;
+
+    &-track{
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 4px;
+        background-color: #F5F5F5;
+    }
+
+    &-thumb{
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #bbb;
+    }
+}

@@ -108,6 +108,8 @@ ENV/
 #angular/dist/
 **/node_modules/**
 !**/node_modules/componentex
+!**/node_modules/ngx-owl-carousel
+!**/node_modules/owl.carousel
 web/src/assets/.sass-cache
 
 #mongo data

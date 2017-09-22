@@ -36,6 +36,7 @@
                 "../node_modules/fullcalendar/dist/fullcalendar.js",
                 "../node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js",
                 "../node_modules/hammerjs/hammer.min.js",
+                "../src/assets/js/plugins/jquery.bxslider/jquery.bxslider.min.js",
                 "../src/assets/js/plugins/bootstrap-datetimepicker.js",
                 "../src/assets/js/plugins/jquery.select-bootstrap.js",
                 "../src/assets/js/plugins/jasny-bootstrap.min.js",

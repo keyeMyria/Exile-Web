@@ -93,6 +93,9 @@ export class ClienteEditComponent implements OnInit {
         ];
     }
 
+    /**
+    *nnoc hola munco
+    */
     ngOnInit() {
         this._form.back = () => {
             this._rt.navigate(['operacion/cliente']);

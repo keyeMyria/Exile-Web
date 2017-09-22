@@ -2,6 +2,9 @@ import { Routes } from '@angular/router';
 import { MenuMeta, RouteComponent } from 'componentex';
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
+import { TareaComponent } from './tarea/tarea.component';
+import { TareaListComponent } from './tareas-list/tareas-list.component';
+import { CalendarioComponent } from './calendario/calendario.component';
 
 import { ClienteService } from './cliente/cliente.service';
 import { LugarService } from './lugar/lugar.service';
@@ -29,8 +32,17 @@ export const OperacionRoutes: Routes = [
                     }
                 ]
             },
-            { path: 'tarea', component: RouteComponent, data: { miga: 'Tareas' }, children: [] },
-            { path: 'calendario', component: RouteComponent, data: { miga: 'Calendario' }, children: [] }
+            {
+                path: 'tareaday', component: RouteComponent, data: { miga: 'Tareas del Dia' }, children: [
+                    { path: '', component: TareaComponent },
+                ]
+            },
+            {
+                path: 'tarea', component: RouteComponent, data: { miga: 'Tareas' }, children: [
+                    { path: '', component: TareaListComponent },
+                ]
+            },
+            { path: 'calendario', component: CalendarioComponent, data: { miga: 'Calendario' }, children: [] }
         ]
     }
 
@@ -39,6 +51,7 @@ export const OperacionRoutes: Routes = [
 export const OperacionMenuMeta: MenuMeta[] = [
     { title: 'Clientes', url: '/operacion/cliente' },
     { title: 'Lugares de Trabajo', url: '/operacion/lugar' },
+    { title: 'Tareas del dia ', url: '/operacion/tareaday' },
     { title: 'Tareas', url: '/operacion/tarea' },
     { title: 'Calendario', url: '/operacion/calendario' }
 ];
