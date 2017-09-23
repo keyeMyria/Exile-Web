@@ -445,19 +445,69 @@ class TareaList(MasterList):
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
         ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
-        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico'
+        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico', 'minute', 'hour', 'day_of_week', 'day_of_month',
+        'month_of_year', 'period',  'every'
     ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10
 
-    def ciclico(self, obj, now):
+    def ciclico(self, obj, row):
         if obj.crontab:
             return 2
         elif obj.interval:
             return 3
         # end def
         return 1
+    # end def
+
+    def minute(self, obj, row):
+        if obj.crontab:
+            return obj.crontab.minute
+        # end if
+        return None
+    # end def
+
+    def hour(self, obj, row):
+        if obj.crontab:
+            return obj.crontab.hour
+        # end if
+        return None
+    # end def
+
+    def day_of_week(self, obj, row):
+        if obj.crontab:
+            return obj.crontab.day_of_week
+        # end if
+        return None
+    # end def
+
+    def day_of_month(self, obj, row):
+        if obj.crontab:
+            return obj.crontab.day_of_month
+        # end if
+        return None
+    # end def
+
+    def month_of_year(self, obj, row):
+        if obj.crontab:
+            return obj.crontab.month_of_year
+        # end if
+        return None
+    # end def
+
+    def period(self, obj, row):
+        if obj.interval:
+            return obj.interval.period
+        # end if
+        return None
+    # end def
+
+    def every(self, obj, row):
+        if obj.interval:
+            return obj.interval.every
+        # end if
+        return None
     # end def
 
     def empleados(self, obj, row):

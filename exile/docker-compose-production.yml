@@ -1,0 +1,32 @@
+version: "2"
+services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - 6379:6379
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+  web:
+    build: .
+    command: bash -c "daphne -b 0.0.0.0 -p 8000 exile.asgi:channel_layer"
+    volumes:
+      - .:/exile
+    ports:
+      - "8000:8000"
+    links:
+      - mongodb
+      - redis
+  worker:
+    build: .
+    command: bash -c "python manage.py runworker"
+    volumes:
+       - .:/exile
+    links:
+      - redis
