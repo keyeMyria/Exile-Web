@@ -25,7 +25,7 @@ services:
       - redis
   celery:
     build: .
-    command: python manage.py celery -A exile worker -l info
+    command: python manage.py celery -A exile beat -l info
     volumes:
       - .:/exile
     depends_on:
