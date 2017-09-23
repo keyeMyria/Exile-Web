@@ -445,11 +445,20 @@ class TareaList(MasterList):
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
         ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
-        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud'
+        ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico'
     ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
     paginate_by = 10
+
+    def ciclico(self, obj, now):
+        if obj.crontab:
+            return 2
+        elif obj.interval:
+            return 3
+        # end def
+        return 1
+    # end def
 
     def empleados(self, obj, row):
         class request():
@@ -462,26 +471,30 @@ class TareaList(MasterList):
     # end def
 
     def grupo(self, obj, row):
-        class request():
-            method = 'GET'
-            GET = {'grupo': obj.grupo.pk}
-            user = self.request.user
-        # end class
-        empleados = GrupoList(dict_only=True).dispatch(request=request())
-        if len(empleados):
-            return json.dumps(empleados['object_list'][0])
+        if obj.grupo:
+            class request():
+                method = 'GET'
+                GET = {'grupo': obj.grupo.pk}
+                user = self.request.user
+            # end class
+            empleados = GrupoList(dict_only=True).dispatch(request=request())
+            if len(empleados):
+                return json.dumps(empleados['object_list'][0])
         # end if
         return "null"
     # end def
 
     def empleados_grupo(self, obj, row):
-        class request():
-            method = 'GET'
-            GET = {'grupo': obj.grupo.pk}
-            user = self.request.user
-        # end class
-        empleados = EmpleadoList(dict_only=True).dispatch(request=request())
-        return json.dumps(empleados['object_list'])
+        if obj.grupo:
+            class request():
+                method = 'GET'
+                GET = {'grupo': obj.grupo.pk}
+                user = self.request.user
+            # end class
+            empleados = EmpleadoList(dict_only=True).dispatch(request=request())
+            return json.dumps(empleados['object_list'])
+        # end if
+        return "null"
     # end def
 
     def creator(self, obj, row):

@@ -6,7 +6,7 @@ import widgets
 from exile.servicios import get_cuenta
 from django.db.models import Q
 from cuser.middleware import CuserMiddleware
-from djcelery.models import PeriodicTask, CrontabSchedule
+from djcelery.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 from datetime import timedelta
 
 class Master(forms.ModelForm):
@@ -45,11 +45,39 @@ class MasterEdit(forms.ModelForm):
 # end class
 
 class TareaFormBase(forms.ModelForm):
+    PERIODS = (
+        ('days', 'Dias'),
+        ('hours', 'Horas'),
+        ('minutes', 'Minutos'),
+        ('seconds', 'Segundos'),
+        ('microseconds', 'Microsegundos')
+    )
+
+    TIPO_C = (
+        (1, 'No ciclico'),
+        (2, 'Crontab'),
+        (3, 'Interval')
+    )
+    minute = forms.CharField(label="Minutos", required=False)
+    hour = forms.CharField(label="Horas", required=False)
+    day_of_week = forms.CharField(label="Dias de la semana", required=False)
+    day_of_month = forms.CharField(label="Dia del mes", required=False)
+    month_of_year = forms.CharField(label="Mes del año", required=False)
+    period = forms.CharField(label="Periodo" ,widget=forms.Select(choices=PERIODS), required=False)
+    every = forms.IntegerField(label="Cada cuanto", required=False)
+    ciclico = forms.IntegerField(widget=forms.Select(choices=TIPO_C), required=False)
 
     class Meta:
         model = models.Tarea
-        exclude = []
+        exclude = ['cuenta', 'cron_ejecucion', 'crontab', 'interval', 'eliminado', 'eliminado_por']
     # end class
+
+    def clean(self):
+        if get_cuenta():
+            return super(TareaFormBase, self).clean()
+        # end if
+        raise forms.ValidationError("Este usuario no esta asociado a una cuenta")
+    # end def
 
     @staticmethod
     def get_tareas_periodicas(fecha_inicio, fecha_final):
@@ -68,12 +96,12 @@ class TareaFormBase(forms.ModelForm):
                     *, '%(fecha)s'::date - tarea.fecha_ejecucion::date as _day_
                     FROM operacion_tarea as tarea
                     JOIN djcelery_intervalschedule as inte
-                    ON 
+                    ON
                         tarea.interval_id = inte.id
                     AND
                         tarea.fecha_ejecucion <= '%(fecha)s'
                     AND (
-                        CASE 
+                        CASE
                             WHEN inte.period = 'days' THEN
                                 '%(fecha)s'::date - tarea.fecha_ejecucion::date
                             WHEN inte.period = 'weeks' THEN
@@ -87,7 +115,7 @@ class TareaFormBase(forms.ModelForm):
                     )::int %(percent)s inte.every = 0""" % {
                     'fecha': strfecha,
                     'percent': '%%'
-                    } 
+                    }
 
             intervals = models.Tarea.objects.raw(
                 sql
@@ -142,8 +170,39 @@ class MultimediaForm(forms.ModelForm):
 # end class
 
 class TareaForm(TareaFormBase):
+
     def save(self, commit=True):
-        obj = super(TareaForm, self).save(commit=True)
+        obj = super(TareaForm, self).save(commit=False)
+        if get_cuenta():
+            obj.cuenta = get_cuenta()
+            obj.save()
+
+
+        ciclo = self.cleaned_data.get('ciclico', False)
+        if ciclo:
+            if ciclo == 2:
+                minute = self.cleaned_data.get('minute', '')
+                hour = self.cleaned_data.get('hour', '')
+                day_of_week = self.cleaned_data.get('day_of_week', '')
+                day_of_month = self.cleaned_data.get('day_of_month', '')
+                month_of_year = self.cleaned_data.get('month_of_year', '')
+                crontab = CrontabSchedule.objects.create(
+                    minute = minute,
+                    hour = hour,
+                    day_of_week = day_of_week,
+                    day_of_month = day_of_month,
+                    month_of_year = month_of_year
+                )
+                obj.crontab = crontab
+            elif ciclo == 3:
+                period = self.cleaned_data.get('period', '')
+                every = self.cleaned_data.get('every', 1)
+                interval = IntervalSchedule.objects.create(
+                    every = every,
+                    period = period
+                )
+                obj.interval = interval
+
         months = (obj.fecha_ejecucion.year - obj.fecha_edicion.year) * 12 + obj.fecha_ejecucion.month - obj.fecha_edicion.month
         crontab = CrontabSchedule.objects.create(
             minute = '0',
@@ -160,15 +219,101 @@ class TareaForm(TareaFormBase):
             expires = obj.fecha_ejecucion
         )
         obj.save()
+
         return obj
     # end def
 # end class
 
 class TareaFormEdit(TareaFormBase, MasterEdit):
+
+    def __init__(self, *args, **kwargs):
+        super(TareaFormEdit, self).__init__(*args, **kwargs)
+        if hasattr(self, 'instance') and self.instance.pk:
+            if self.instance.crontab:
+                self.fields['minute'].initial = self.instance.crontab.minute
+                self.fields['hour'].initial = self.instance.crontab.hour
+                self.fields['day_of_week'].initial = self.instance.crontab.day_of_week
+                self.fields['day_of_month'].initial = self.instance.crontab.day_of_month
+                self.fields['month_of_year'].initial = self.instance.crontab.month_of_year
+                self.fields['ciclico'].initial = 2
+            elif self.instance.interval:
+                self.fields['period'].initial = self.instance.interval.period
+                self.fields['every'].initial = self.instance.interval.every
+                self.fields['ciclico'].initial = 3
+
     def save(self, commit=True):
         obj = super(TareaFormEdit, self).save(commit=True)
         months = (obj.fecha_ejecucion.year - obj.fecha_edicion.year) * 12 + obj.fecha_ejecucion.month - obj.fecha_edicion.month
-        
+        ciclo = self.cleaned_data.get('ciclico', False)
+        print ciclo
+        if ciclo:
+            if ciclo == 2:
+                minute = self.cleaned_data.get('minute', '')
+                hour = self.cleaned_data.get('hour', '')
+                day_of_week = self.cleaned_data.get('day_of_week', '')
+                day_of_month = self.cleaned_data.get('day_of_month', '')
+                month_of_year = self.cleaned_data.get('month_of_year', '')
+                if obj.crontab:
+                    crontab = CrontabSchedule.objects.filter(id=obj.crontab.pk).first()
+                    if crontab:
+                        crontab.minute = minute
+                        crontab.hour = hour
+                        crontab.day_of_week = day_of_week
+                        crontab.day_of_month = day_of_month
+                        crontab.month_of_year = month_of_year
+                        crontab.save()
+                    # end if
+                else:
+                    crontab = CrontabSchedule.objects.create(
+                        minute = minute,
+                        hour = hour,
+                        day_of_week = day_of_week,
+                        day_of_month = day_of_month,
+                        month_of_year = month_of_year
+                    )
+                    obj.crontab = crontab
+                # end if
+                if obj.interval:
+                    interval = IntervalSchedule.objects.filter(id=obj.interval.pk).first()
+                    obj.interval = None
+                    interval.delete()
+                # end if
+            elif ciclo == 3:
+                period = self.cleaned_data.get('period', '')
+                every = self.cleaned_data.get('every', 1)
+                if obj.interval:
+                    interval = IntervalSchedule.objects.filter(id=obj.interval.pk).first()
+                    if interval:
+                        interval.period = period
+                        interval.every = every
+                        interval.save()
+                    # end if
+
+                else:
+                    interval = IntervalSchedule.objects.create(
+                        every = every,
+                        period = period
+                    )
+                    obj.interval = interval
+                # end if
+                if obj.crontab:
+                    crontab = CrontabSchedule.objects.filter(id=obj.crontab.pk).first()
+                    obj.crontab = None
+                    crontab.delete()
+                # end if
+            elif ciclo == 1:
+                if obj.crontab:
+                    crontab = CrontabSchedule.objects.filter(id=obj.crontab.pk).first()
+                    obj.crontab = None
+                    crontab.delete()
+
+                elif obj.interval:
+                    interval = IntervalSchedule.objects.filter(id=obj.interval.pk).first()
+                    obj.interval = None
+                    interval.delete()
+                # end if
+            # end if
+        #end if
         CrontabSchedule.objects.filter(pk=obj.cron_ejecucion.crontab.pk).update(
             minute = '0',
             hour = '7',
@@ -183,7 +328,7 @@ class TareaFormEdit(TareaFormBase, MasterEdit):
             expires = obj.fecha_ejecucion
         )
 
-        return obj
+        return obj.save()
     # end def
 # end class
 
@@ -191,7 +336,7 @@ class SubTareaFormBase(forms.ModelForm):
 
     class Meta:
         model = models.SubTarea
-        fields = ['tarea', 'nombre', 'descripcion'] 
+        fields = ['tarea', 'nombre', 'descripcion']
     # end class
 
 # end class

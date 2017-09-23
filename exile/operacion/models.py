@@ -69,8 +69,8 @@ class Tarea(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField("Descripción", max_length=400)
     #GPS
-    latitud = models.CharField(max_length=100)
-    longitud = models.CharField(max_length=100)
+    latitud = models.CharField(max_length=100, null=True, blank=True)
+    longitud = models.CharField(max_length=100, null=True, blank=True)
 
     lugar = models.ForeignKey(Lugar, blank=True, null=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True)
