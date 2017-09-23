@@ -333,7 +333,7 @@ class EmpleadoList(MasterList):
                     'imagen', 'id', 'cuenta']
     search_fields = ['first_name', 'last_name',
                      'identificacion', 'email', 'username']
-    list_filter = ['pk', 'grupo']
+    list_filter = ['pk', 'grupo', 'tarea']
     paginate_by = 10
 # end class
 

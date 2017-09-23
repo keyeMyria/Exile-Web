@@ -206,7 +206,7 @@ class TareaForm(TareaFormBase):
         months = (obj.fecha_ejecucion.year - obj.fecha_edicion.year) * 12 + obj.fecha_ejecucion.month - obj.fecha_edicion.month
         crontab = CrontabSchedule.objects.create(
             minute = '0',
-            hour = '7',
+            hour = '*',
             day_of_week = '*',
             day_of_month = '%d' % (obj.fecha_ejecucion.day, ),
             month_of_year = '*/%d' % (months, )
@@ -316,7 +316,7 @@ class TareaFormEdit(TareaFormBase, MasterEdit):
         #end if
         CrontabSchedule.objects.filter(pk=obj.cron_ejecucion.crontab.pk).update(
             minute = '0',
-            hour = '7',
+            hour = '*',
             day_of_week = '*',
             day_of_month = '%d' % (obj.fecha_ejecucion.day, ),
             month_of_year = '*/%d' % (months, )

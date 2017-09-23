@@ -20,6 +20,6 @@ RUN pip install -r dependencias.txt
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # RUN /bin/sh -c python manage.py celery -A picha worker -l info
-RUN /bin/sh -c python manage.py celery -A picha beat -l info
+# RUN /bin/sh -c python manage.py celery -A picha beat -l info
 
 #To REmove Zombies use: docker rmi $(docker images -f "dangling=true" -q)

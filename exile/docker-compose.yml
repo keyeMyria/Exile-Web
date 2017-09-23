@@ -23,3 +23,12 @@ services:
     links:
       - mongodb
       - redis
+  celery:
+    build: .
+    command: python manage.py celery -A exile beat -l info
+    volumes:
+      - .:/exile
+    depends_on:
+        - web
+    links:
+        - redis
