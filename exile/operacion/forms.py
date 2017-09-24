@@ -8,6 +8,7 @@ from django.db.models import Q
 from cuser.middleware import CuserMiddleware
 from djcelery.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 from datetime import timedelta
+import datetime
 
 class Master(forms.ModelForm):
 
@@ -77,6 +78,34 @@ class TareaFormBase(forms.ModelForm):
             return super(TareaFormBase, self).clean()
         # end if
         raise forms.ValidationError("Este usuario no esta asociado a una cuenta")
+    # end def
+
+    def clean_fecha_ejecucion(self):
+        fecha = self.cleaned_data['fecha_ejecucion']
+        if not fecha:
+            raise forms.ValidationError("Este campo es requerido")
+        # end if
+        hoy = datetime.datetime.today()
+        if hasattr(self, 'instance') and self.instance.pk:
+            if not self.instance.fecha_ejecucion == fecha:
+                if fecha <= hoy:
+                    raise forms.ValidationError("La fecha de ejecución no pueden ser días anteriores o iguales a la fecha actual")
+                # end if
+        else:
+            if fecha <= hoy:
+                raise forms.ValidationError("La fecha de ejecución no pueden ser días anteriores o iguales a la fecha actual")
+            # end if
+        return fecha
+    # end def
+
+    def clean_fecha_finalizacion(self):
+        fin = self.cleaned_data['fecha_finalizacion']
+        inicio = self.cleaned_data.get('fecha_ejecucion', False)
+        if inicio and fin:
+            if inicio > fin:
+                raise forms.ValidationError("La fecha de finalización debe ser mayor a la de ejecución")
+
+        return fin
     # end def
 
     @staticmethod
