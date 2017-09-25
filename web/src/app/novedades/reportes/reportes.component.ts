@@ -31,8 +31,8 @@ export class ReportesListComponent {
         {
             orderable: false,
             searchable: false,
-            data: 'creatorR',
-            render: data => data.nombre
+            data: 'creator',
+            render: data => `${data.first_name} ${data.last_name}`
         },
         { data: 'fecha' }
 
