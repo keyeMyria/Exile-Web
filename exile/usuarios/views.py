@@ -42,7 +42,7 @@ class UserDetail(supra.SupraDetailView):
         if asistente:
             return "/media/%s" % (asistente.imagen)
         # end if
-        empelado = models.Empleado.objects.filter(id=obj["id"]).first()
+        empleado = models.Empleado.objects.filter(id=obj["id"]).first()
         if empleado:
             return "/media/%s" % (empleado.imagen)
 

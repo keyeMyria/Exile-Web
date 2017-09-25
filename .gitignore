@@ -119,4 +119,5 @@ exile/data
 exile/media
 
 #Celerity
-exile/celerybeat.pid 
+exile/celerybeat.pid
+celerybeat.pid 
