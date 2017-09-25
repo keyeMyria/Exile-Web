@@ -446,7 +446,7 @@ class TareaList(MasterList):
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
         ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
         ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico', 'minute', 'hour', 'day_of_week', 'day_of_month',
-        'month_of_year', 'period',  'every'
+        'month_of_year', 'period',  'every', 'cliente__nombre', 'lugar__nombre'
     ]
     search_fields = ['nombre', 'direccion', ]
     list_filter = ['pk', ]
