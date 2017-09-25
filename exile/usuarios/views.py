@@ -31,13 +31,13 @@ supra.SupraConf.body = True
 
 class UserDetail(supra.SupraDetailView):
     model = User
-    list_display  = ['id', 'first_name', 'last_name', 'username', 'avarar']
+    list_display  = ['id', 'first_name', 'last_name', 'email', 'username', 'avarar']
 
     def avatar(self, obj, row):
         if hasattr(obj, 'empleado'):
-            return obj.empleado.imagen
+            return "/media/%s" % (obj.empleado.imagen)
         if hasattr(obj, 'asistente'):
-            return obj.asistente.imagen
+            return "/media/%s"% (obj.asistente.imagen)
         # end if
         return 'null'
     # end def

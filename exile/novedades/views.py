@@ -12,6 +12,8 @@ from usuarios import models as usuarios
 from exile.decorator import check_login, get_cuenta
 from exile.settings import ORIGIN
 from django.db.models import Q
+from usuarios.views import UserDetail
+import json
 
 # Create your views here.
 supra.SupraConf.ACCECC_CONTROL["allow"] = True
@@ -123,15 +125,18 @@ class FotoReporteInlineForm(supra.SupraInlineFormView):
 class ReporteListView(MasterList):
     list_filter = ['tipo', 'cliente', 'lugar', 'id', 'estado']
     list_display = ['id', 'nombre', 'tipo', 'tipo__nombre', 'cliente', 'cliente__nombre','lugar', 'lugar__nombre',
-                    'latitud', 'longitud', 'descripcion', 'creatorR', 'fecha', 'estado']
+                    'latitud', 'longitud', 'descripcion', ('creator', 'json'), 'fecha', 'estado']
     search_fields = ['nombre', 'descripcion',
                      'tipo_nombre']
     model = models.Reporte
     paginate_by = 10
 
-    def creatorR(self, obj, row):
-        nombre = "%s %s" % (obj.creator.first_name, obj.creator.last_name)
-        return {"username": obj.creator.username, "nombre": nombre}
+    def creator(self, obj, row):
+        class request():
+            method = 'GET'
+        # end class
+        creator = UserDetail(dict_only=True).dispatch(request=request(), pk=obj.creator.pk)
+        return json.dumps(creator)
     # end def
 # end class
 
