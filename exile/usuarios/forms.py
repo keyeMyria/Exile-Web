@@ -8,6 +8,7 @@ from exile.servicios import get_cuenta
 from subcripcion.models import Cuenta
 from cuser.middleware import CuserMiddleware
 from subcripcion.models import Cliente
+from django.contrib.auth.models import User
 
 
 class LoginForm(forms.Form):
@@ -16,7 +17,8 @@ class LoginForm(forms.Form):
 # end class
 
 
-class MasterU(UserCreationForm):
+class MasterU(forms.ModelForm):
+    identificacion2 = forms.CharField(widget=forms.NumberInput() , label="Verificar número identificación")
 
     def clean(self):
         if get_cuenta():
@@ -30,6 +32,8 @@ class MasterU(UserCreationForm):
         usuario = super(MasterU, self).save(commit)
         if get_cuenta():
             usuario.cuenta = get_cuenta()
+            usuario.username = usuario.identificacion
+            usuario.set_password(raw_password=usuario.identificacion)
             usuario.save()
         # end if
         return usuario
@@ -90,11 +94,55 @@ class AsistenteForm(MasterU):
             '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
     # end def
 
+    def clean_identificacion(self):
+        identificacion = self.cleaned_data['identificacion']
+        if identificacion:
+            user = User.objects.filter(username=identificacion).first()
+            medico = usuarios.Asistente.objects.filter(identificacion=identificacion).first()
+            if hasattr(self, 'instance') and self.instance.pk:
+                if user.id != self.instance.id:
+                    raise forms.ValidationError('Ya existe un usuario con este username')
+                # end if
+                if medico != self.instance:
+                    raise forms.ValidationError('Ya existe un usuario con esta identificación')
+                # end if
+                return identificacion
+            else:
+                if user:
+                    raise forms.ValidationError('Ya existe un usuario con este username')
+                # end if
+                if medico:
+                    raise forms.ValidationError('Ya existe un usuario con esta identificación')
+                # end if
+                return identificacion
+        # end if
+        raise forms.ValidationError('Este campo es requerido')
+    # end def
+
+    def clean_identificacion2(self):
+        identificacion = self.cleaned_data.get('identificacion', False)
+        identificacion2 = self.cleaned_data.get('identificacion2', False)
+        if identificacion2:
+            if identificacion2 == identificacion:
+                return identificacion
+            else:
+                raise forms.ValidationError("Los números de identificación no coinciden")
+            # end if
+        else:
+            raise forms.ValidationError("Este campo es requerido")
+        # end if
+    # end def
+
     class Meta:
         model = usuarios.Asistente
-        fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name',
-                  'identificacion', 'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
-
+        fields = ['email', 'first_name', 'last_name', 'identificacion', 'identificacion2',
+                    'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen']
+        widgets = {
+            'identificacion': forms.NumberInput(),
+            'telefono': forms.NumberInput(),
+            'fijo': forms.NumberInput()
+        }
+    # end class
 # end class
 
 
@@ -109,7 +157,7 @@ class AsistenteFormEdit(MasterEdit):
 
     class Meta:
         model = usuarios.Asistente
-        fields = ['username', 'email', 'first_name', 'last_name', 'identificacion',
+        fields = ['email', 'first_name', 'last_name', 'identificacion',
                   'fecha_nacimiento', 'direccion', 'telefono', 'fijo', 'imagen', 'eliminado']
     # end class
 # end class
@@ -141,11 +189,54 @@ class EmpleadoForm(MasterU):
             '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y')
     # end def
 
+    def clean_identificacion(self):
+        identificacion = self.cleaned_data['identificacion']
+        if identificacion:
+            user = User.objects.filter(username=identificacion).first()
+            medico = usuarios.Empleado.objects.filter(identificacion=identificacion).first()
+            if hasattr(self, 'instance') and self.instance.pk:
+                if user.id != self.instance.id:
+                    raise forms.ValidationError('Ya existe un usuario con este username')
+                # end if
+                if medico != self.instance:
+                    raise forms.ValidationError('Ya existe un usuario con esta identificación')
+                # end if
+                return identificacion
+            else:
+                if user:
+                    raise forms.ValidationError('Ya existe un usuario con este username')
+                # end if
+                if medico:
+                    raise forms.ValidationError('Ya existe un usuario con esta identificación')
+                # end if
+                return identificacion
+        # end if
+        raise forms.ValidationError('Este campo es requerido')
+    # end def
+
+    def clean_identificacion2(self):
+        identificacion = self.cleaned_data.get('identificacion', False)
+        identificacion2 = self.cleaned_data.get('identificacion2', False)
+        if identificacion2:
+            if identificacion2 == identificacion:
+                return identificacion
+            else:
+                raise forms.ValidationError("Los números de identificación no coinciden")
+            # end if
+        else:
+            raise forms.ValidationError("Este campo es requerido")
+        # end if
+    # end def
+
     class Meta:
         model = usuarios.Empleado
-        fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name',
-                  'identificacion', 'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen']
-
+        fields = ['email', 'first_name', 'last_name', 'identificacion', 'fecha_nacimiento',
+                    'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen']
+        widgets = {
+            'identificacion': forms.NumberInput(),
+            'telefono': forms.NumberInput(),
+            'fijo': forms.NumberInput()
+        }
 # end class
 
 
@@ -160,7 +251,7 @@ class EmpleadoFormEdit(MasterEdit):
 
     class Meta:
         model = usuarios.Empleado
-        fields = ['username', 'email', 'first_name', 'last_name', 'identificacion',
+        fields = ['email', 'first_name', 'last_name', 'identificacion',
                   'fecha_nacimiento', 'fecha_ingreso', 'fecha_retiro', 'cargo', 'direccion', 'telefono', 'fijo', 'imagen', 'eliminado']
     # end class
 # end class
