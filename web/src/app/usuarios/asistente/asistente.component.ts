@@ -11,6 +11,7 @@ declare var $: any;
         [form]="form"
         [service]="service"
         [columns]="columns"
+        [debug]="debug"
         [renderinputs]="renderinputs"></ex-form>`
 })
 export class AsistenteEditComponent implements OnInit {
@@ -20,17 +21,16 @@ export class AsistenteEditComponent implements OnInit {
     renderinputs: RenderInput[];
     service = this._as;
     deleteable = false;
+    debug = true;
     @ViewChild('f') private _form: FormComponent;
 
     constructor(private _fb: FormBuilder, private _as: AsistenteService, private _rt: Router) {
         this.form = this._fb.group({
-            username: ['', [Validators.required, Validators.maxLength(150)]],
-            password1: ['', [/*Validators.required*/]],
-            password2: ['', [/*Validators.required*/]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
             first_name: ['', [Validators.maxLength(30), Validators.required]],
             last_name: ['', [Validators.maxLength(30), Validators.required]],
             identificacion: ['', [Validators.maxLength(120), Validators.required]],
+            identificacion2: ['', [Validators.maxLength(120)]],
             fecha_nacimiento: ['', Validators.required],
             direccion: ['', [Validators.maxLength(120)]],
             telefono: ['', [Validators.maxLength(15)]],
@@ -39,13 +39,11 @@ export class AsistenteEditComponent implements OnInit {
         });
         this.columns = ['col1', 'col2'];
         this.renderinputs = [
-            { column: 'col2', title: 'Nombre de Usuario', type: 'text', name: 'username' },
-            { column: 'col2', title: 'Contraseña', type: 'password', name: 'password1', noitem: true },
-            { column: 'col2', title: 'Confirmar contraseña', type: 'password', name: 'password2', noitem: true },
             { column: 'col2', title: 'Correo', type: 'email', name: 'email' },
             { column: 'col1', title: 'Nombre', type: 'text', name: 'first_name' },
             { column: 'col1', title: 'Apellido', type: 'text', name: 'last_name' },
-            { column: 'col1', title: 'Identificación', type: 'number', name: 'identificacion' },
+            { column: 'col2', title: 'Identificación', type: 'number', name: 'identificacion' },
+            { column: 'col2', title: 'Confirmar identificación', type: 'number', name: 'identificacion2', noitem: true },
             { column: 'col1', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
             { column: 'col1', title: 'Dirección', type: 'text', name: 'direccion' },
             { column: 'col1', title: 'Celular', type: 'text', name: 'telefono' },
@@ -94,7 +92,8 @@ export class AsistenteListComponent {
         { data: 'last_name' },
         { data: 'identificacion' },
         { data: 'email' },
-        { data: 'telefono' }
+        { data: 'telefono' },
+        { data: 'fecha_nacimiento' }
     ];
 
     constructor(private _as: AsistenteService) { }

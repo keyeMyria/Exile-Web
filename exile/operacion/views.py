@@ -444,7 +444,7 @@ class TareaList(MasterList):
     list_display = [
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
         'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
-        ('creator', 'json'), ('last_editor', 'json'), ('grupo', 'json'), ('empleados_grupo', 'json'), 'sub_complete', 'eliminado',
+        ('creator', 'json'), ('last_editor', 'json'), 'grupo', 'grupo__nombre', 'sub_complete', 'eliminado',
         ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico', 'minute', 'hour', 'day_of_week', 'day_of_month',
         'month_of_year', 'period',  'every', 'cliente__nombre', 'lugar__nombre'
     ]
@@ -511,6 +511,14 @@ class TareaList(MasterList):
     # end def
 
     def empleados(self, obj, row):
+        empleados = usuarios.Empleado.objects.filter(tarea=obj.pk)
+        lista = []
+        for e in empleados:
+            lista.append(e.id)
+        # end for
+        return json.dumps(lista)
+    """
+    def empleados(self, obj, row):
         class request():
             method = 'GET'
             GET = {'tarea': obj.pk}
@@ -519,6 +527,7 @@ class TareaList(MasterList):
         empleados = EmpleadoList(dict_only=True).dispatch(request=request())
         return json.dumps(empleados['object_list'])
     # end def
+
 
     def grupo(self, obj, row):
         if obj.grupo:
@@ -546,6 +555,7 @@ class TareaList(MasterList):
         # end if
         return "null"
     # end def
+    """
 
     def creator(self, obj, row):
         class request():

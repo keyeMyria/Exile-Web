@@ -19,13 +19,11 @@ export class EditEmpleadoComponent implements OnInit {
 
     constructor(private _fb: FormBuilder, private _as: EmpleadoService, public _c: CargoService, private _rt: Router) {
         this.form = this._fb.group({
-            username: ['', [Validators.required, Validators.maxLength(150)]],
-            password1: ['', [/*Validators.required*/]],
-            password2: ['', [/*Validators.required*/]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
             first_name: ['', [Validators.maxLength(30), Validators.required]],
             last_name: ['', [Validators.maxLength(30), Validators.required]],
             identificacion: ['', [Validators.maxLength(120), Validators.required]],
+            identificacion2: ['', [Validators.maxLength(120)]],
             fecha_nacimiento: ['', Validators.required],
             fecha_ingreso: ['',],
             fecha_retiro: ['',],
@@ -37,12 +35,10 @@ export class EditEmpleadoComponent implements OnInit {
         });
         this.columns = ['col1', 'col2'];
         this.renderinputs = [
-            { column: 'col1', title: 'Nombre de Usuario', type: 'text', name: 'username' },
-            { column: 'col2', title: 'Contraseña', type: 'password', name: 'password1', noitem: true },
-            { column: 'col2', title: 'Confirmar contraseña', type: 'password', name: 'password2', noitem: true },
             { column: 'col1', title: 'Nombre', type: 'text', name: 'first_name' },
             { column: 'col1', title: 'Apellido', type: 'text', name: 'last_name' },
             { column: 'col1', title: 'Identificación', type: 'text', name: 'identificacion' },
+            { column: 'col1', title: 'Confirmar identificación', type: 'number', name: 'identificacion2', noitem: true },
             { column: 'col1', title: 'Correo', type: 'email', name: 'email' },
             { column: 'col2', title: 'Fecha de nacimiento', type: 'text', name: 'fecha_nacimiento', class: 'datepicker' },
             { column: 'col2', title: 'Fecha de ingreso', type: 'text', name: 'fecha_ingreso', class: 'datepicker' },

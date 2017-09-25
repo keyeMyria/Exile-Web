@@ -27,6 +27,7 @@ supra.SupraConf.ACCECC_CONTROL["credentials"] = "true"
 supra.SupraConf.ACCECC_CONTROL["headers"] = "origin, content-type, accept"
 supra.SupraConf.ACCECC_CONTROL["methods"] = "POST, GET, PUT, DELETE, OPTIONS"
 supra.SupraConf.body = True
+supra.SupraListView.date_format = '%m/%d/%Y'
 
 
 class UserDetail(supra.SupraDetailView):
@@ -45,7 +46,7 @@ class UserDetail(supra.SupraDetailView):
         empleado = models.Empleado.objects.filter(id=obj["id"]).first()
         if empleado:
             return "/media/%s" % (empleado.imagen)
-
+        # end if
         return None
     # end def
 # end class
