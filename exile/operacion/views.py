@@ -443,7 +443,7 @@ class TareaList(MasterList):
     model = models.Tarea
     list_display = [
         'id', 'fecha_ejecucion', 'fecha_finalizacion', 'interval', 'crontab',
-        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', 'empleados',
+        'cuenta', 'nombre', 'descripcion', 'lugar', 'cliente', ('empleados', 'json'),
         ('creator', 'json'), ('last_editor', 'json'), 'grupo', 'grupo__nombre', 'sub_complete', 'eliminado',
         ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico', 'minute', 'hour', 'day_of_week', 'day_of_month',
         'month_of_year', 'period',  'every', 'cliente__nombre', 'lugar__nombre'
