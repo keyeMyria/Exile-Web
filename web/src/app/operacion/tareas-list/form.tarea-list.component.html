@@ -1,0 +1,119 @@
+<!-- <ex-card title="Tareas" icon="assignment">
+    <pre>form: {{form.value | json}}</pre>
+    <form class="tarea-list-form" novalidate (submit)="save()" [formGroup]="form">
+        <md-form-field class="tarea-list-full-width">
+            <input mdInput placeholder="Nombre:" formControlName="nombre" id="id_nombre">
+        </md-form-field>
+        <br>
+        <md-form-field class="tarea-list-full-width">
+            <textarea mdInput placeholder="Descripción:" formControlName="descripcion" id="id_descripcion"></textarea>
+        </md-form-field>
+
+        <ex-autocomplete class="tarea-list-full-width" placeholder="Lugar" name="lugar" [service]="_l" [form]="form" [item]="item" [itemVal]="itemLugar"></ex-autocomplete>
+
+        <ex-autocomplete class="tarea-list-full-width" placeholder="Cliente" name="cliente" [service]="_c" [form]="form" [item]="item" [itemVal]="itemCliente"></ex-autocomplete>
+
+        <ex-autocomplete class="tarea-list-full-width" placeholder="Grupo" name="grupo" [service]="_g" [form]="form" [item]="item" [itemVal]="itemGrupo"></ex-autocomplete>
+
+        <ex-multi #multi class="tarea-list-full-width multi" name="empleados" (complete)="completeAjax($event)" placeholder="Seleccione los empleados" [form]="form" [service]="_p" [render]="itemEmpleado" [item]="item"></ex-multi>
+
+        <md-form-field>
+            <input mdInput [min]="minDate" [mdDatepicker]="ejec" placeholder="Fecha de Ejecucion" >
+            <md-datepicker-toggle mdSuffix [for]="ejec"></md-datepicker-toggle>
+            <md-datepicker #ejec></md-datepicker>
+        </md-form-field>
+        <br>
+        <md-form-field>
+            <input mdInput [min]="minDate" [mdDatepicker]="fini" placeholder="Fecha de Finalizacion">
+            <md-datepicker-toggle mdSuffix [for]="fini"></md-datepicker-toggle>
+            <md-datepicker #fini></md-datepicker>
+        </md-form-field>
+
+        <p><label for="id_sub_complete">Sub complete:</label> <input type="checkbox" name="sub_complete" id="id_sub_complete" /></p>
+
+        <p><label for="id_minute">Minutos:</label> <input type="text" name="minute" id="id_minute" /></p>
+        <p><label for="id_hour">Horas:</label> <input type="text" name="hour" id="id_hour" /></p>
+        <p><label for="id_day_of_week">Dias de la semana:</label> <input type="text" name="day_of_week" id="id_day_of_week" /></p>
+        <p><label for="id_day_of_month">Dia del mes:</label> <input type="text" name="day_of_month" id="id_day_of_month" /></p>
+        <p><label for="id_month_of_year">Mes del año:</label> <input type="text" name="month_of_year" id="id_month_of_year" /></p>
+        <p><label for="id_period">Periodo:</label> <select name="period" id="id_period">
+            <option value="days">Dias</option>
+
+            <option value="hours">Horas</option>
+
+            <option value="minutes">Minutos</option>
+
+            <option value="seconds">Segundos</option>
+
+            <option value="microseconds">Microsegundos</option>
+
+        </select></p>
+        <p><label for="id_every">Cada cuanto:</label> <input type="number" name="every" id="id_every" /></p>
+        <p><label for="id_ciclico">Ciclico:</label> <select name="ciclico" id="id_ciclico">
+            <option value="1">No ciclico</option>
+
+            <option value="2">Crontab</option>
+
+            <option value="3">Interval</option>
+
+        </select></p>
+
+        <input type="submit" value="Send message" />
+    </form>
+</ex-card> -->
+<ex-form #f icon="assignment" title="Tareas" [form]="form" [service]="service" [columns]="columns" [renderinputs]="renderinputs" [debug]="debug">
+    <div bottom-form class="row">
+        <div class="col-lg-6">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_cargo">Lugar:</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="lugar" [service]="_l" [form]="form" [item]="_form.item" [itemVal]="itemLugar"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_cargo">Cliente:</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="cliente" [service]="_c" [form]="form" [item]="_form.item" [itemVal]="itemCliente"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_cargo">Grupo:</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-autocomplete name="grupo" [service]="_g" [form]="form" [item]="_form.item" [itemVal]="itemGrupo"></ex-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-horizontal">
+                <div class="row">
+                    <label class="col-lg-3 label-on-left" for="id_cargo">Empleados:</label>
+                    <div class="col-lg-9">
+                        <div class="form-group label-floating is-empty">
+                            <label class="control-label"></label>
+                            <ex-multi #multi name="empleados" (complete)="completeAjax($event)" placeholder="Seleccione los empleados" [form]="form" [service]="_p" [render]="itemEmpleado" [item]="_form.item"></ex-multi>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ex-form>
