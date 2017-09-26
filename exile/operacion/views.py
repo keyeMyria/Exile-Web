@@ -298,6 +298,11 @@ class NotificacionList(supra.SupraListView):
     ]
     list_filter = ['fecha']
 
+    @method_decorator(check_login)
+    def dispatch(self, request, *args, **kwargs):
+        return super(NotificacionList, self).dispatch(request, *args, **kwargs)
+    # end def
+
     def get_queryset(self,):
         queryset = super(NotificacionList, self).get_queryset()
         fecha_inicio = self.request.GET.get('fecha_inicio', False)
@@ -448,7 +453,7 @@ class TareaList(MasterList):
         ('eliminado_por', 'json'), ('subtareas', 'json'), 'latitud', 'longitud', 'ciclico', 'minute', 'hour', 'day_of_week', 'day_of_month',
         'month_of_year', 'period',  'every', 'cliente__nombre', 'lugar__nombre'
     ]
-    search_fields = ['nombre', 'direccion', ]
+    search_fields = ['nombre', 'descripcion', ]
     list_filter = ['pk', ]
     paginate_by = 10
 
