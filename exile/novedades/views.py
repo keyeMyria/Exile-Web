@@ -127,7 +127,7 @@ class ReporteListView(MasterList):
     list_display = ['id', 'nombre', 'tipo', 'tipo__nombre', 'cliente', 'cliente__nombre','lugar', 'lugar__nombre',
                     'latitud', 'longitud', 'descripcion', ('creator', 'json'), 'fecha', 'estado']
     search_fields = ['nombre', 'descripcion',
-                     'tipo_nombre']
+                     'tipo__nombre']
     model = models.Reporte
     paginate_by = 10
 
