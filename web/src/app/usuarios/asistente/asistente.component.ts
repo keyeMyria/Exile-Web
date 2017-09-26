@@ -21,7 +21,7 @@ export class AsistenteEditComponent implements OnInit {
     renderinputs: RenderInput[];
     service = this._as;
     deleteable = false;
-    debug = true;
+    debug = false;
     @ViewChild('f') private _form: FormComponent;
 
     constructor(private _fb: FormBuilder, private _as: AsistenteService, private _rt: Router) {
