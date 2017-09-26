@@ -24,7 +24,6 @@ export class TimelinelistComponent implements OnInit {
             if (this.list.length > 0) {
                 this.setSelect(this.list[0]);
             }
-
         });
     }
 

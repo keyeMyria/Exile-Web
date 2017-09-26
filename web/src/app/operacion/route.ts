@@ -3,11 +3,12 @@ import { MenuMeta, RouteComponent } from 'componentex';
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
 import { TareaComponent } from './tarea/tarea.component';
-import { TareaListComponent } from './tareas-list/tareas-list.component';
+import { TareaListComponent, TareaFormComponent } from './tareas-list/tareas-list.component';
 import { CalendarioComponent } from './calendario/calendario.component';
 
 import { ClienteService } from './cliente/cliente.service';
 import { LugarService } from './lugar/lugar.service';
+import { TareaService } from './tarea/tarea.service';
 
 export const OperacionRoutes: Routes = [
     {
@@ -40,6 +41,11 @@ export const OperacionRoutes: Routes = [
             {
                 path: 'tarea', component: RouteComponent, data: { miga: 'Tareas' }, children: [
                     { path: '', component: TareaListComponent },
+                    {
+                        path: ':id/edit', component: TareaFormComponent,
+                        data: { miga: 'Editar' },
+                        resolve: { item: TareaService }
+                    }
                 ]
             },
             { path: 'calendario', component: CalendarioComponent, data: { miga: 'Calendario' }, children: [] }

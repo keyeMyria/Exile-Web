@@ -5,20 +5,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { SampleModule } from 'componentex';
 import { OperacionRoutes } from './route';
-import { MaterialModule } from '@angular/material';
+import { MaterialModule, MdNativeDateModule } from '@angular/material';
 
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
 import { LugarEditComponent, LugarListComponent } from './lugar/lugar.component';
 import { TareaComponent } from './tarea/tarea.component';
-import { NotificacionService } from './notificacion.service';
+import { TimelinelistComponent } from './timelinelist/timelinelist.component';
+import { CalendarioComponent } from './calendario/calendario.component';
 
+import { NotificacionService } from './notificacion.service';
 import { ClienteService } from './cliente/cliente.service';
 import { LugarService } from './lugar/lugar.service';
 import { TipoclienteService } from '../configuracion/tipocliente/tipocliente.service';
+import { GrupoService } from '../configuracion/grupo/grupo.service';
 import { TareaService } from './tarea/tarea.service';
-import { CalendarioComponent } from './calendario/calendario.component';
-import { TimelinelistComponent } from './timelinelist/timelinelist.component';
-import { TareaListComponent } from './tareas-list/tareas-list.component';
+import { EmpleadoService } from '../usuarios/empleado/empleado.service';
+
+
+import { TareaListComponent, TareaFormComponent } from './tareas-list/tareas-list.component';
 
 @NgModule({
     imports: [
@@ -27,6 +31,7 @@ import { TareaListComponent } from './tareas-list/tareas-list.component';
         SampleModule,
         AgmCoreModule,
         MaterialModule,
+        MdNativeDateModule,
         ReactiveFormsModule,
         RouterModule.forChild(OperacionRoutes)
     ],
@@ -39,14 +44,18 @@ import { TareaListComponent } from './tareas-list/tareas-list.component';
         CalendarioComponent,
         TimelinelistComponent,
         TareaListComponent,
+        TareaFormComponent
     ],
     providers: [
         ClienteService,
         LugarService,
         TipoclienteService,
         TareaService,
+        GrupoService,
         NotificacionService,
-        GoogleMapsAPIWrapper
+        EmpleadoService,
+        GoogleMapsAPIWrapper,
+        // { provide: MAT_DATE_LOCALE, useValue: 'es-CO' },
     ]
 })
 export class OperacionModule { }
