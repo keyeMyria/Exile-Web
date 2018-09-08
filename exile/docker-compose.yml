@@ -19,7 +19,7 @@ services:
     volumes:
       - .:/exile
     ports:
-      - "8000:8000"
+      - "8000:8081"
     links:
       - mongodb
       - redis
