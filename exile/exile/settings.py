@@ -155,15 +155,15 @@ MONGODB_DATABASES = {
 }
 
 DATABASES = {
-    'default': {
+    'default2': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'exile',
-        'USER': 'postgres',
-        'PASSWORD': 'Exile*74522547',
-        'HOST': '104.236.33.228',
+        'NAME': 'exile_deploy',
+        'USER': 'exile',
+        'PASSWORD': 'admin123456',
+        'HOST': 'localhost',
         'POST': '5432'
     },
-    'default2': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite'),
     }
