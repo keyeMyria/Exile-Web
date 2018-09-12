@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { TableComponent, RenderInput, FormComponent, ExgmapComponent } from 'componentex';
+import { TableComponent, RenderInput, FormComponent, ExgmapComponent } from '../../shared';
 import { ReportesService } from './reportes.service';
 import { TipoReporteService } from '../../configuracion/tiporeporte/tiporeporte.service';
 import { ClienteService } from '../../operacion/cliente/cliente.service';
@@ -57,15 +57,23 @@ export class EditReporteComponent implements OnInit {
     @ViewChild('f') public _form: FormComponent;
     @ViewChild('map') private map: ExgmapComponent;
 
-    constructor(private _fb: FormBuilder, private _s: ReportesService, public _t: TipoReporteService, public _l: LugarService, public _c: ClienteService, private _rt: Router, private _r: ActivatedRoute) {
+    constructor(
+        private _fb: FormBuilder,
+        private _s: ReportesService,
+        public _t: TipoReporteService,
+        public _l: LugarService,
+        public _c: ClienteService,
+        private _rt: Router,
+        private _r: ActivatedRoute) {
+
         this.form = this._fb.group({
             nombre: ['', [Validators.required]],
             descripcion: ['', [Validators.required]],
-            tipo: [[],],
-            cliente: [[],],
-            lugar: [[],],
-            latitud: ['',],
-            longitud: ['',],
+            tipo: [[], ],
+            cliente: [[], ],
+            lugar: [[], ],
+            latitud: ['', ],
+            longitud: ['', ],
         });
         this.columns = ['col1'];
         this.renderinputs = [

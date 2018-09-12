@@ -8,7 +8,7 @@ import { AsistenteService } from './asistente/asistente.service';
 import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
 import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/empleado.component';
 import { EmpleadoService } from './empleado/empleado.service';
-import { SampleModule } from 'componentex';
+import { SampleModule } from '../shared';
 import { CargoService } from '../configuracion/cargo/cargo.service';
 import { AgmCoreModule } from '@agm/core';
 

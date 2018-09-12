@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { TableComponent } from 'componentex';
+import { TableComponent } from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { RenderInput, FormComponent } from 'componentex';
+import { RenderInput, FormComponent } from '../../shared';
 import { TareaService } from '../tarea/tarea.service';
 
 @Component({
@@ -62,7 +62,7 @@ export class TareaFormComponent implements AfterViewInit {
     columns: string[];
     renderinputs: RenderInput[]; i
     service = this._s;
-    debug = true;
+    debug = false;
     // item: any;
     @ViewChild('f') public _form: FormComponent;
 
@@ -92,21 +92,8 @@ export class TareaFormComponent implements AfterViewInit {
         this.columns = ['col1', 'col2'];
         this.renderinputs = [
             { column: 'col1', title: 'Nombre', type: 'text', name: 'nombre' },
-            { column: 'col1', title: 'Descripción', type: 'textarea', name: 'descripcion' },
-            { column: 'col2', title: 'Fecha de Ejecucion', type: 'text', name: 'fecha_ejecucion', class: 'datetimepicker' },
-            { column: 'col2', title: 'Fecha de Finalizacion', type: 'text', name: 'fecha_finalizacion', class: 'datetimepicker' },
-            {
-                column: 'col2', title: 'Periodo', isSelect: true, name: 'period', type: 'select', options: [
-                    { title: '-----', value: null },
-                    { title: 'Dias', value: 'days' },
-                    { title: 'Horas', value: 'hours' },
-                    { title: 'Minutos', value: 'minutes' },
-                    { title: 'Segundos', value: 'seconds' },
-                    { title: 'Microsegundos', value: 'microseconds' }
-                ]
-            },
-            { column: 'col2', title: 'Frecuencia', type: 'number', name: 'every' }
-        ];
+            { column: 'col1', title: 'Descripción', type: 'textarea', name: 'descripcion' }
+        ]
         // if (!!this._ar.snapshot.data['item'] && Object.keys(this._ar.snapshot.data['item']).length !== 0) {
         //     this.item = this._ar.snapshot.data['item'];
         // }

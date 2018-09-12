@@ -7,7 +7,7 @@ import { LockComponent } from './lock/lock.component';
 import { RegistroComponent } from './registro/registro.component';
 import { AuthRoutes } from './auth.route';
 import { AuthComponent } from './auth.component';
-import { SampleModule } from 'componentex';
+import { SampleModule } from '../shared';
 
 @NgModule({
     imports: [

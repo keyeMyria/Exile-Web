@@ -105,7 +105,7 @@ ENV/
 
 #Angular
 
-#angular/dist/
+web/dist/
 **/node_modules/**
 !**/node_modules/componentex
 !**/node_modules/ngx-owl-carousel

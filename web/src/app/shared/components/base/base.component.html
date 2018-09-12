@@ -1,0 +1,20 @@
+<md-sidenav-container class="example-container" (window:resize)="onResize($event)">
+    <md-sidenav #sidenav class="example-sidenav">
+        <ex-sidebar></ex-sidebar>
+    </md-sidenav>
+
+    <div class="example-sidenav-content">
+        <ex-toolbar title="Exile" (sidenavClick)="sidenav.toggle()">
+            <button md-menu-item (click)="onLogout()">
+                <md-icon>power_settings_new</md-icon>
+                <span>Cerrar Sesión</span>
+            </button>
+        </ex-toolbar>
+        <div class="main-content">
+            <ex-miga></ex-miga>
+            <div class="flex">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</md-sidenav-container>

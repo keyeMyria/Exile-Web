@@ -1,0 +1,14 @@
+<ul class="nav" [class.navbar-nav]="right" [class.navbar-right]="right" [class.nav-mobile-menu]="mobile">
+    <li class="dropdown ">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            <i class="material-icons">more_vert</i>
+            <p class="hidden-lg hidden-md">Controles<b class="caret"></b></p>
+        </a>
+        <ul class="dropdown-menu">
+            <li (click)="_as.logout()"><a>Cerrar Session</a></li>
+            <!-- <li (click)="isLogin()"><a>isLogin</a></li> -->
+            <!-- <li class="divider"></li> -->
+        </ul>
+    </li>
+    <li class="separator hidden-lg hidden-md"></li>
+</ul>

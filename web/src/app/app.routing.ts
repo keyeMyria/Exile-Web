@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { BaseComponent, P404Component, Menu } from 'componentex';
-import { AuthGuard } from 'componentex';
+import { BaseComponent, P404Component, Menu } from './shared';
+import { AuthGuard } from './shared';
 
 
 

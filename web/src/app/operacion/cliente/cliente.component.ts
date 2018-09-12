@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { TableComponent } from 'componentex';
+import { TableComponent } from '../../shared';
 import { ClienteService } from './cliente.service';
 import { TipoclienteService } from '../../configuracion/tipocliente/tipocliente.service';
 
@@ -41,7 +41,7 @@ export class ClienteListComponent implements AfterViewInit {
 
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { RenderInput, FormComponent } from 'componentex';
+import { RenderInput, FormComponent } from '../../shared';
 
 @Component({
     template: `<ex-form #f icon="account_box" title="Cliente"

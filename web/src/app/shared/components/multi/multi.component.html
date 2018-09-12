@@ -1,0 +1,6 @@
+<div [formGroup]="form">
+    <md-select style="width:100%" [placeholder]="placeholder" auto="auto" [formControlName]="name" name="name" [multiple]="true">
+        <button style="width:100%" md-button (click)="selectAll()"><span *ngIf="todos">Des-</span><span>Seleccionar todos</span></button>
+        <md-option *ngFor="let option of options" [value]="option.id">{{render(option)}}</md-option>
+    </md-select>
+</div>

@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FormComponent, TableComponent, RenderInput } from 'componentex';
+import { FormComponent, TableComponent, RenderInput } from '../../shared';
 import { EmpleadoService } from './empleado.service';
 import { CargoService } from '../../configuracion/cargo/cargo.service';
 
@@ -25,8 +25,8 @@ export class EditEmpleadoComponent implements OnInit {
             identificacion: ['', [Validators.maxLength(120), Validators.required]],
             identificacion2: ['', [Validators.maxLength(120)]],
             fecha_nacimiento: ['', Validators.required],
-            fecha_ingreso: ['',],
-            fecha_retiro: ['',],
+            fecha_ingreso: ['', ],
+            fecha_retiro: ['', ],
             direccion: ['', [Validators.maxLength(120)]],
             telefono: ['', [Validators.maxLength(15)]],
             fijo: ['', [Validators.maxLength(15)]],

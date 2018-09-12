@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TableComponent } from 'componentex';
+import { TableComponent } from '../../shared';
 import { TipoReporteService } from './tiporeporte.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class TipoReporteListComponent {
 
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { RenderInput, FormComponent } from 'componentex';
+import { RenderInput, FormComponent } from '../../shared';
 
 @Component({
     template: `<ex-form #f icon="format_list_bulleted" title="Tipo de Reporte"

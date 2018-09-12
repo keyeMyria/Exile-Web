@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { MdSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material';
 import { Router, NavigationEnd } from '@angular/router';
 // import { AuthService } from '../../services/auth.service'
 import 'rxjs/add/operator/filter';
@@ -13,7 +13,7 @@ declare var $: any;
 })
 export class BaseComponent implements OnInit, AfterViewInit {
 
-    @ViewChild('sidenav') sidenav: MdSidenav;
+    @ViewChild('sidenav') sidenav: MatSidenav;
 
     constructor(private router: Router) { }
 

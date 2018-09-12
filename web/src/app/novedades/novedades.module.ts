@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { ReportesListComponent, EditReporteComponent } from './reportes/reportes.component';
-import { SampleModule } from 'componentex';
+import { SampleModule } from '../shared';
 import { ReportesService } from './reportes/reportes.service';
 import { NovedadesRoutes } from './route';
 import { TipoReporteService } from '../configuracion/tiporeporte/tiporeporte.service';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallService, CrudService } from 'componentex';
+import { CallService, CrudService } from '../shared';
 import { Observable } from 'rxjs/Rx';
 
 @Injectable()

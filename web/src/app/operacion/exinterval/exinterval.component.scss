@@ -1,0 +1,21 @@
+:host{
+    display: block;
+    width: 100%
+}
+
+table.table-day {
+    width: 320px;
+    border-collapse: separate;
+    border-spacing: 4px;
+}
+
+table.table-day td {
+    border: 1px solid #555;
+    padding: 4px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+table.table-day input[type=checkbox] {
+    display: none;
+}

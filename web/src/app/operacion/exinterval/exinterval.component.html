@@ -1,0 +1,174 @@
+<div>
+    <md-select [(ngModel)]="selectedValue">
+        <md-option value="----">----</md-option>
+        <md-option value="Intervalo">Intervalo</md-option>
+        <md-option value="Dias de la semana">Dias de la semana</md-option>
+        <md-option value="Dias del mes">Dias del mes</md-option>
+        <md-option value="Meses del año">Meses del año</md-option>
+    </md-select>
+</div>
+
+<div>
+    <table class="table-date">
+        <tr>
+            <td>
+                <md-form-field>
+                    <input type="text" placeholder="Fecha de Ejecucion" mdInput>
+                </md-form-field>
+            </td>
+            <td *ngIf="selectedValue !== '----'">-</td>
+            <td *ngIf="selectedValue !== '----'">
+                <md-form-field>
+                    <input type="text" placeholder="Fecha de Finalizacion" mdInput>
+                </md-form-field>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div *ngIf="selectedValue === 'Intervalo'">
+    <md-select [(ngModel)]="selectedIntervalo">
+        <md-option *ngFor="let item of options" [value]="item.value">{{item.title}}</md-option>
+    </md-select>
+    <br>
+    <md-form-field>
+        <input type="number" placeholder="Cada" mdInput>
+    </md-form-field>
+</div>
+
+<div *ngIf="selectedValue === 'Dias de la semana'">
+    <md-checkbox>Lun</md-checkbox>
+    <md-checkbox>Mar</md-checkbox>
+    <md-checkbox>Mie</md-checkbox>
+    <md-checkbox>Jue</md-checkbox>
+    <md-checkbox>Vie</md-checkbox>
+    <md-checkbox>Sab</md-checkbox>
+    <md-checkbox>Dom</md-checkbox>
+</div>
+
+<div *ngIf="selectedValue === 'Meses del año'">
+    <md-select placeholder="Meses" [(ngModel)]="selectedMes" multiple="true">
+        <md-option value="Enero">Enero</md-option>
+        <md-option value="Febrero">Febrero</md-option>
+        <md-option value="Marzo">Marzo</md-option>
+        <md-option value="Abril">Abril</md-option>
+        <md-option value="Mayo">Mayo</md-option>
+        <md-option value="Junio">Junio</md-option>
+        <md-option value="Julio">Julio</md-option>
+        <md-option value="Agosto">Agosto</md-option>
+        <md-option value="Septiembre">Septiembre</md-option>
+        <md-option value="Octubre">Octubre</md-option>
+        <md-option value="Noviembre">Noviembre</md-option>
+        <md-option value="Diciembre">Diciembre</md-option>
+    </md-select>
+
+
+</div>
+
+<div *ngIf="selectedValue === 'Meses del año' || selectedValue === 'Dias del mes'">
+    <table class="table-day">
+        <tr>
+            <td>
+                1 <input type="checkbox" name="day" value="1">
+            </td>
+            <td>
+                2 <input type="checkbox" name="day" value="2">
+            </td>
+            <td>
+                3 <input type="checkbox" name="day" value="3">
+            </td>
+            <td>
+                4 <input type="checkbox" name="day" value="4">
+            </td>
+            <td>
+                5 <input type="checkbox" name="day" value="5">
+            </td>
+            <td>
+                6 <input type="checkbox" name="day" value="6">
+            </td>
+            <td>
+                7 <input type="checkbox" name="day" value="7">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                8 <input type="checkbox" name="day" value="8">
+            </td>
+            <td>
+                9 <input type="checkbox" name="day" value="9">
+            </td>
+            <td>
+                10 <input type="checkbox" name="day" value="10">
+            </td>
+            <td>
+                11 <input type="checkbox" name="day" value="11">
+            </td>
+            <td>
+                12 <input type="checkbox" name="day" value="12">
+            </td>
+            <td>
+                13 <input type="checkbox" name="day" value="13">
+            </td>
+            <td>
+                14 <input type="checkbox" name="day" value="14">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                15 <input type="checkbox" name="day" value="15">
+            </td>
+            <td>
+                16 <input type="checkbox" name="day" value="16">
+            </td>
+            <td>
+                17 <input type="checkbox" name="day" value="17">
+            </td>
+            <td>
+                18 <input type="checkbox" name="day" value="18">
+            </td>
+            <td>
+                19 <input type="checkbox" name="day" value="19">
+            </td>
+            <td>
+                20 <input type="checkbox" name="day" value="20">
+            </td>
+            <td>
+                21 <input type="checkbox" name="day" value="21">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                22 <input type="checkbox" name="day" value="22">
+            </td>
+            <td>
+                23 <input type="checkbox" name="day" value="23">
+            </td>
+            <td>
+                24 <input type="checkbox" name="day" value="24">
+            </td>
+            <td>
+                25 <input type="checkbox" name="day" value="25">
+            </td>
+            <td>
+                26 <input type="checkbox" name="day" value="26">
+            </td>
+            <td>
+                27 <input type="checkbox" name="day" value="27">
+            </td>
+            <td>
+                28 <input type="checkbox" name="day" value="28">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                29 <input type="checkbox" name="day" value="29">
+            </td>
+            <td>
+                30 <input type="checkbox" name="day" value="30">
+            </td>
+            <td>
+                31 <input type="checkbox" name="day" value="31">
+            </td>
+        </tr>
+    </table>
+</div>

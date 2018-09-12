@@ -1,0 +1,10 @@
+<ol class="breadcrumb">
+    <li>
+        <a routerLink="[/]" >Inicio</a>
+    </li>
+    <ng-template [ngIf]="migas.length > 0">
+        <li *ngFor="let breadcrumb of migas">
+            <a [routerLink]="[breadcrumb.url]">{{ breadcrumb.name }}</a>
+        </li>
+    </ng-template>
+</ol>

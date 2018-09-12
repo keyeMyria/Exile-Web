@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CallService, AuthService } from 'componentex';
-import { Menu } from 'componentex';
+import { CallService, AuthService } from './shared';
+import { Menu } from './shared';
 import { UsuariosMenuMeta } from './usuarios/route';
 import { OperacionMenuMeta } from './operacion/route';
 import { ConfiguracionMenuMeta } from './configuracion/route';

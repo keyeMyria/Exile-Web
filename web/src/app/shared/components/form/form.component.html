@@ -1,0 +1,51 @@
+<ex-card [icon]="icon" [title]="title">
+    <form class="form-horizontal" novalidate (submit)="save()" [formGroup]="form">
+        <ng-content select="[top-form]"></ng-content>
+        <div class="row">
+            <div *ngFor="let column of columns" class="col-lg-{{12/columns.length}}">
+                <div class="form-horizontal">
+                    <div *ngFor="let input of renderinputs">
+                        <div *ngIf="isRender(column, input.column, input.noitem)" class="row">
+                            <label class="col-lg-3 label-on-left" for="id_{{input.name}}">{{input.title}}:</label>
+                            <div class="col-lg-9">
+                                <div class="form-group label-floating is-empty" [class.has-error]="!!input.error" [class.has-success]="!input.error">
+                                    <label class="control-label"></label>
+                                    <input *ngIf="!input.isSelect && input.type !== 'checkbox' && input.type !== 'textarea'" class="form-control {{input.class}}" [attr.step]="input.step" name="{{input.name}}" [formControlName]="input.name" [type]="input.type" />
+                                    <md-select style="width:100%" *ngIf="input.isSelect" class="selectpicker" id="id_{{input.name}}" [formControlName]="input.name" [title]="input.title">
+                                        <md-option *ngFor="let option of input.options" [value]="option.value">{{option.title}}</md-option>
+                                    </md-select>
+                                    <textarea *ngIf="input.type === 'textarea'" class="form-control {{input.class}}" name="{{input.name}}" [formControlName]="input.name" rows="8" cols="80"></textarea>
+                                    <span class="text-danger">{{input.error}}</span>
+                                </div>
+                                <md-checkbox *ngIf="input.type === 'checkbox'" [formControlName]="input.name"></md-checkbox>
+                                <pre *ngIf="debug">{{form.get(input.name).errors | json }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-content select="[bottom-form]"></ng-content>
+        <div class="row">
+            <div class="col-lg-6">
+                <ng-content select="[custom-button]"></ng-content>
+            </div>
+            <div class="col-lg-6 text-right">
+                <button *ngIf="!item && saveable && otro" class="btn btn-primary btn-responsive" (click)="save(true)" type="button" [disabled]="!form.valid">Guardar y Crear Otro</button>
+                <input *ngIf="!item && saveable" class="btn btn-primary btn-responsive" [disabled]="!form.valid" type="submit" value="Guardar" />
+                <button *ngIf="!!item && deleteable" class="btn btn-warning btn-responsive" (click)="delete()" type="button">Eliminar</button>
+                <input *ngIf="!!item && saveable" class="btn btn-primary btn-responsive" type="submit" value="Guardar Cambios" [disabled]="!form.valid" />
+                <button *ngIf="retur" class="btn btn-primary btn-responsive" (click)="back()" type="button">Regresar</button>
+            </div>
+        </div>
+    </form>
+    <div class="cargando" *ngIf="_ready">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+            </svg>
+        </div>
+    </div>
+    <pre *ngIf="debug"> form valid: {{ form.valid }}</pre>
+    <pre *ngIf="debug"> form value: {{ form.value | json }}</pre>
+</ex-card>

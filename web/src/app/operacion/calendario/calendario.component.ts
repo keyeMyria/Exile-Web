@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 declare var $: any;
 
 @Component({
-    selector: 'app-calendario',
+    selector: 'ex-calendario',
     templateUrl: './calendario.component.html',
     styleUrls: ['./calendario.component.scss']
 })

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-lock',
+    selector: 'ex-lock',
     templateUrl: './lock.component.html'
 })
 export class LockComponent implements OnInit {

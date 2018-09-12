@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { MenuMeta, RouteComponent } from 'componentex';
+import { MenuMeta, RouteComponent } from '../shared';
 import { TipoclienteListComponent, TipoclienteEditComponent } from './tipocliente/tipocliente.component';
 import { TipoclienteService } from './tipocliente/tipocliente.service';
 import { CargoListComponent, EditCargoComponent } from './cargo/cargo.component';

@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FormComponent, TableComponent, RenderInput } from 'componentex';
+import { FormComponent, TableComponent, RenderInput } from '../../shared';
 import { GrupoService } from './grupo.service';
 import { EmpleadoService } from '../../usuarios/empleado/empleado.service';
 

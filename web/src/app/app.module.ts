@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SampleModule } from 'componentex';
+import { SampleModule } from './shared';
 import { AgmCoreModule } from '@agm/core';
 
 

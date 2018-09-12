@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { MenuMeta, RouteComponent } from 'componentex';
+import { MenuMeta, RouteComponent } from '../shared';
 import { AsistenteEditComponent, AsistenteListComponent } from './asistente/asistente.component';
 import { AsistenteService } from './asistente/asistente.service';
 import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/empleado.component';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from 'componentex';
+import { AuthService } from '../../shared';
 
 declare var $: any;
 declare var swal: any;

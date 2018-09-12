@@ -1,0 +1,9 @@
+<div>
+    <div class="form-group">
+        <input (keydown)="onKeydown($event)" #search placeholder="Busca la Ubicación" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control" [formControl]="searchControl">
+    </div>
+    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="markerdraggable" (dragEnd)="onDragEnd($event)"></agm-marker>
+    </agm-map>
+    <span>Coloca el marcador del mapa en la ubicación indicada</span>
+</div>
