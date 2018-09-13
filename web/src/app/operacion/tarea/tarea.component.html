@@ -1,65 +1,65 @@
-<!-- <img md-card-image *ngFor="let foto of multimediaImages" md-card-image src="{{foto.url}}" alt="Photo of a Shiba Inu"> -->
+<!-- <img mat-card-image *ngFor="let foto of multimediaImages" mat-card-image src="{{foto.url}}" alt="Photo of a Shiba Inu"> -->
 <!-- If images array is dynamically changing pass this array to [items] input -->
 <!-- classes to be attached along with owl-carousel class -->
-<md-tab-group>
-    <md-tab label="Pendientes">
-        <md-sidenav-container class="tareas-container">
-            <md-sidenav #sidenav mode="side" opened="true" class="tareas-sidenav">
+<mat-tab-group>
+    <mat-tab label="Pendientes">
+        <mat-sidenav-container class="tareas-container">
+            <mat-sidenav #sidenav mode="side" opened="true" class="tareas-sidenav">
                 <ex-timelinelist (onSelect)="onSelectItem($event)"></ex-timelinelist>
-            </md-sidenav>
+            </mat-sidenav>
 
             <div class="tareas-sidenav-content" *ngIf="!!notificacion">
                 <div class="main-content">
-                    <md-card class="example-card">
-                        <md-card-header>
-                            <div md-card-avatar class="example-header-image"></div>
-                            <md-card-title>{{tarea.nombre}}</md-card-title>
-                            <md-card-subtitle>{{tarea.creator.username}}</md-card-subtitle>
+                    <mat-card class="example-card">
+                        <mat-card-header>
+                            <div mat-card-avatar class="example-header-image"></div>
+                            <mat-card-title>{{tarea.nombre}}</mat-card-title>
+                            <mat-card-subtitle>{{tarea.creator.username}}</mat-card-subtitle>
                             <span class="flex"></span>
-                            <md-checkbox [checked]="notificacion.completado" (change)="onCheckTarea($event)" (click)="stop($even)" class="example-margin"></md-checkbox>
-                        </md-card-header>
+                            <mat-checkbox [checked]="notificacion.completado" (change)="onCheckTarea($event)" (click)="stop($even)" class="example-margin"></mat-checkbox>
+                        </mat-card-header>
 
-                        <div md-card-image>
+                        <div mat-card-image>
                             <ul class="bxslider">
                                 <li *ngFor="let foto of multimediaImages; let last = last"><img [src]="foto.url" />{{onLoad(last)}}</li>
                             </ul>
                         </div>
-                        <md-card-content>
+                        <mat-card-content>
                             <p>{{tarea.descripcion}}</p>
-                            <md-expansion-panel class="expansion-panel " *ngIf="multimediaAudios.length> 0">
-                                <md-expansion-panel-header>
-                                    <md-panel-title>Audios</md-panel-title>
-                                </md-expansion-panel-header>
+                            <mat-expansion-panel class="expansion-panel " *ngIf="multimediaAudios.length> 0">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>Audios</mat-panel-title>
+                                </mat-expansion-panel-header>
                                 <div *ngFor="let multimedia of multimediaAudios">
                                     <audio controls>
                                         <source src="{{multimedia.url}}" type="audio/aac"/>
                                         tu navegador no soporta reproduccion de audios
                                     </audio>
                                 </div>
-                            </md-expansion-panel>
-                        </md-card-content>
-                        <md-card-actions>
-                            <button md-button>LIKE</button>
-                            <button md-button>SHARE</button>
-                        </md-card-actions>
+                            </mat-expansion-panel>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button>LIKE</button>
+                            <button mat-button>SHARE</button>
+                        </mat-card-actions>
 
-                    </md-card>
+                    </mat-card>
 
-                    <md-accordion class="example-headers-align">
-                        <md-expansion-panel *ngFor="let subtarea of tarea.subtareas" hideToggle="true">
-                            <md-expansion-panel-header>
-                                <md-checkbox [checked]="!!subtarea.completado" [disabled]="notificacion.completado" (click)="stop($even)" (change)="onCheckSubTarea($event)"></md-checkbox>
-                                <md-panel-title>{{subtarea.nombre}}</md-panel-title>
-                            </md-expansion-panel-header>
-                            <md-panel-description>{{subtarea.descripcion}}</md-panel-description>
-                        </md-expansion-panel>
-                    </md-accordion>
+                    <mat-accordion class="example-headers-align">
+                        <mat-expansion-panel *ngFor="let subtarea of tarea.subtareas" hideToggle="true">
+                            <mat-expansion-panel-header>
+                                <mat-checkbox [checked]="!!subtarea.completado" [disabled]="notificacion.completado" (click)="stop($even)" (change)="onCheckSubTarea($event)"></mat-checkbox>
+                                <mat-panel-title>{{subtarea.nombre}}</mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-panel-description>{{subtarea.descripcion}}</mat-panel-description>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
             </div>
             <div class="no-tarea" *ngIf="!notificacion">
                 <p>No hay tareas pendientes</p>
             </div>
-        </md-sidenav-container>
-    </md-tab>
-    <md-tab label="Realizadas">Content 2</md-tab>
-</md-tab-group>
+        </mat-sidenav-container>
+    </mat-tab>
+    <mat-tab label="Realizadas">Content 2</mat-tab>
+</mat-tab-group>

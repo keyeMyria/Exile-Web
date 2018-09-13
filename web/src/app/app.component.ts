@@ -16,7 +16,7 @@ declare var $: any;
 
 export class AppComponent implements OnInit {
     constructor(private _cs: CallService, private _as: AuthService) {
-        this._cs.conf({ host: '104.236.33.228', port: '8000' });
+        this._cs.conf({ host: 'ec2-18-223-116-221.us-east-2.compute.amazonaws.com', port: '8081' });
         this._as.conf('usuarios/login/', 'usuarios/is/login/');
         // this._cs.conf({ host: 'isabela.com.co' });
     }

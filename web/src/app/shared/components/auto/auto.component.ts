@@ -6,6 +6,14 @@ import { of } from 'rxjs';
     templateUrl: './auto.component.html',
 })
 export class AutoComponent {
+
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        this._value = val;
+    }
     public options = [];
 
     @Output() cambio: EventEmitter<any>;
@@ -14,9 +22,9 @@ export class AutoComponent {
     @Input() form: any;
     @Input() name: string
     @Input('value') _value: any = '';
+    @Input() params = {};
     @Input() render: any = (val: any) => val.nombre;
     @Input() itemVal: any = (item: any) => item.id;
-    @Input() params = {};
 
     displayFn = val => {
         if (this.options.length === 0 && !!this.item) {
@@ -26,14 +34,6 @@ export class AutoComponent {
             this.cambio.emit({ item: value });
             return val ? (value ? this.render(value) : '') : null;
         }
-    }
-
-    get value() {
-        return this._value;
-    }
-
-    set value(val) {
-        this._value = val;
     }
 
     constructor() {
@@ -64,12 +64,14 @@ export class AutoComponent {
         this.params['q'] = val ? val : '';
         this.service.list(this.params)
             .pipe(
-                map((data: any) => data.json()),
+                map((data: any) => data),
                 map((data: any) => {
                     this.options = data.object_list
                 }),
                 catchError((error) => of(error))
-            );
+            )
+            .toPromise()
+            .catch(error => console.log(error));
     }
 
 

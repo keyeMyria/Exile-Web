@@ -16,16 +16,16 @@
         </div>
     </div>
 </nav> -->
-<md-toolbar color="primary">
-    <button class="menu-button" md-icon-button (click)="onsidenavClick($event)">
-        <md-icon>menu</md-icon>
+<mat-toolbar color="primary">
+    <button class="menu-button" mat-icon-button (click)="onsidenavClick($event)">
+        <mat-icon>menu</mat-icon>
     </button>
     <span class="icon">{{title}}</span>
     <span class="spacer"></span>
-    <button md-icon-button [mdMenuTriggerFor]="menu">
-        <md-icon>more_vert</md-icon>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
     </button>
-    <md-menu #menu="mdMenu">
-        <ng-content select="[md-menu-item]"></ng-content>
-    </md-menu>
-</md-toolbar>
+    <mat-menu #menu="matMenu">
+        <ng-content select="[mat-menu-item]"></ng-content>
+    </mat-menu>
+</mat-toolbar>

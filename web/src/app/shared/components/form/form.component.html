@@ -11,13 +11,13 @@
                                 <div class="form-group label-floating is-empty" [class.has-error]="!!input.error" [class.has-success]="!input.error">
                                     <label class="control-label"></label>
                                     <input *ngIf="!input.isSelect && input.type !== 'checkbox' && input.type !== 'textarea'" class="form-control {{input.class}}" [attr.step]="input.step" name="{{input.name}}" [formControlName]="input.name" [type]="input.type" />
-                                    <md-select style="width:100%" *ngIf="input.isSelect" class="selectpicker" id="id_{{input.name}}" [formControlName]="input.name" [title]="input.title">
-                                        <md-option *ngFor="let option of input.options" [value]="option.value">{{option.title}}</md-option>
-                                    </md-select>
+                                    <mat-select style="width:100%" *ngIf="input.isSelect" class="selectpicker" id="id_{{input.name}}" [formControlName]="input.name" [title]="input.title">
+                                        <mat-option *ngFor="let option of input.options" [value]="option.value">{{option.title}}</mat-option>
+                                    </mat-select>
                                     <textarea *ngIf="input.type === 'textarea'" class="form-control {{input.class}}" name="{{input.name}}" [formControlName]="input.name" rows="8" cols="80"></textarea>
                                     <span class="text-danger">{{input.error}}</span>
                                 </div>
-                                <md-checkbox *ngIf="input.type === 'checkbox'" [formControlName]="input.name"></md-checkbox>
+                                <mat-checkbox *ngIf="input.type === 'checkbox'" [formControlName]="input.name"></mat-checkbox>
                                 <pre *ngIf="debug">{{form.get(input.name).errors | json }}</pre>
                             </div>
                         </div>

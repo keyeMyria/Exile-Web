@@ -1,7 +1,7 @@
-<md-sidenav-container class="base-tarea-container" (window:resize)="onResize($event)">
-    <md-sidenav #sidenav class="base-tarea-sidenav">
+<mat-sidenav-container class="base-tarea-container" (window:resize)="onResize($event)">
+    <mat-sidenav #sidenav class="base-tarea-sidenav">
         <ng-content select="[sidenav]"></ng-content>
-    </md-sidenav>
+    </mat-sidenav>
 
     <div class="base-tarea-sidenav-content">
         <div class="main-content">
@@ -10,4 +10,4 @@
             </div>
         </div>
     </div>
-</md-sidenav-container>
+</mat-sidenav-container>

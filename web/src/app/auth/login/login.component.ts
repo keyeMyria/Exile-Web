@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../shared';
 
 declare var $: any;
@@ -42,12 +42,13 @@ export class LoginComponent implements OnInit {
             .catch(err => {
                 this.ready = false;
                 if (!!err) {
-                    swal({
-                        title: err.title,
-                        text: err.text,
-                        type: 'warning',
-                        confirmButtonColor: '#213b78',
-                    });
+                    // swal({
+                    //     title: err.title,
+                    //     text: err.text,
+                    //     type: 'warning',
+                    //     confirmButtonColor: '#213b78',
+                    // });
+                    console.log('error', err);
                 }
             });
     }

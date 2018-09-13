@@ -152,9 +152,9 @@ export class TableComponent implements OnInit {
         if (this.service) {
             dataSource = this.preAjax(dataSource);
             this.service.list(dataSource)
-                .subscribe( 
+                .subscribe(
                     res => {
-                        const data = res.json();
+                        const data = res;
                         this.selectedItems = [];
                         this.selectedItemsChange.emit({ selectedItems: this.selectedItems });
                         this.service.data = data.object_list;

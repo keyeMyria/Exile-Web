@@ -1,66 +1,66 @@
 <div>
-    <md-select [(ngModel)]="selectedValue">
-        <md-option value="----">----</md-option>
-        <md-option value="Intervalo">Intervalo</md-option>
-        <md-option value="Dias de la semana">Dias de la semana</md-option>
-        <md-option value="Dias del mes">Dias del mes</md-option>
-        <md-option value="Meses del año">Meses del año</md-option>
-    </md-select>
+    <mat-select [(ngModel)]="selectedValue">
+        <mat-option value="----">----</mat-option>
+        <mat-option value="Intervalo">Intervalo</mat-option>
+        <mat-option value="Dias de la semana">Dias de la semana</mat-option>
+        <mat-option value="Dias del mes">Dias del mes</mat-option>
+        <mat-option value="Meses del año">Meses del año</mat-option>
+    </mat-select>
 </div>
 
 <div>
     <table class="table-date">
         <tr>
             <td>
-                <md-form-field>
-                    <input type="text" placeholder="Fecha de Ejecucion" mdInput>
-                </md-form-field>
+                <mat-form-field>
+                    <input type="text" placeholder="Fecha de Ejecucion" matInput>
+                </mat-form-field>
             </td>
             <td *ngIf="selectedValue !== '----'">-</td>
             <td *ngIf="selectedValue !== '----'">
-                <md-form-field>
-                    <input type="text" placeholder="Fecha de Finalizacion" mdInput>
-                </md-form-field>
+                <mat-form-field>
+                    <input type="text" placeholder="Fecha de Finalizacion" matInput>
+                </mat-form-field>
             </td>
         </tr>
     </table>
 </div>
 
 <div *ngIf="selectedValue === 'Intervalo'">
-    <md-select [(ngModel)]="selectedIntervalo">
-        <md-option *ngFor="let item of options" [value]="item.value">{{item.title}}</md-option>
-    </md-select>
+    <mat-select [(ngModel)]="selectedIntervalo">
+        <mat-option *ngFor="let item of options" [value]="item.value">{{item.title}}</mat-option>
+    </mat-select>
     <br>
-    <md-form-field>
-        <input type="number" placeholder="Cada" mdInput>
-    </md-form-field>
+    <mat-form-field>
+        <input type="number" placeholder="Cada" matInput>
+    </mat-form-field>
 </div>
 
 <div *ngIf="selectedValue === 'Dias de la semana'">
-    <md-checkbox>Lun</md-checkbox>
-    <md-checkbox>Mar</md-checkbox>
-    <md-checkbox>Mie</md-checkbox>
-    <md-checkbox>Jue</md-checkbox>
-    <md-checkbox>Vie</md-checkbox>
-    <md-checkbox>Sab</md-checkbox>
-    <md-checkbox>Dom</md-checkbox>
+    <mat-checkbox>Lun</mat-checkbox>
+    <mat-checkbox>Mar</mat-checkbox>
+    <mat-checkbox>Mie</mat-checkbox>
+    <mat-checkbox>Jue</mat-checkbox>
+    <mat-checkbox>Vie</mat-checkbox>
+    <mat-checkbox>Sab</mat-checkbox>
+    <mat-checkbox>Dom</mat-checkbox>
 </div>
 
 <div *ngIf="selectedValue === 'Meses del año'">
-    <md-select placeholder="Meses" [(ngModel)]="selectedMes" multiple="true">
-        <md-option value="Enero">Enero</md-option>
-        <md-option value="Febrero">Febrero</md-option>
-        <md-option value="Marzo">Marzo</md-option>
-        <md-option value="Abril">Abril</md-option>
-        <md-option value="Mayo">Mayo</md-option>
-        <md-option value="Junio">Junio</md-option>
-        <md-option value="Julio">Julio</md-option>
-        <md-option value="Agosto">Agosto</md-option>
-        <md-option value="Septiembre">Septiembre</md-option>
-        <md-option value="Octubre">Octubre</md-option>
-        <md-option value="Noviembre">Noviembre</md-option>
-        <md-option value="Diciembre">Diciembre</md-option>
-    </md-select>
+    <mat-select placeholder="Meses" [(ngModel)]="selectedMes" multiple="true">
+        <mat-option value="Enero">Enero</mat-option>
+        <mat-option value="Febrero">Febrero</mat-option>
+        <mat-option value="Marzo">Marzo</mat-option>
+        <mat-option value="Abril">Abril</mat-option>
+        <mat-option value="Mayo">Mayo</mat-option>
+        <mat-option value="Junio">Junio</mat-option>
+        <mat-option value="Julio">Julio</mat-option>
+        <mat-option value="Agosto">Agosto</mat-option>
+        <mat-option value="Septiembre">Septiembre</mat-option>
+        <mat-option value="Octubre">Octubre</mat-option>
+        <mat-option value="Noviembre">Noviembre</mat-option>
+        <mat-option value="Diciembre">Diciembre</mat-option>
+    </mat-select>
 
 
 </div>

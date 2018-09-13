@@ -16,19 +16,19 @@
                     <li *ngIf="selectedItems.length == 1 && editable">
                         <button [routerLink]="editlink" class="btn btn-primary btn-just-icon ">
                             <i class="material-icons">create</i>
-                            <!-- <span class="hidden-lg hidden-md hidden-sm">Editar</span> -->
+                            <!-- <span class="hidden-lg hidden-mat hidden-sm">Editar</span> -->
                         </button>
                     </li>
                     <li *ngIf="selectedItems.length >= 1 && deleteable">
                         <button class="btn btn-primary btn-just-icon" (click)="onDelete()">
                             <i class="material-icons">delete</i>
-                            <!-- <span class="hidden-lg hidden-md hidden-sm">Eliminar</span> -->
+                            <!-- <span class="hidden-lg hidden-mat hidden-sm">Eliminar</span> -->
                         </button>
                     </li>
                     <li *ngIf="aggregable">
                         <button [routerLink]="addlink" class="btn btn-primary btn-just-icon">
                             <i class="material-icons">add</i>
-                            <!-- <span class="hidden-lg hidden-md hidden-sm">Agregar</span> -->
+                            <!-- <span class="hidden-lg hidden-mat hidden-sm">Agregar</span> -->
                         </button>
                     </li>
 

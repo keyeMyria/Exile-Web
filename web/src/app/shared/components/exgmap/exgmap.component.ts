@@ -15,12 +15,12 @@ export class ExgmapComponent implements OnInit {
     @ViewChild('search')
     public searchElementRef: ElementRef;
     @Input()
-    public latitude: number = 4.570868;
+    public latitude = 4.570868;
     @Input()
-    public longitude: number = -74.297333;
+    public longitude = -74.297333;
     public searchControl: FormControl = new FormControl();
     @Input()
-    public zoom: number = 5;
+    public zoom = 5;
     public markerdraggable = true;
     @Output()
     public coordsChange = new EventEmitter();
@@ -33,18 +33,18 @@ export class ExgmapComponent implements OnInit {
         this.setCurrentPosition();
 
         // load Places Autocomplete
-        // this.mapsAPILoader.load().then(() => {
-        //     const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-        //     autocomplete.addListener('place_changed', () => {
-        //         this.ngZone.run(() => {
-        //             const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-        //             if (place.geometry === undefined || place.geometry === null) {
-        //                 return;
-        //             }
-        //             this.coords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }
-        //         });
-        //     });
-        // });
+        this.mapsAPILoader.load().then(() => {
+            const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+            autocomplete.addListener('place_changed', () => {
+                this.ngZone.run(() => {
+                    const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+                    if (place.geometry === undefined || place.geometry === null) {
+                        return;
+                    }
+                    this.coords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }
+                });
+            });
+        });
     }
 
     onDragEnd(event) {

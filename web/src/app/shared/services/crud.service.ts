@@ -1,7 +1,7 @@
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { CallService } from './call.service';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators'
+import { map, catchError, switchMap } from 'rxjs/operators'
 
 declare var $: any;
 

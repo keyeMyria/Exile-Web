@@ -35,17 +35,18 @@ export class AuthService {
         this.serviceUrl = url;
         this.isLogUrl = log;
     }
-    
+
     isLoggedIn(): boolean {
         return !!this.getUser();
     }
 
 
     private addUser(user: any) {
+        console.log(user);
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));
-        const ip = this._cl.getUrl(user.ws, 'ws');
-        console.log(ip);
+        const ws = user.ws ? user.ws : user.username;
+        const ip = this._cl.getUrl(ws, 'ws');
         this._ws.connect(ip)
         this._ws.mgs().subscribe(noc => console.log(noc));
         this._ws.mgs('asistente').filter(item => item.pk === 11).subscribe(noc => console.log(noc));
@@ -53,7 +54,6 @@ export class AuthService {
 
     }
     private removeUser(err?) {
-        console.log(err);
         this.user = null;
         this.redirectUrl = null;
         localStorage.removeItem('user');
@@ -80,7 +80,7 @@ export class AuthService {
         }
         return this._cl.post(this.serviceUrl, body)
             .toPromise()
-            .then(res => res.json())
+            .then(res => res)
             .then(() => {
                 return this.isLogin()
                     .then(data => {
@@ -95,7 +95,7 @@ export class AuthService {
     }
 
     logout() {
-        if(!!this.serviceUrl){
+        if (!!this.serviceUrl) {
             this._cl.delete(this.serviceUrl)
                 .toPromise()
                 .then(data => {
@@ -109,7 +109,7 @@ export class AuthService {
     isLogin() {
         return this._cl.get(this.isLogUrl)
             .toPromise()
-            .then(res => res.json())
+            .then(res => res)
             .catch(err => this.removeUser(err));
     }
 }

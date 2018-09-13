@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { catchError, map} from 'rxjs/operators';
+import { catchError, map, switchMap} from 'rxjs/operators';
 
 declare var ReconnectingWebSocket: any;
 declare var window: any;
@@ -173,7 +173,6 @@ export class CallService {
             .pipe(
                 catchError(this.error)
             );
-        
     }
 
     /**

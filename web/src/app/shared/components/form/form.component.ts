@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BsNotify } from '../../utils';
 import 'rxjs/add/operator/toPromise';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, flatMap, first, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 declare var $: any;
@@ -175,46 +175,39 @@ export class FormComponent implements OnInit, AfterViewInit {
             this._ready = true;
             if (!!this.item) {
                 this.service.edit(this.item.id, body)
-                    .pipe(
-                        tap(data => {
-                            this._ready = false;
-                            this.successful(data);
-                            this.back();
-                            swal({
-                                title: 'Guardado!',
-                                text: 'Registro se guardo con exito',
-                                type: 'success',
-                                confirmButtonColor: '#213b78',
-                            });
-                        }),
-                        catchError(error => {
-                            this._error(error, 'Ha ocurrido un error al intentar gurdar los datos');
-                            return of({ error, mgs: 'Ha ocurrido un error al intentar gurdar los datos' });
-                        })
-                    )
+                    .toPromise()
+                    .then(data => {
+                        this._ready = false;
+                        this.successful(data);
+                        this.back();
+                        swal({
+                            title: 'Guardado!',
+                            text: 'Registro se guardo con exito',
+                            type: 'success',
+                            confirmButtonColor: '#213b78',
+                        });
+                    })
+                    .catch(error => this._error(error, 'Ha ocurrido un error al intentar guardar los datos'));
+
 
             } else {
                 this.service.add(body)
-                    .pipe(
-                        tap(data => {
-                            this.form.reset();
-                            this._ready = false;
-                            swal({
-                                title: 'Guardado!',
-                                text: 'Registro se guardo con exito',
-                                type: 'success',
-                                confirmButtonColor: '#213b78',
-                            });
-                            this.successful(data);
-                            if (!back) {
-                                this.back();
-                            }
-                        }),
-                        catchError(error => {
-                            this._error(error, 'Ha ocurrido un error al intentar gurdar los datos');
-                            return of({ error, mgs: 'Ha ocurrido un error al intentar gurdar los datos'});
-                        })
-                    )
+                    .toPromise()
+                    .then(data => {
+                        this.form.reset();
+                        this._ready = false;
+                        swal({
+                            title: 'Guardado!',
+                            text: 'Registro se guardo con exito',
+                            type: 'success',
+                            confirmButtonColor: '#213b78',
+                        });
+                        this.successful(data);
+                        if (!back) {
+                            this.back();
+                        }
+                    })
+                    .catch(error => this._error(error, 'Ha ocurrido un error al intentar gurdar los datos'))
             }
         } else {
             console.error('no se ha definido un service para este formulario');
@@ -250,23 +243,18 @@ export class FormComponent implements OnInit, AfterViewInit {
                 confirmButtonText: 'Eliminar'
             }).then(() => {
                 this.service.delete(this.item.id)
-                    .pipe(
-                        tap(data => {
-                            this.successful(data);
-                            this.back();
-                            swal({
-                                title: 'Eliminado!',
-                                text: 'Registros se eliminado con exito',
-                                type: 'success',
-                                confirmButtonColor: '#213b78',
-                            });
-                        }),
-                        catchError(err => {
-                            console.log(err);
-                            this._error(err, 'No se han podido eliminar los registros');
-                            return of({ error: err, mgs: 'No se han podido eliminar los registros'})
-                        })
-                    )
+                    .toPromise()
+                    .then(data => {
+                        this.successful(data);
+                        this.back();
+                        swal({
+                            title: 'Eliminado!',
+                            text: 'Registros se eliminado con exito',
+                            type: 'success',
+                            confirmButtonColor: '#213b78',
+                        });
+                    })
+                    .catch(error => this._error(error, 'No se han podido eliminar los registros'));
             }, () => { });
         }
     }

@@ -54,12 +54,12 @@ export class MultiComponent implements OnInit {
         parametros['num_page'] = 0;
         this.service.list(parametros)
             .pipe(
-                map((data:any) => data.json()),
-                tap((data:any) => {
+                map((data: any) => data),
+                tap((data: any) => {
                     this.options = data.object_list;
                     const num = this.options.length;
                     if (num === 0) {
-                        this.placeholder = "No se encontraron resultados";
+                        this.placeholder = 'No se encontraron resultados';
                     } else {
                         this.placeholder = `Se encontraron ${num} registros`;
                     }
@@ -70,5 +70,7 @@ export class MultiComponent implements OnInit {
                     return of({error})
                 })
             )
+            .toPromise()
+            .catch(error => console.log(error));
     }
 }

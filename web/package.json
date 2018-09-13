@@ -6,7 +6,7 @@
     "ng": "ng",
     "dng": "docker-compose run --rm web ng",
     "dnpm": "docker-compose run --rm web npm",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
