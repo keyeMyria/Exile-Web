@@ -33,18 +33,18 @@ export class ExgmapComponent implements OnInit {
         this.setCurrentPosition();
 
         // load Places Autocomplete
-        this.mapsAPILoader.load().then(() => {
-            const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-            autocomplete.addListener('place_changed', () => {
-                this.ngZone.run(() => {
-                    const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-                    if (place.geometry === undefined || place.geometry === null) {
-                        return;
-                    }
-                    this.coords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }
-                });
-            });
-        });
+        // this.mapsAPILoader.load().then(() => {
+        //     const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+        //     autocomplete.addListener('place_changed', () => {
+        //         this.ngZone.run(() => {
+        //             const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+        //             if (place.geometry === undefined || place.geometry === null) {
+        //                 return;
+        //             }
+        //             this.coords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }
+        //         });
+        //     });
+        // });
     }
 
     onDragEnd(event) {
@@ -52,7 +52,7 @@ export class ExgmapComponent implements OnInit {
     }
 
     onKeydown(event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             event.preventDefault();
             return false;
         }

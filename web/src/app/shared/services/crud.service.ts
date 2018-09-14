@@ -18,7 +18,6 @@ export class CrudBase implements Resolve<any> {
     public data: any[];
 
     protected conf: CrudConf;
-
     constructor(protected _cl: CallService) {
         this.conf = {};
     }
@@ -75,7 +74,7 @@ export class CrudBase implements Resolve<any> {
         }
         return this.list({ id: id })
             .pipe(
-                map(data => data.json().object_list[0])
+                map(data => data.object_list[0])
             )
     }
 
@@ -115,7 +114,7 @@ export class CrudBase implements Resolve<any> {
         const id = route.params['id'];
         if (isNaN(+id)) {
             console.log(`Item id was not a number: ${id}`);
-            window.location.href = '/#/' + ( !!this.conf.redirect? this.conf.redirect: '');
+            window.location.href = '/#/' + ( !!this.conf.redirect ? this.conf.redirect : '');
             return null;
         }
         return this.getById(+id)
@@ -125,13 +124,13 @@ export class CrudBase implements Resolve<any> {
                         return item;
                     }
                     console.log(`Item was not found: ${id}`);
-                    window.location.href = '/#/' + ( !!this.conf.redirect? this.conf.redirect: '');
-                    return null;
+                    window.location.href = '/#/' + ( !!this.conf.redirect ? this.conf.redirect : '');
+                    return of(null);
                 }),
                 catchError(error => {
                     console.log(`Retrieval error: ${error}`);
-                    window.location.href = '/#/' + ( !!this.conf.redirect? this.conf.redirect: '');
-                    return null;
+                    window.location.href = '/#/' + ( !!this.conf.redirect ? this.conf.redirect : '');
+                    return of(null);
                 })
             )
     }

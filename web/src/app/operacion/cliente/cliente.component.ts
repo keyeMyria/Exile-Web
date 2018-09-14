@@ -102,6 +102,6 @@ export class ClienteEditComponent implements OnInit {
         }
     }
 
-    itemTipo = data => data.nombre;
+    itemTipo = data => data.tipo__nombre;
 
 }

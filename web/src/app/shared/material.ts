@@ -37,7 +37,7 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule,
+    MatTreeModule
 } from '@angular/material';
 
 export const material: any[] = [

@@ -19,7 +19,7 @@ export class TimelinelistComponent implements OnInit {
 
     public ngOnInit(): void {
         this._n.list({ /*esta_completado: false*/ }).subscribe(data => {
-            const result = data.json();
+            const result = data;
             this.list = result.object_list;
             if (this.list.length > 0) {
                 this.setSelect(this.list[0]);

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
-import { SampleModule } from '../shared';
+import { SampleModule, material } from '../shared';
 import { OperacionRoutes } from './route';
 
 import { ClienteEditComponent, ClienteListComponent } from './cliente/cliente.component';
@@ -24,14 +24,16 @@ import { EmpleadoService } from '../usuarios/empleado/empleado.service';
 import { TareaListComponent, TareaFormComponent } from './tareas-list/tareas-list.component';
 import { ExintervalComponent } from './exinterval/exinterval.component';
 
+
 @NgModule({
     imports: [
+        SampleModule,
         FormsModule,
         CommonModule,
-        SampleModule,
         AgmCoreModule,
         ReactiveFormsModule,
-        RouterModule.forChild(OperacionRoutes)
+        RouterModule.forChild(OperacionRoutes),
+        ...material
     ],
     declarations: [
         ClienteEditComponent,
@@ -55,7 +57,6 @@ import { ExintervalComponent } from './exinterval/exinterval.component';
         NotificacionService,
         EmpleadoService,
         GoogleMapsAPIWrapper,
-        // { provide: MAT_DATE_LOCALE, useValue: 'es-CO' },
     ]
 })
 export class OperacionModule { }

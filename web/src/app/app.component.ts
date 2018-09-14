@@ -9,7 +9,7 @@ import { NovedadesMenuMeta } from './novedades/route';
 declare var $: any;
 
 @Component({
-    selector: 'ex-nomina',
+    selector: 'ex-app',
     template: '<router-outlet></router-outlet>',
     styleUrls: ['./app.component.scss']
 })
