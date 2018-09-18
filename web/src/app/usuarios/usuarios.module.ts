@@ -10,6 +10,8 @@ import { EditEmpleadoComponent, ListEmpleadoComponent } from './empleado/emplead
 import { EmpleadoService } from './empleado/empleado.service';
 import { SampleModule } from '../shared';
 import { CargoService } from '../configuracion/cargo/cargo.service';
+import { PerfilComponent, EditPerfilComponent } from './perfil/perfil.component';
+import { PerfilService } from './perfil/perfil.service';
 
 @NgModule({
     imports: [
@@ -25,12 +27,14 @@ import { CargoService } from '../configuracion/cargo/cargo.service';
         AsistenteEditComponent,
         EditEmpleadoComponent,
         ListEmpleadoComponent,
-
+        PerfilComponent,
+        EditPerfilComponent
     ],
     providers: [
         AsistenteService,
         EmpleadoService,
-        CargoService
+        CargoService,
+        PerfilService
     ]
 })
 export class UsuariosModule { }

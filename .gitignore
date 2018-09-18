@@ -101,7 +101,7 @@ ENV/
 .mypy_cache/
 
 # python
-.pyc
+*.pyc
 
 #Angular
 
@@ -121,3 +121,6 @@ exile/media
 #Celerity
 exile/celerybeat.pid
 celerybeat.pid 
+
+#VS code
+.vscode
