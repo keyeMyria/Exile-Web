@@ -20,7 +20,7 @@ def check_login(funcion):
         if request.user.is_authenticated() or request.method == "OPTIONS":
             return funcion(request, *args, **kwargs)
             # end if
-        return HttpResponse(simplejson.dumps({"error": "Debes iniciar sesion"}), 403)
+        return HttpResponse(simplejson.dumps({"error": "Debes iniciar sesion"}), status=403)
     # end def
     return check
 # end def
