@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^login/empleado/$', views.LoginE.as_view(), name="LoginE"),
     url(r'^is/login/$', views.islogin, name="isLogin"),
     url(r'^change/password/$', views.change_password, name='change_password'),
-    url(r'^perfil/detail/(?P<pk>\d+)/$', views.UserDetail.as_view(), name='UserDetail')
+    url(r'^perfil/form/(?P<pk>\d+)/$', views.PerfilSupra.as_view(), name='PerfilSupra')
 ]
 
 """

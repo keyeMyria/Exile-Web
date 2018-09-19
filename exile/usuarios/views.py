@@ -51,6 +51,15 @@ class UserDetail(supra.SupraDetailView):
     # end def
 # end class
 
+class PerfilSupra(supra.SupraFormView):
+    model = User
+    form_class = forms.PerfilForm
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(PerfilSupra, self).dispatch(request, *args, **kwargs)
+    # end def
+
 class LoginU(supra.SupraSession):
 
     @method_decorator(csrf_exempt)
@@ -90,7 +99,19 @@ def islogin(cuenta, request):
                     avatar = None
 
                 url = "/usuarios/avatar/cliente/%d/" % (cuenta.cliente.id)
-                data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": "Administrador"}
+                data = {
+                        "url_avatar": url, 
+                        "session": request.session.session_key, 
+                        "username": request.user.username, 
+                        "first_name": request.user.first_name, 
+                        "last_name": request.user.last_name, 
+                        "email": request.user.email, 
+                        "cuenta": cuenta.id, 
+                        "avatar": avatar,  
+                        "ws": "noti/%d/" % (cuenta.id), 
+                        "cargo": "Administrador",
+                        "userID": cuenta.cliente.id
+                    }
                 return HttpResponse(simplejson.dumps(data), 200)
 
             else:
@@ -102,7 +123,19 @@ def islogin(cuenta, request):
                         avatar = None
 
                     url = "/usuarios/avatar/asistente/%d/" % (asistente.id)
-                    data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": "Asistente"}
+                    data = {
+                            "url_avatar": url, 
+                            "session": request.session.session_key, 
+                            "username": request.user.username, 
+                            "first_name": request.user.first_name, 
+                            "last_name": request.user.last_name, 
+                            "email": request.user.email, 
+                            "cuenta": cuenta.id, 
+                            "avatar": avatar,  
+                            "ws": "noti/%d/" % (cuenta.id), 
+                            "cargo": "Asistente",
+                            "userID": cuenta.cliente.id
+                        }
                     return HttpResponse(simplejson.dumps(data), 200)
 
                 empleado = models.Empleado.objects.filter(id=request.user.id).first()
@@ -118,7 +151,19 @@ def islogin(cuenta, request):
                         cargo = None
 
                     url = "/usuarios/avatar/empleado/%d/" % (empleado.id)
-                    data = {"url_avatar": url, "session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name, "email": request.user.email, "cuenta": cuenta.id, "avatar": avatar,  "ws": "noti/%d/" % (cuenta.id), "cargo": cargo}
+                    data = {
+                            "url_avatar": url, 
+                            "session": request.session.session_key, 
+                            "username": request.user.username, 
+                            "first_name": request.user.first_name, 
+                            "last_name": request.user.last_name, 
+                            "email": request.user.email, 
+                            "cuenta": cuenta.id, 
+                            "avatar": avatar,  
+                            "ws": "noti/%d/" % (cuenta.id), 
+                            "cargo": cargo,
+                            "userID": cuenta.cliente.id
+                    }
                     return HttpResponse(simplejson.dumps(data), 200)
         # end if
         return HttpResponse(simplejson.dumps({"session": request.session.session_key, "username": request.user.username, "first_name": request.user.first_name, "last_name": request.user.last_name}), 200)
