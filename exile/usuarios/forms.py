@@ -10,12 +10,16 @@ from cuser.middleware import CuserMiddleware
 from subcripcion.models import Cliente
 from django.contrib.auth.models import User
 
-
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput())
     password = forms.CharField(widget=forms.PasswordInput(render_value=False))
 # end class
 
+class PerfilForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
 
 class MasterU(forms.ModelForm):
     identificacion2 = forms.CharField(widget=forms.NumberInput() , label="Verificar número identificación")
